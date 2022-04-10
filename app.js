@@ -15,7 +15,20 @@ app.use(cors())
 
 
 // connecting server
-
-const server=app.listen(process.env.PORT,()=>{
-    console.log(`App running locally on ${process.env.PORT}`)
-})
+mongoose
+  .connect(process.env.MONGODB_KEY,{
+         useNewUrlParser: true,
+         useUnifiedTopology: true 
+  }
+  )
+  .then(Db=>{
+      console.log("connected to database")
+  })
+  .then(result => {      
+    const server=app.listen(process.env.PORT,()=>{
+        console.log(`App running locally on ${process.env.PORT}`)
+    })
+  })
+  .catch(err => {
+    console.log(err.message);
+  });

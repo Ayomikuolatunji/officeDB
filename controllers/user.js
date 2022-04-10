@@ -13,7 +13,6 @@ const registration=async(req,res,next)=>{
         error.status=422
         throw error
     }
-    console.log(req.body)
     // if email already exist throw erro to the client
     const checkUserExits=await User.findOne({email:email})
     if(checkUserExits){
@@ -28,9 +27,9 @@ const registration=async(req,res,next)=>{
         hashedPassword
     })
     const userData=await user.save()
-    res.status(210).json({message:"Account created successfully"})
+    res.status(210).json({message:"Account created successfully",data:userData.email})
    } catch (error) {
-       
+       console.log(error)
    }
 }
 

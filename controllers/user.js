@@ -1,6 +1,7 @@
 const bcrypt=require("bcrypt")
 const User=require("../models/user")
-const { validationResult }=require("express-validator")
+const { validationResult }=require("express-validator");
+
 
 const registration=async(req,res,next)=>{
   const errors = validationResult(req);
@@ -36,7 +37,16 @@ const registration=async(req,res,next)=>{
     next(err);
   }
 }
-const login=async()=>{
+const login=async(req,res,next)=>{
+    const email=req.body.email
+    const password=req.bdoy.password
+    const user=await findOne({email:email})
+    if(!user){
+      const error=new Error("User not found with that email")
+      error.statusCode=404
+      throw error
+    }
+    const comparedPassword=await bcrypt.compare(password, user.password)
 
 } 
 module.exports={registration,login}

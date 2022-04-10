@@ -15,11 +15,11 @@ const registration=async(req,res,next)=>{
   const username = req.body.username;
   const password = req.body.password;
   const userExist=await User.findOne({email:email})
-    if(userExist){
+  if(userExist){
       const error=new Error("User already exist with this email")
       error.statusCode=422;
       throw error
-    } 
+  } 
   try {
     const hashedPw = await bcrypt.hash(password, 12);
     const user = new User({
@@ -36,5 +36,7 @@ const registration=async(req,res,next)=>{
     next(err);
   }
 }
+const login=async()=>{
 
-module.exports=registration
+} 
+module.exports={registration,login}

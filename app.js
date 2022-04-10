@@ -4,6 +4,7 @@ const mongoose =require("mongoose")
 // call dotenv 
 require("dotenv").config()
 const router=require("./routes/user")
+const ErrorPage=require("./controllers/404")
 
 
 
@@ -27,6 +28,7 @@ app.use((error,req,res,next)=>{
 
 // api routes for user auth
 app.use("/office-api/auth",router)
+app.use(ErrorPage())
 
 // connecting server
 mongoose

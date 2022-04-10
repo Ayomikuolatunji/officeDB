@@ -28,7 +28,7 @@ const registration=async(req,res,next)=>{
       password: hashedPw,
     });
     const result = await user.save();
-    res.status(201).json({ message: 'User created!', user:user});
+    res.status(201).json({ message: 'User created!', user:result});
     } catch (err) {
      if (!err.statusCode) {
        err.statusCode = 500;

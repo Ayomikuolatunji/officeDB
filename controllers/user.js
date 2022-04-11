@@ -114,25 +114,29 @@ const profilePicture=async(req,res,next)=>{
     }
 }
 
-const getALlUsers=(req,res,next)=>{
+const getAllUsers=async(req,res,next)=>{
 
      try {
-         const alluser=await User.find({})
-         if(!alluser){
+         const users=await User.find({_id:{$ne:req.params.id}}).select([
+           "email",
+            "username",
+            "avartImage",
+            "_id"
+         ])
+         if(!users){
           const error=new Error(`user empty`)
           error.statusCode=422
           throw error
          }     
-         res.status(200).json({users:alluser})
-
+         res.status(200).json({users})
      } catch (error) {
 
       if(!error.statusCode){
-        error.statusCode=500
+           error.statusCode=500
        }
        next(error) 
      }   
 
 }
 
-module.exports={registration,login,oneUser,profilePicture,getALlUsers}
+module.exports={registration,login,oneUser,profilePicture,getAllUsers}

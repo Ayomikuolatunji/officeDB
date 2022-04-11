@@ -26,7 +26,7 @@ router
     registration
 )
 
-router.get("/login",login)
+router.post("/login",login)
 
 
 module.exports=router

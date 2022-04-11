@@ -1,6 +1,7 @@
 const bcrypt=require("bcrypt")
 const User=require("../models/user")
 const { validationResult }=require("express-validator");
+const jwt=require("jsonwebtoken")
 
 
 const registration=async(req,res,next)=>{
@@ -38,15 +39,36 @@ const registration=async(req,res,next)=>{
   }
 }
 const login=async(req,res,next)=>{
-    const email=req.body.email
-    const password=req.bdoy.password
-    const user=await findOne({email:email})
-    if(!user){
-      const error=new Error("User not found with that email")
-      error.statusCode=404
-      throw error
+  const email = req.body.email;
+  const password = req.body.password;
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      const error = new Error('A user with this email could not be found.');
+      error.statusCode = 401;
+      throw error;
     }
-    const comparedPassword=await bcrypt.compare(password, user.password)
 
+    const isEqual = await bcrypt.compare(password, user.password);
+    if (!isEqual) {
+      const error = new Error('Wrong password!');
+      error.statusCode = 401;
+      throw error;
+    }
+    const token = jwt.sign(
+      {
+        email: user.email,
+        userId: user._id.toString()
+      },
+      'somesupersecretsecret',
+      { expiresIn: '1h' }
+    );
+    res.status(200).json({ token: token, user:user });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
 } 
 module.exports={registration,login}

@@ -40,7 +40,6 @@ const registration=async(req,res,next)=>{
   }
 }
 
-
 const login=async(req,res,next)=>{
   const email = req.body.email;
   const password = req.body.password;
@@ -75,7 +74,6 @@ const login=async(req,res,next)=>{
   }
 } 
 
-
 const oneUser=async(req,res,next)=>{
   const {id}=req.params;
    try {
@@ -94,16 +92,15 @@ const oneUser=async(req,res,next)=>{
    }
 }
 
-
 const profilePicture=async(req,res,next)=>{
   const {id}=req.params
-  const image=req.body.image
+  const avartImage=req.body.avartImage
     try {
-       const user=await findOneAndUpdate(id,{
+       const user=await User.findOneAndUpdate({_id:id},{
         avatarImageSet:true,
-        avartImage:image
+        avartImage: avartImage
        })
-       return res.status(200).json({isSet:user.avatarImageSet,image:user.avartImage})
+       return res.status(200).json({isSet:user.avatarImageSet,avartImage:user.avartImage})
     }catch (error) {
       if(!error.statusCode){
         error.statusCode=500

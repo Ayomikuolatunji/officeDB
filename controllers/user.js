@@ -38,6 +38,8 @@ const registration=async(req,res,next)=>{
     next(err);
   }
 }
+
+
 const login=async(req,res,next)=>{
   const email = req.body.email;
   const password = req.body.password;
@@ -71,6 +73,8 @@ const login=async(req,res,next)=>{
     next(err);
   }
 } 
+
+
 const oneUser=async(req,res,next)=>{
   const {id}=req.params;
    try {
@@ -89,4 +93,10 @@ const oneUser=async(req,res,next)=>{
    }
 }
 
-module.exports={registration,login,oneUser}
+
+const profilePicture=async(req,res,next)=>{
+
+}
+
+
+module.exports={registration,login,oneUser,profilePicture}

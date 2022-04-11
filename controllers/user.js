@@ -1,7 +1,8 @@
 const bcrypt=require("bcrypt")
 const User=require("../models/user")
 const { validationResult }=require("express-validator");
-const jwt=require("jsonwebtoken")
+const jwt=require("jsonwebtoken");
+const { findOneAndUpdate } = require("../models/user");
 
 
 const registration=async(req,res,next)=>{
@@ -98,8 +99,7 @@ const profilePicture=async(req,res,next)=>{
   const {id}=req.params
   const image=req.body.image
     try {
-       
-
+       const user=await findOneAndUpdate({_id:id})
 
     }catch (error) {
       if(!error.statusCode){

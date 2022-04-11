@@ -94,6 +94,11 @@ const oneUser=async(req,res,next)=>{
 
 const profilePicture=async(req,res,next)=>{
   const {id}=req.params
+  if(!id){
+    const error=new Error(`Cant uplaod image with this ${id}`)
+    error.statusCode=422
+    throw error
+  }
   const avartImage=req.body.avartImage
     try {
        const user=await User.findOneAndUpdate({_id:id},{
@@ -110,6 +115,23 @@ const profilePicture=async(req,res,next)=>{
 }
 
 const getALlUsers=(req,res,next)=>{
+
+     try {
+         const alluser=await User.find({})
+         if(!alluser){
+          const error=new Error(`user empty`)
+          error.statusCode=422
+          throw error
+         }     
+         res.status(200).json({users:alluser})
+
+     } catch (error) {
+
+      if(!error.statusCode){
+        error.statusCode=500
+       }
+       next(error) 
+     }   
 
 }
 

@@ -1,7 +1,7 @@
 const express=require("express")
 const {body}=require("express-validator")
 const User=require("../models/user")
-const {registration,login,oneUser,profilePicture}= require("../controllers/user")
+const {registration,login,oneUser,profilePicture,getALlUsers}= require("../controllers/user")
 const router=express.Router()
 
 
@@ -29,5 +29,7 @@ router.post("/login",login)
 router.get("/:id",oneUser)
 
 router.post("/profile_picture/:id", profilePicture)
+
+router.get("/all_users",getALlUsers)
 
 module.exports=router

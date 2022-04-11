@@ -109,5 +109,8 @@ const profilePicture=async(req,res,next)=>{
     }
 }
 
+const getALlUsers=(req,res,next)=>{
 
-module.exports={registration,login,oneUser,profilePicture}
+}
+
+module.exports={registration,login,oneUser,profilePicture,getALlUsers}

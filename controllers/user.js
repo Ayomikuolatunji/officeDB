@@ -30,7 +30,7 @@ const registration=async(req,res,next)=>{
       password: hashedPw,
     });
     const result = await user.save();
-    res.status(201).json({ message: 'User created!', user:result});
+    res.status(201).json({ message: 'User created successfully!', user:result._id});
     } catch (err) {
      if (!err.statusCode) {
        err.statusCode = 500;
@@ -71,4 +71,22 @@ const login=async(req,res,next)=>{
     next(err);
   }
 } 
-module.exports={registration,login}
+const oneUser=async(req,res,next)=>{
+  const {id}=req.params;
+   try {
+    const user=await User.findById({_id:id})
+    if(!user){
+      const error=new Error("No user found")
+      error.statusCode=404
+      throw error
+    }
+    res.status(200).json({user:user})
+    } catch (error) {
+     if(!error.statusCode){
+         error.statusCode=500
+     }
+     next()
+   }
+}
+
+module.exports={registration,login,oneUser}

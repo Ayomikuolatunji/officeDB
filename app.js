@@ -5,6 +5,8 @@ const mongoose =require("mongoose")
 require("dotenv").config()
 const router=require("./routes/user")
 const ErrorPage=require("./controllers/errrorPage")
+const userId=require("./middleware/userId")
+
 
 
 
@@ -27,7 +29,7 @@ app.use((error,req,res,next)=>{
 })
 
 // api routes for user auth
-
+// app.use(userId)
 app.use("/office-api/auth",router)
 app.use(ErrorPage)
 

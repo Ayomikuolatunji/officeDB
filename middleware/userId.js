@@ -4,7 +4,7 @@ const User=require("../models/user")
 const UserID=async(req,res,next)=>{
    const {id}=req.params;
    if(!id){
-       const error=new Error("user with this Id not found")
+       const error=new Error("Id is not found")
        error.statusCode=404
        throw error
    }
@@ -15,6 +15,6 @@ const UserID=async(req,res,next)=>{
     throw error
    }
    req.userId=user._id
-
+   next()
 }
 module.exports=UserID

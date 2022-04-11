@@ -89,13 +89,24 @@ const oneUser=async(req,res,next)=>{
      if(!error.statusCode){
          error.statusCode=500
      }
-     next()
+     next(error)
    }
 }
 
 
 const profilePicture=async(req,res,next)=>{
+  const {id}=req.params
+  const image=req.body.image
+    try {
+       
 
+
+    }catch (error) {
+      if(!error.statusCode){
+        error.statusCode=500
+       }
+       next(error) 
+    }
 }
 
 

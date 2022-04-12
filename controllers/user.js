@@ -65,7 +65,7 @@ const login=async(req,res,next)=>{
       'somesupersecretsecret',
       { expiresIn: '1h' }
     );
-    res.status(200).json({ token: token, user:user });
+    res.status(200).json({ token: token, user:user._id });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;

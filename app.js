@@ -8,8 +8,6 @@ const ErrorPage=require("./controllers/errrorPage")
 const userId=require("./middleware/userId")
 
 
-
-
 // initialise app
 const app=express()
 

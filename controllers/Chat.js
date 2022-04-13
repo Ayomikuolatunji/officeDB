@@ -4,7 +4,7 @@ const fetchChat=async(req,res,next)=>{
     const from=req.body
     const to=req.body
     try {
-        const messages=await Chat.find({users:{$all:["6255d4b309f2b134d30584a2","6255d5b309f2b134d30584b9"]}}).sort({createdAt:-1})
+        const messages=await Chat.find({users:{$all:[from,to]}}).sort({createdAt:-1})
         if(!messages){
             const error=new Error("No similar chats found")
             error.statusCode=404
@@ -12,7 +12,7 @@ const fetchChat=async(req,res,next)=>{
         }
         const sendChat=messages.map(chat=>{
             return {
-                me:chat.sender.toString() ==="6255d4b309f2b134d30584a2",
+                me:chat.sender.toString() ===from,
                 message:chat.chats
             }
         })

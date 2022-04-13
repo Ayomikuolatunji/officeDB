@@ -62,7 +62,7 @@ const login=async(req,res,next)=>{
         userId: user._id.toString()
       },
       'somesupersecretsecret',
-      { expiresIn: '1h' }
+      { expiresIn: '24h' }
     );
     res.status(200).json({ token: token, user:user._id });
   } catch (err) {

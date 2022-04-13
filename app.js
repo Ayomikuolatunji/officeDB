@@ -3,9 +3,10 @@ const cors =require("cors")
 const mongoose =require("mongoose")
 // call dotenv 
 require("dotenv").config()
-const router=require("./routes/user")
-const ErrorPage=require("./controllers/errrorPage")
-const userId=require("./middleware/userId")
+const routeRoutes=require("./routes/user")
+const ErrorPage=require("./util/errrorPage")
+const chatRoutes=require("./routes/chats")
+
 
 
 // initialise app
@@ -28,7 +29,8 @@ app.use((error,req,res,next)=>{
 
 // api routes for user auth
 // app.use(userId)
-app.use("/office-api/auth",router)
+app.use("/office-api/auth",routeRoutes)
+app.use('/office-api/chats',chatRoutes)
 app.use(ErrorPage)
 
 // connecting server

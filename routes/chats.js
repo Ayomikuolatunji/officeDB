@@ -8,7 +8,7 @@ const router=express.Router()
 
 
 router
-.get("/chat",fetchChat)
+.post("/fetch-chats",fetchChat)
 .post("/chats", postChat)
 
 

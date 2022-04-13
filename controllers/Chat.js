@@ -7,8 +7,9 @@ const fetchChat=async()=>{
 
 const postChat=async(req,res,next)=>{
    try {
-    const {chat,from,to}=req.body
-
+    const chat=req.body.chat
+    const from=req.body.from
+    const to=req.body.to
     const chatsCreated=await Chat.create({
         chat:{text:{chat}},
         users:[from,to],

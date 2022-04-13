@@ -30,7 +30,7 @@ app.use((error,req,res,next)=>{
 // api routes for user auth
 // app.use(userId)
 app.use("/office-api/auth",routeRoutes)
-app.use('/office-api/chats',chatRoutes)
+app.use('/office-api',chatRoutes)
 app.use(ErrorPage)
 
 // connecting server

@@ -7,7 +7,7 @@ const routeRoutes=require("./routes/user")
 const ErrorPage=require("./util/errrorPage")
 const chatRoutes=require("./routes/chats")
 const bodyParser=require("body-parser")
-
+const socket = require("socket.io");
 
 
 // initialise app

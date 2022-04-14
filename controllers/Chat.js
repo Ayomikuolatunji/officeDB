@@ -1,8 +1,8 @@
 const Chat =require("../models/chat")
 
 const fetchChat=async(req,res,next)=>{
-    const from=req.body
-    const to=req.body
+    const from=req.body.from
+    const to=req.body.to
     try {
         const messages=await Chat.find({users:{$all:[from,to]}}).sort({createdAt:-1})
         if(!messages){

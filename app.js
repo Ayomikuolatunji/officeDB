@@ -6,6 +6,7 @@ require("dotenv").config()
 const routeRoutes=require("./routes/user")
 const ErrorPage=require("./util/errrorPage")
 const chatRoutes=require("./routes/chats")
+const bodyParser=require("body-parser")
 
 
 
@@ -14,7 +15,7 @@ const app=express()
 
 
 // convert request to json using express middleware
-app.use(express.json())
+app.use(bodyParser.json())
 
 // enable cors policy
 app.use(cors())
@@ -26,7 +27,17 @@ app.use((error,req,res,next)=>{
   const status=error.statusCode || 500 
   res.status(status).json({message})
 })
+app.post('/api/upload', (req, res, next) => {
+  const form = formidable({ });
 
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      next(err);
+      return;
+    }
+    res.json({ fields, files });
+  });
+});
 // api routes for user auth
 // app.use(userId)
 app.use("/office-api/auth",routeRoutes)
@@ -38,13 +49,10 @@ mongoose
   .connect(process.env.MONGODB_KEY,{
          useNewUrlParser: true,
          useUnifiedTopology: true 
-  }
-  )
+  })
   .then(Db=>{
       console.log("connected to database")
-  })
-  .then(result => {      
-    const server=app.listen(process.env.PORT,()=>{
+      app.listen(process.env.PORT,()=>{
         console.log(`App running locally on ${process.env.PORT}`)
     })
   })

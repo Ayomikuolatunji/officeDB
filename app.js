@@ -7,7 +7,8 @@ const routeRoutes=require("./routes/user")
 const ErrorPage=require("./util/errrorPage")
 const chatRoutes=require("./routes/chats")
 const bodyParser=require("body-parser")
-const socket = require("socket.io");
+const Socket=require("./socket-io/socket")
+
 
 
 // initialise app
@@ -52,13 +53,10 @@ mongoose
   })
   .then(Db=>{
       console.log("connected to database")
-       const server=  app.listen(process.env.PORT,()=>{
+     const server=app.listen(process.env.PORT,()=>{
         console.log(`App running locally on ${process.env.PORT}`)
-        const io = socket(server);
-        io.on("connection", function (socket) {
-          console.log("Made socket connection");
-        });
     })
+    Socket(server)
   })
   .catch(err => {
     console.log(err.message);

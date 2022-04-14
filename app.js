@@ -52,8 +52,12 @@ mongoose
   })
   .then(Db=>{
       console.log("connected to database")
-      app.listen(process.env.PORT,()=>{
+       const server=  app.listen(process.env.PORT,()=>{
         console.log(`App running locally on ${process.env.PORT}`)
+        const io = socket(server);
+        io.on("connection", function (socket) {
+          console.log("Made socket connection");
+        });
     })
   })
   .catch(err => {

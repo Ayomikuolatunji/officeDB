@@ -18,8 +18,9 @@ module.exports=buildSchema(`
     }
 
     input pictureUpdate{
-        Id:Strings!
+        Id:String!
         avartImage:String!
+        avatarImageSet:Boolean!
     }
     type RootMutation {
         update_Profile_Picture(update_picture:pictureUpdate): Users!

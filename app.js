@@ -1,13 +1,16 @@
 const express=require("express")
 const cors =require("cors")
 const mongoose =require("mongoose")
+var { graphqlHTTP } = require('express-graphql');
+const bodyParser=require("body-parser")
 // call dotenv 
 require("dotenv").config()
 const routeRoutes=require("./routes/user")
 const ErrorPage=require("./util/errrorPage")
 const chatRoutes=require("./routes/chats")
-const bodyParser=require("body-parser")
 const Socket=require("./socket-io/socket")
+const buildSchema=require("./graphql/Schema")
+const resolver = require("./graphql/Resolver");
 
 
 
@@ -39,11 +42,18 @@ app.post('/api/upload', (req, res, next) => {
     res.json({ fields, files });
   });
 });
+// graphql endpoints
+app.use('/graphql', graphqlHTTP({
+  schema: buildSchema,
+  rootValue: resolver,
+  graphiql: true,
+}));
 // api routes for user auth
 // app.use(userId)
 app.use("/office-api/auth",routeRoutes)
 app.use('/office-api',chatRoutes)
 app.use(ErrorPage)
+
 
 // connecting server
 mongoose

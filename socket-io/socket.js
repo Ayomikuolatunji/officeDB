@@ -10,7 +10,11 @@ const Socket=(server)=>{
         }
       });
       io.on("connection", function (socket) {
-        console.log("Made socket connection",socket.connected);
+        console.log("Made socket connection",socket.id);
+        socket.on("send_chat",data=>{
+          console.log(data)
+           socket.broadcast.emit("recieved_chat",data)
+        })
       });
 
 }

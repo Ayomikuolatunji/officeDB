@@ -26,7 +26,7 @@ module.exports=buildSchema(`
     }
     type RootMutation {
         update_Profile_Picture(id:ID!,update_picture:pictureUpdate): Users!
-        update_profile_name(id:ID!,update_picture:usernameUpdate): Users!
+        update_profile_Username(id:ID!,update_username:usernameUpdate): Users!
     }
     
     schema {

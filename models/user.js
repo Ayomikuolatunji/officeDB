@@ -21,6 +21,10 @@ const userSchema=new Schema({
         type:Boolean,
         default:false
     },
+    about:{
+       type:String,
+       default:""
+    },
     avartImage:{
         type:String,
         default:"",

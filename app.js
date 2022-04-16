@@ -3,6 +3,7 @@ const cors =require("cors")
 const mongoose =require("mongoose")
 var { graphqlHTTP } = require('express-graphql');
 const bodyParser=require("body-parser")
+const helmet = require("helmet");
 // call dotenv 
 require("dotenv").config()
 const routeRoutes=require("./routes/user")
@@ -42,6 +43,22 @@ app.post('/api/upload', (req, res, next) => {
     res.json({ fields, files });
   });
 });
+// setheaders
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', '*');
+//   res.setHeader(
+//     'Access-Control-Allow-Methods',
+//     'OPTIONS, GET, POST, PUT, PATCH, DELETE'
+//   );
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   if (req.method === 'OPTIONS') {
+//     return res.sendStatus(200);
+//   }
+//   next();
+// });
+
+app.use(helmet())
+
 // graphql endpoints
 app.use('/graphql', graphqlHTTP({
   schema: buildSchema,

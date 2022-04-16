@@ -18,16 +18,16 @@ module.exports=buildSchema(`
     }
 
     input pictureUpdate{
-        Id:String!
-        avartImage:String!
-        avatarImageSet:Boolean!
+        avartImage:String
+        avatarImageSet:Boolean
     }
     type RootMutation {
-        update_Profile_Picture(update_picture:pictureUpdate): Users!
+        update_Profile_Picture(id:ID!,update_picture:pictureUpdate): Users!
     }
     
     schema {
         query: RootQuery
+        mutation : RootMutation
     }   
 `
 )

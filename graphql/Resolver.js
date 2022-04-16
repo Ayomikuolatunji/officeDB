@@ -7,17 +7,18 @@ module.exports={
     Init(){
         return 100
     },
-    update_Profile_Picture:async({avartImage,id,avatarImageSet}, req)=>{
+    update_Profile_Picture:async({update_picture,id}, req)=>{
       console.log(id)
      if(!id){
         const error=new Error("No id provided")
         error.statusCode=422
         throw error
      }
-     const updateProfilePicture=await User.findByIdAndUpdate({_id:id},{
-        avatarImageSet:avatarImageSet,
-        avartImage: avartImage
-     })
+     const updateProfilePicture=await User.findOneAndUpdate({_id:id},{
+        avatarImageSet:update_picture.avatarImageSet,
+        avartImage:update_picture.avartImage
+    })
+     console.log(updateProfilePicture);
      if(!updateProfilePicture){
          const error=new Error("Not updated")
          error.statusCode=422

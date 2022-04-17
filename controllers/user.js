@@ -138,4 +138,17 @@ const getAllUsers=async(req,res,next)=>{
 
 }
 
-module.exports={registration,login,oneUser,profilePicture,getAllUsers}
+const deleteUser=async(req,res,next)=>{
+    const id=req.params;
+    const findUser=await User.findByIdAndDelete(id)
+}
+
+
+module.exports={
+  registration,
+  login,
+  oneUser,
+  profilePicture,
+  getAllUsers,
+  deleteUser
+}

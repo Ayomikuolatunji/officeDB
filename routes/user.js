@@ -1,7 +1,16 @@
 const express=require("express")
 const {body}=require("express-validator")
 const User=require("../models/user")
-const {registration,login,oneUser,profilePicture,getAllUsers}= require("../controllers/user")
+const 
+   {
+    registration,
+    login,
+    oneUser,
+    profilePicture,
+    getAllUsers,
+    deleteUser
+  }
+= require("../controllers/user")
 const router=express.Router()
 
 
@@ -31,6 +40,6 @@ router.post("/login",login)
 router.get("/:id",oneUser)
 
 router.post("/profile_picture/:id", profilePicture)
-
+router.delete("/delete_user",deleteUser)
 
 module.exports=router

@@ -19,7 +19,6 @@ module.exports={
         avatarImageSet:update_picture.avatarImageSet,
         avartImage:update_picture.avartImage
     })
-     console.log(updateProfilePicture);
      if(!updateProfilePicture){
          const error=new Error("Not updated")
          error.statusCode=422
@@ -32,7 +31,7 @@ module.exports={
     },
 
     update_Profile_Username:async({update_username, id}, req)=>{
-        try {
+ 
             if(!id){
                 const  error=new Error("Can't find Id")
                 error.statusCode=404
@@ -41,6 +40,7 @@ module.exports={
             const findUser=await User.findByIdAndUpdate({_id:id},{
                 username:update_username.username
             })
+            console.log(findUser);
             if(!findUser){
                 const error=new Error("No user with this id found")
                 error.statusCode=404
@@ -50,11 +50,6 @@ module.exports={
                 ...findUser._doc,
                 _id:findUser._id.toString()
             }
-        } catch (error) {
-            if(!error.statusCode){
-                error.statusCode=500
-            }
-            next(error)
-        }
+       
     }
 }

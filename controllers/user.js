@@ -2,6 +2,7 @@ const bcrypt=require("bcrypt")
 const User=require("../models/user")
 const { validationResult }=require("express-validator");
 const jwt=require("jsonwebtoken");
+const {StatusCodes,ReasonPhrases} =require("http-status-codes")
 
 
 const registration=async(req,res,next)=>{
@@ -139,8 +140,24 @@ const getAllUsers=async(req,res,next)=>{
 }
 
 const deleteUser=async(req,res,next)=>{
-    const id=req.params;
-    const findUser=await User.findByIdAndDelete(id)
+    try {
+      const id=req.params.id;
+    const findUser=await User.findByIdAndDelete({_id:id})
+    if(!findUser){
+      const error=new Error("No user find the id undefined")
+      error.statusCode=404
+      throw error
+    }
+    
+    res.status(StatusCodes.OK).json({message:ReasonPhrases.OK})
+
+    } catch (error) {
+      if(!error.statusCode){
+        error.statusCode=500
+      }
+      next(error)
+    }
+    
 }
 
 

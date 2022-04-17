@@ -40,6 +40,6 @@ router.post("/login",login)
 router.get("/:id",oneUser)
 
 router.post("/profile_picture/:id", profilePicture)
-router.delete("/delete_user",deleteUser)
+router.delete("/delete_user/:id",deleteUser)
 
 module.exports=router

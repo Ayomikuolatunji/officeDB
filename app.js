@@ -57,7 +57,6 @@ app.post('/api/upload', (req, res, next) => {
 //   next();
 // });
 
-app.use(helmet())
 
 // graphql endpoints
 app.use('/graphql', graphqlHTTP({
@@ -65,6 +64,7 @@ app.use('/graphql', graphqlHTTP({
   rootValue: resolver,
   graphiql: true,
 }));
+app.use(helmet())
 // api routes for user auth
 // app.use(userId)
 app.use("/office-api/auth",routeRoutes)

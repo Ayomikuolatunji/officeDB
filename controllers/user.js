@@ -3,7 +3,23 @@ const User=require("../models/user")
 const { validationResult }=require("express-validator");
 const jwt=require("jsonwebtoken");
 const {StatusCodes,ReasonPhrases} =require("http-status-codes")
+const nodemailer = require('nodemailer');
+const API=`VvaB7bjUYJhsKd3C`
 
+
+const transporter = nodemailer.createTransport({
+  service: 'SendinBlue',
+  auth: {
+    user: 'ayomikuolatunji@gmail.com',
+    pass: API
+  }
+});
+const mailOptions = {
+  from: 'ayomikuolatunji@gmail.com',
+  to: 'ayomikuolatunji@gmail.com',
+  subject: 'Sending Email using Node.js',
+  text: 'That was easy!'
+};
 
 const registration=async(req,res,next)=>{
   const errors = validationResult(req);
@@ -32,6 +48,16 @@ const registration=async(req,res,next)=>{
     });
     const result = await user.save();
     res.status(201).json({ message: 'User created successfully!', user:result._id});
+
+    //  return transporter.sendMail(mailOptions, function(error, info){
+    //   if (error) {
+    //     console.log(error.message);
+    //   } else {
+    //     console.log('Email sent: ' + info.response);
+    //   }
+    // })
+
+
     } catch (err) {
      if (!err.statusCode) {
        err.statusCode = 500;

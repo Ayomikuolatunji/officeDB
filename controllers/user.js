@@ -8,17 +8,18 @@ const API=`VvaB7bjUYJhsKd3C`
 
 
 const transporter = nodemailer.createTransport({
-  service: 'SendinBlue',
+  host: "smtp.mailtrap.io",
+  port: 2525,
   auth: {
-    user: 'ayomikuolatunji@gmail.com',
-    pass: API
+    user: "ad7efd4f646469",
+    pass: "c7469f5820877f"
   }
 });
 const mailOptions = {
   from: 'ayomikuolatunji@gmail.com',
-  to: 'ayomikuolatunji@gmail.com',
-  subject: 'Sending Email using Node.js',
-  text: 'That was easy!'
+  to: 'olatunjiayomiku@gmail.com',
+  subject: 'Test Nodemailer with Mailtrap',
+  html: '<h1>Attachments</h1>',
 };
 
 const registration=async(req,res,next)=>{
@@ -33,12 +34,12 @@ const registration=async(req,res,next)=>{
   const email = req.body.email;
   const username = req.body.username;
   const password = req.body.password;
-  const userExist=await User.findOne({email:email})
-  if(userExist){
-      const error=new Error("User already exist with this email")
-      error.statusCode=422;
-      throw error
-  } 
+  // const userExist=await User.findOne({email:email})
+  // if(userExist){
+  //     const error=new Error("User already exist with this email")
+  //     error.statusCode=422;
+  //     throw error
+  // } 
   try {
     const hashedPw = await bcrypt.hash(password, 12);
     const user = new User({
@@ -49,13 +50,13 @@ const registration=async(req,res,next)=>{
     const result = await user.save();
     res.status(201).json({ message: 'User created successfully!', user:result._id});
 
-    //  return transporter.sendMail(mailOptions, function(error, info){
-    //   if (error) {
-    //     console.log(error.message);
-    //   } else {
-    //     console.log('Email sent: ' + info.response);
-    //   }
-    // })
+     return transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error.message);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    })
 
 
     } catch (err) {

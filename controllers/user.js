@@ -1,9 +1,11 @@
 const bcrypt=require("bcrypt")
-const User=require("../models/user")
 const { validationResult }=require("express-validator");
 const jwt=require("jsonwebtoken");
-const transporter=require("../email/transporter")
 const {StatusCodes,ReasonPhrases} =require("http-status-codes")
+const crypto=require("crypto")
+const transporter=require("../email/transporter")
+const User=require("../models/user")
+
 
 
 
@@ -82,7 +84,7 @@ const login=async(req,res,next)=>{
         userId: user._id.toString()
       },
       'somesupersecretsecret',
-      { expiresIn: '24h' }
+      { expiresIn: '30d' }
     );
     res.status(200).json({ token: token, user:user._id });
   } catch (err) {
@@ -179,8 +181,47 @@ const deleteUser=async(req,res,next)=>{
     
 }
 
-const resetPassword=async()=>{
+const resetPassword=async(req,res,next)=>{
+    try{
+      const email=req.body.email
+      const user=await User.findOne({email:email})
+      if(!user){
+        const error=new Error("No user with the email found")
+        error.statusCode=404
+        throw error
+      }
+      // const token=jwt.sign({
+      //    email:user.email,
+      //    id:user_id
+      // }, 'somesupersecretsecret',
+      // { expiresIn: '30d' })
+      const random=await crypto.randomBytes(32)
+      if(!random){
+        return console.log("err");
+      }
+      const token=random.toString("hex")
 
+        user.token=token
+        user.save()
+       res.status(200).json({user:token})
+      var mailOptions = {
+      from: 'ayomikuolatunji@gmail.com',
+      to: email,
+      subject: 'Message from onlineoffice.com',
+      text: `Your request to change password with ${email} is sent `,
+      html:`<body><h5>You set your password with the link below</h5><div><a href='http://localhost:3000/reset-password/${token}'>Login to your profile</a></div></body>`
+    };
+    // send email after successful signup
+     transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+    }catch(err){
+       console.log(err);
+    }
 }
 module.exports={
   registration,

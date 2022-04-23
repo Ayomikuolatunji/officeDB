@@ -201,7 +201,7 @@ const resetPassword=async(req,res,next)=>{
       to: email,
       subject: 'Ayoscript from onlineoffice.com',
       text: `Your request to change password with ${email} is sent `,
-      html:`<body><h5>You set your password with the link below</h5><div><a href='http://localhost:3000/reset-password/?code=${token}&id=${user._id}'>Login to your profile</a></div></body>`
+      html:`<body><h5>You set your password with the link below</h5><div><a href='http://localhost:3000/reset-password/?code=${token}&id=${user._id}'>Click to correct password</a></div></body>`
     };
     // send email after successful signup
      transporter.sendMail(mailOptions, function(error, info){
@@ -217,20 +217,38 @@ const resetPassword=async(req,res,next)=>{
 }
 
 const correctPassword=async(req,res,next)=>{
-  console.log(req.body);
   const password=req.body.password
+  const username=req.body.username
   const userId=req.body.userId
   const resetToken=req.body.resetToken
   const user=await User.findById({_id:userId})
-
- 
-
-  res.status(200).json({user:userId})
-       // const token=jwt.sign({
-      //    email:user.email,
-      //    id:user_id
-      // }, 'somesupersecretsecret',
-      // { expiresIn: '30d' })
+  if(user){
+    const resetPassword=await bcrypt.hash(password,12)
+    const newPassword=await User.findOneAndUpdate({_id:user._id},{
+      password:resetPassword,
+      username:username
+  })
+  res.status(200).json({user:user}) 
+  var mailOptions = {
+    from: 'ayomikuolatunji@gmail.com',
+    to: user.email,
+    subject: 'Ayoscript from onlineoffice.com',
+    text: `Your request to change password with ${user.email} is sucessful `,
+    html:`<body><h5>Your password has been reset </h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>`
+  };
+  // send email after successful signup
+   transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+  }else{
+    const error=new Error("You are not allowed")
+    error.statusCode=404
+    throw error
+  }
 }
 module.exports={
   registration,

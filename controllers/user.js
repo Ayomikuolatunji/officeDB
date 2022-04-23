@@ -179,12 +179,15 @@ const deleteUser=async(req,res,next)=>{
     
 }
 
+const resetPassword=async()=>{
 
+}
 module.exports={
   registration,
   login,
   oneUser,
   profilePicture,
   getAllUsers,
-  deleteUser
+  deleteUser,
+  resetPassword
 }

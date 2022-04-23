@@ -9,7 +9,8 @@ const
     profilePicture,
     getAllUsers,
     deleteUser,
-    resetPassword
+    resetPassword,
+    correctPassword
   }
 = require("../controllers/user")
 const router=express.Router()
@@ -40,6 +41,8 @@ router.post("/login",login)
 
 
 router.post("/reset_password",resetPassword)
+
+router.post("/reset_password/:token",correctPassword)
 
 router.get("/:id",oneUser)
 

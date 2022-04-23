@@ -190,26 +190,18 @@ const resetPassword=async(req,res,next)=>{
         error.statusCode=404
         throw error
       }
-      // const token=jwt.sign({
-      //    email:user.email,
-      //    id:user_id
-      // }, 'somesupersecretsecret',
-      // { expiresIn: '30d' })
       const random=await crypto.randomBytes(32)
       if(!random){
         return console.log("err");
       }
       const token=random.toString("hex")
-
-        user.token=token
-        user.save()
-       res.status(200).json({user:token})
+      res.status(200).json({message:"Email sent to " + user.email})
       var mailOptions = {
       from: 'ayomikuolatunji@gmail.com',
       to: email,
       subject: 'Message from onlineoffice.com',
       text: `Your request to change password with ${email} is sent `,
-      html:`<body><h5>You set your password with the link below</h5><div><a href='http://localhost:3000/reset-password/${token}'>Login to your profile</a></div></body>`
+      html:`<body><h5>You set your password with the link below</h5><div><a href='http://localhost:3000/reset-password/${token}/${user._id}'>Login to your profile</a></div></body>`
     };
     // send email after successful signup
      transporter.sendMail(mailOptions, function(error, info){
@@ -223,6 +215,17 @@ const resetPassword=async(req,res,next)=>{
        console.log(err);
     }
 }
+
+const correctPassword=async(req,res,next)=>{
+  const password=req.body.password
+  const userId=req.body.id
+  const resentToken=req.body.token
+       // const token=jwt.sign({
+      //    email:user.email,
+      //    id:user_id
+      // }, 'somesupersecretsecret',
+      // { expiresIn: '30d' })
+}
 module.exports={
   registration,
   login,
@@ -230,5 +233,6 @@ module.exports={
   profilePicture,
   getAllUsers,
   deleteUser,
-  resetPassword
+  resetPassword,
+  correctPassword
 }

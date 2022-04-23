@@ -2,20 +2,8 @@ const bcrypt=require("bcrypt")
 const User=require("../models/user")
 const { validationResult }=require("express-validator");
 const jwt=require("jsonwebtoken");
-var nodemailer = require('nodemailer');
+const transporter=require("../email/transporter")
 const {StatusCodes,ReasonPhrases} =require("http-status-codes")
-
-var transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'ayomikuolatunji',
-    pass: 'rfigetyfhzcincej'
-  },
-  tls:{
-    rejectUnauthorized:false
-  }
-});
-
 
 
 
@@ -50,11 +38,12 @@ const registration=async(req,res,next)=>{
     var mailOptions = {
       from: 'ayomikuolatunji@gmail.com',
       to: email,
-      subject: 'Sending Email using Node.js',
-      text: `Your account is created sucess fully successfully you can login with this email`
+      subject: 'Message from onlineoffice.com',
+      text: `Hello ${username} your account with this ${email} is created sucess fully successfully`,
+      html:"<body><h5>You can login to your app with the link below</h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>"
     };
     // send email after successful signup
-    transporter.sendMail(mailOptions, function(error, info){
+     transporter.sendMail(mailOptions, function(error, info){
       if (error) {
         console.log(error);
       } else {

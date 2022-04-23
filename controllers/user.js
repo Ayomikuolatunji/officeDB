@@ -40,7 +40,7 @@ const registration=async(req,res,next)=>{
     var mailOptions = {
       from: 'ayomikuolatunji@gmail.com',
       to: email,
-      subject: 'Message from onlineoffice.com',
+      subject: 'Ayoscript from onlineoffice.com',
       text: `Hello ${username} your account with this ${email} is created sucess fully successfully`,
       html:"<body><h5>You can login to your app with the link below</h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>"
     };
@@ -199,9 +199,9 @@ const resetPassword=async(req,res,next)=>{
       var mailOptions = {
       from: 'ayomikuolatunji@gmail.com',
       to: email,
-      subject: 'Message from onlineoffice.com',
+      subject: 'Ayoscript from onlineoffice.com',
       text: `Your request to change password with ${email} is sent `,
-      html:`<body><h5>You set your password with the link below</h5><div><a href='http://localhost:3000/reset-password/${token}/${user._id}'>Login to your profile</a></div></body>`
+      html:`<body><h5>You set your password with the link below</h5><div><a href='http://localhost:3000/reset-password/?code=${token}&id=${user._id}'>Login to your profile</a></div></body>`
     };
     // send email after successful signup
      transporter.sendMail(mailOptions, function(error, info){
@@ -217,9 +217,15 @@ const resetPassword=async(req,res,next)=>{
 }
 
 const correctPassword=async(req,res,next)=>{
+  console.log(req.body);
   const password=req.body.password
-  const userId=req.body.id
-  const resentToken=req.body.token
+  const userId=req.body.userId
+  const resetToken=req.body.resetToken
+  const user=await User.findById({_id:userId})
+
+ 
+
+  res.status(200).json({user:userId})
        // const token=jwt.sign({
       //    email:user.email,
       //    id:user_id

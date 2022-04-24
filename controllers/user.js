@@ -190,7 +190,7 @@ const resetPassword=async(req,res,next)=>{
         error.statusCode=404
         throw error
       }
-      const random=await crypto.randomBytes(32)
+      const random= crypto.randomBytes(300)
       if(!random){
         return console.log("err");
       }
@@ -201,7 +201,7 @@ const resetPassword=async(req,res,next)=>{
       to: email,
       subject: 'Ayoscript from onlineoffice.com',
       text: `Your request to change password with ${email} is sent `,
-      html:`<body><h5>You set your password with the link below</h5><div><a href='http://localhost:3000/reset-password/?code=${token}&id=${user._id}'>Click to correct password</a></div></body>`
+      html:`<body><h5>You set your password with the link below</h5><div><a href='http://localhost:3000/reset-password/new-password?code=${token}&id=${user._id}'>Click to correct password</a></div></body>`
     };
     // send email after successful signup
      transporter.sendMail(mailOptions, function(error, info){
@@ -213,6 +213,7 @@ const resetPassword=async(req,res,next)=>{
     });
     }catch(err){
        console.log(err);
+       next()
     }
 }
 
@@ -224,7 +225,7 @@ const correctPassword=async(req,res,next)=>{
   const user=await User.findById({_id:userId})
   if(user){
     const resetPassword=await bcrypt.hash(password,12)
-    const newPassword=await User.findOneAndUpdate({_id:user._id},{
+    await User.findOneAndUpdate({_id:user._id},{
       password:resetPassword,
       username:username
   })

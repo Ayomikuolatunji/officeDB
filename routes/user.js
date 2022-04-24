@@ -46,7 +46,7 @@ router.post("/set_newpassword",correctPassword)
 
 router.get("/:id",oneUser)
 
-router.get("/profile_picture/:id", profilePicture)
+router.post("/profile_picture/:id", profilePicture)
 
 router.delete("/delete_user/:id",deleteUser)
 

@@ -121,12 +121,13 @@ const profilePicture=async(req,res,next)=>{
     throw error
   }
   const avartImage=req.body.avartImage
+  const avatarImageSet=req.body.avatarImageSet
     try {
        const user=await User.findOneAndUpdate({_id:id},{
-        avatarImageSet:true,
+        avatarImageSet:avatarImageSet,
         avartImage: avartImage
        })
-       return res.status(200).json({isSet:user.avatarImageSet,avartImage:user.avartImage})
+       return res.status(200).json({msg:user})
     }catch (error) {
       if(!error.statusCode){
         error.statusCode=500

@@ -219,17 +219,15 @@ const resetPassword=async(req,res,next)=>{
 
 const correctPassword=async(req,res,next)=>{
   const password=req.body.password
-  const username=req.body.username
   const userId=req.body.userId
   const resetToken=req.body.resetToken
   const user=await User.findById({_id:userId})
-  if(user){
+  if(user || resetToken ||userId){
     const resetPassword=await bcrypt.hash(password,12)
     await User.findOneAndUpdate({_id:user._id},{
       password:resetPassword,
-      username:username
   })
-  res.status(200).json({user:user}) 
+  res.status(200).json({user:user._id}) 
   var mailOptions = {
     from: 'ayomikuolatunji@gmail.com',
     to: user.email,

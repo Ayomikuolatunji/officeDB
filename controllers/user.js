@@ -115,19 +115,19 @@ const oneUser=async(req,res,next)=>{
 
 const profilePicture=async(req,res,next)=>{
   const {id}=req.params
+  const avartImage=req.body.avartImage
   if(!id){
     const error=new Error(`Cant uplaod image with this ${id}`)
     error.statusCode=422
     throw error
   }
-  const avartImage=req.body.avartImage
-  const avatarImageSet=req.body.avatarImageSet
+    const avatarImageSet=req.body.avatarImageSet
     try {
        const user=await User.findOneAndUpdate({_id:id},{
         avatarImageSet:avatarImageSet,
         avartImage: avartImage
        })
-       return res.status(200).json({msg:user})
+       return res.status(200).json({msg:user._id})
     }catch (error) {
       if(!error.statusCode){
         error.statusCode=500
@@ -137,7 +137,6 @@ const profilePicture=async(req,res,next)=>{
 }
 
 const getAllUsers=async(req,res,next)=>{
-
      try {
          const users=await User.find({_id:{$ne:req.params.id}}).select([
            "email",

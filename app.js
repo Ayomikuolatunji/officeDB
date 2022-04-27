@@ -53,9 +53,7 @@ app.use('/graphql', graphqlHTTP({
 }));
 app.use(helmet())
 
-app.use("/",(req,res,next)=>{
-     res.status(200).json({message:"hi"})
-})
+
 // api routes for user auth
 app.use("/office-api/auth",routeRoutes)
 app.use('/office-api',chatRoutes)

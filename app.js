@@ -5,7 +5,7 @@ var { graphqlHTTP } = require('express-graphql');
 const bodyParser=require("body-parser")
 const helmet = require("helmet");
 // call dotenv 
-require("dotenv").config()
+// require("dotenv").config()
 const routeRoutes=require("./routes/user")
 const ErrorPage=require("./util/errrorPage")
 const chatRoutes=require("./routes/chats")

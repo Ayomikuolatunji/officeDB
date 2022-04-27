@@ -37,13 +37,13 @@ const registration=async(req,res,next)=>{
     const result = await user.save();
     res.status(201).json({ message: 'User created successfully!', user:result._id});
 
-    // var mailOptions = {
-    //   from: 'ayomikuolatunji@gmail.com',
-    //   to: email,
-    //   subject: 'Ayoscript from onlineoffice.com',
-    //   text: `Hello ${username} your account with this ${email} is created sucess fully successfully`,
-    //   html:"<body><h5>You can login to your app with the link below</h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>"
-    // };
+    var mailOptions = {
+      from: 'ayomikuolatunji@gmail.com',
+      to: email,
+      subject: 'Ayoscript from onlineoffice.com',
+      text: `Hello ${username} your account with this ${email} is created sucess fully successfully`,
+      html:"<body><h5>You can login to your app with the link below</h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>"
+    };
     // send email after successful signup
      transporter.sendMail(mailOptions, function(error, info){
       if (error) {

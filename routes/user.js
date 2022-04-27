@@ -37,18 +37,18 @@ router
     ],
     registration
 )
-router.post("/login",login)
+.post("/login",login)
 
 
-router.post("/reset_password",resetPassword)
+.post("/reset_password",resetPassword)
 
-router.post("/set_newpassword",correctPassword)
+.post("/set_newpassword",correctPassword)
 
-router.get("/:id",oneUser)
+.get("/:id",oneUser)
 
-router.post("/profile_picture/:id", profilePicture)
+.post("/profile_picture/:id", profilePicture)
 
-router.delete("/delete_user/:id",deleteUser)
+.delete("/delete_user/:id",deleteUser)
 
 
 module.exports=router

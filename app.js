@@ -5,7 +5,7 @@ var { graphqlHTTP } = require('express-graphql');
 const bodyParser=require("body-parser")
 const helmet = require("helmet");
 // call dotenv 
-// require("dotenv").config()
+require("dotenv").config()
 const routeRoutes=require("./routes/user")
 const ErrorPage=require("./util/errrorPage")
 const chatRoutes=require("./routes/chats")
@@ -69,8 +69,8 @@ const startConnection=(KEY)=>{
   })
   .then(Db=>{
       console.log("connected to database")
-     const server=app.listen(8080,()=>{
-        console.log(`App running locally on ${8080}`)
+     const server=app.listen(process.env.PORT,()=>{
+        console.log(`App running locally on ${process.env.PORT}`)
     })
     Socket(server)
   })
@@ -79,5 +79,5 @@ const startConnection=(KEY)=>{
   });
 }
 
-startConnection("mongodb+srv://office-admin:admin123456@cluster0.xcjno.mongodb.net/officeChatDatabase")
+startConnection(process.env.MONGODB_KEY)
 

@@ -43,19 +43,6 @@ app.post('/api/upload', (req, res, next) => {
     res.json({ fields, files });
   });
 });
-// setheaders
-// app.use((req, res, next) => {
-//   res.setHeader('Access-Control-Allow-Origin', '*');
-//   res.setHeader(
-//     'Access-Control-Allow-Methods',
-//     'OPTIONS, GET, POST, PUT, PATCH, DELETE'
-//   );
-//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-//   if (req.method === 'OPTIONS') {
-//     return res.sendStatus(200);
-//   }
-//   next();
-// });
 
 
 // graphql endpoints
@@ -74,8 +61,9 @@ app.use(ErrorPage)
 
 
 // connecting server
-mongoose
-  .connect(process.env.MONGODB_KEY,{
+const startConnection=(KEY)=>{
+  mongoose
+  .connect(KEY,{
          useNewUrlParser: true,
          useUnifiedTopology: true 
   })
@@ -89,3 +77,7 @@ mongoose
   .catch(err => {
     console.log(err.message);
   });
+}
+
+startConnection(process.env.MONGODB_KEY)
+

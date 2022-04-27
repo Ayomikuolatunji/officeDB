@@ -35,7 +35,7 @@ const registration=async(req,res,next)=>{
       password: hashedPw,
     });
     const result = await user.save();
-    res.status(201).json({ message: 'User created successfully!', user:result._id});
+    res.status(201).json({ message: 'User created successfully!', user:result._id})
 
     var mailOptions = {
       from: 'ayomikuolatunji@gmail.com',

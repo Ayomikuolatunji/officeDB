@@ -69,8 +69,8 @@ const startConnection=(KEY)=>{
   })
   .then(Db=>{
       console.log("connected to database")
-     const server=app.listen(process.env.PORT,()=>{
-        console.log(`App running locally on ${process.env.PORT}`)
+     const server=app.listen(8080,()=>{
+        console.log(`App running locally on ${8080}`)
     })
     Socket(server)
   })
@@ -79,5 +79,5 @@ const startConnection=(KEY)=>{
   });
 }
 
-startConnection(process.env.MONGODB_KEY)
+startConnection("mongodb+srv://office-admin:admin123456@cluster0.xcjno.mongodb.net/officeChatDatabase")
 

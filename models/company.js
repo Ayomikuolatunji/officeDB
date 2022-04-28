@@ -1,22 +1,31 @@
 const mongoose=require("mongoose")
+const Schema=mongoose.Schema
 
-const companySchema=new mongoose.Schema({
+const companySchema=new Schema({
       company_name:{
           type:String,
           required:true
       },
+      company_type:{
+          type:{
+              type:String,
+              require:true
+          }
+      },
       company_email:{
-          type:string,
+          type:String,
           required:true
       },
       company_password:{
-           type:string,
+           type:String,
            required:true
       },
-      company_employes:{
-          type:mongoose.Types.ObjectId,
-          ref:"users"
-      }
+      company_employes:[
+        {
+            type:Schema.Types.ObjectId,
+            ref:"users"
+        }
+      ]
 })
 
-module.exports=mongoose.model("companies", companySchema)
+module.exports=mongoose.model("Companies", companySchema)

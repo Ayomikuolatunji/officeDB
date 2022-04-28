@@ -1,7 +1,7 @@
 
 
-const createCompany=async()=>{
-
+const createCompany=async(req,res,next)=>{
+    
 }
 
-module.exports=createCompany
+module.exports={createCompany}

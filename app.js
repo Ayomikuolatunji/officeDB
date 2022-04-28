@@ -6,12 +6,13 @@ const bodyParser=require("body-parser")
 const helmet = require("helmet");
 // call dotenv 
 require("dotenv").config()
-const routeRoutes=require("./routes/user")
+const authRoutes=require("./routes/user")
 const ErrorPage=require("./util/errrorPage")
 const chatRoutes=require("./routes/chats")
 const Socket=require("./socket-io/socket")
 const buildSchema=require("./graphql/Schema")
 const resolver = require("./graphql/Resolver");
+const companyRoutes=require("./routes/company")
 
 
 
@@ -55,8 +56,9 @@ app.use(helmet())
 
 
 // api routes for user auth
-app.use("/office-api/auth",routeRoutes)
+app.use("/office-api/auth",authRoutes)
 app.use('/office-api',chatRoutes)
+app.use("/office-api",companyRoutes)
 app.use(ErrorPage)
 
 

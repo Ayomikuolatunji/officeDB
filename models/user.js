@@ -28,10 +28,6 @@ const userSchema=new Schema({
     avartImage:{
         type:String,
         default:"",
-    },
-    company_belongs_to:{
-        type:mongoose.Types.ObjectId,
-        ref:"companies"
     }
 })
 

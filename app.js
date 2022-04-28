@@ -33,17 +33,6 @@ app.use((error,req,res,next)=>{
   const status=error.statusCode || 500 
   res.status(status).json({message})
 })
-app.post('/api/upload', (req, res, next) => {
-  const form = formidable({ });
-
-  form.parse(req, (err, fields, files) => {
-    if (err) {
-      next(err);
-      return;
-    }
-    res.json({ fields, files });
-  });
-});
 
 
 // graphql endpoints

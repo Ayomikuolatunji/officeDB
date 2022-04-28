@@ -1,6 +1,6 @@
 const Company = require("../models/company")
 const bcrypt=require("bcrypt")
-const { transporter } = require("../email/transporter");
+const  transporter  = require("../email/transporter");
 
 
 
@@ -10,17 +10,17 @@ const createCompany=async(req,res,next)=>{
   const company_type=req.body.company_type
   const company_email=req.body.company_email
   const company_password=req.body.company_password  
+  const companyExits=await Company.findOne({email:company_email})
+  if(companyExits){
+      res.status(422).json({message:"company already exits"})
+  }
     try{
-        const companyExits=await Company.findOne({email:company_email})
-        if(companyExits){
-            res.status(422).json({message:"company already exits"})
-        }
-        const hashPassword=await bcrypt.hash(company_password,12)
+      const hashedPw =await  bcrypt.hash(company_password, 12);
         const newCompany=new Company({
-          company_email, 
-          company_type, 
-          company_name, 
-          hashPassword
+          company_email:company_email,
+          company_type:company_type,
+          company_name:company_name,
+          company_password:hashedPw
         })
         const result=await newCompany.save()  
         res.status(201).json({newCompany:result})
@@ -34,7 +34,7 @@ const createCompany=async(req,res,next)=>{
           // send email after successful signup
            transporter.sendMail(mailOptions, function(error, info){
             if (error) {
-              console.log(error);
+              console.log(error.message);
             } else {
               console.log('Email sent: ' + info.response);
             }

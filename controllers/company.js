@@ -47,5 +47,24 @@ const createCompany=async(req,res,next)=>{
 }
 
 
+const companiesEmployees=async(req,res,next)=>{
 
-module.exports={createCompany}
+     try {
+         const users=await Company.find({}).populate("company_employes")
+         if(!users){
+          const error=new Error(`user empty`)
+          error.statusCode=422
+          throw error
+         }     
+         res.status(200).json({users})
+     } catch (error) {
+
+      if(!error.statusCode){
+           error.statusCode=500
+       }
+       next(error) 
+     }   
+
+}
+
+module.exports={createCompany,companiesEmployees}

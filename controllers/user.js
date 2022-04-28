@@ -4,7 +4,8 @@ const jwt=require("jsonwebtoken");
 const {StatusCodes,ReasonPhrases} =require("http-status-codes")
 const crypto=require("crypto")
 const transporter=require("../email/transporter")
-const User=require("../models/user")
+const User=require("../models/user");
+const Company = require("../models/company");
 
 
 
@@ -33,10 +34,14 @@ const registration=async(req,res,next)=>{
       email,
       username,
       password: hashedPw,
+      company:"626a6414a2c8b2c7ae12fab2"
     });
-    const result = await user.save();
-    res.status(201).json({ message: 'User created successfully!', user:result._id});
+      await user.save();
+    const company=await Company.findById({_id:"626a6414a2c8b2c7ae12fab2"});
+    company.company_employes.push(user)
 
+    res.status(201).json({ message: 'User created successfully!'});
+     company.save()
     var mailOptions = {
       from: 'ayomikuolatunji@gmail.com',
       to: email,

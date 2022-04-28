@@ -24,7 +24,7 @@ const companySchema=new Schema({
       company_employes:[
         {
             type:Schema.Types.ObjectId,
-            ref:"users"
+            ref:"Users"
         }
       ]
 },Timestamp)

@@ -35,7 +35,7 @@ const registration=async(req,res,next)=>{
       password: hashedPw,
     });
     const result = await user.save();
-    res.status(201).json({ message: 'User created successfully!', user:result._id})
+    res.status(201).json({ message: 'User created successfully!', user:result._id});
 
     var mailOptions = {
       from: 'ayomikuolatunji@gmail.com',
@@ -115,19 +115,19 @@ const oneUser=async(req,res,next)=>{
 
 const profilePicture=async(req,res,next)=>{
   const {id}=req.params
-  const avartImage=req.body.avartImage
   if(!id){
     const error=new Error(`Cant uplaod image with this ${id}`)
     error.statusCode=422
     throw error
   }
-    const avatarImageSet=req.body.avatarImageSet
+  const avartImage=req.body.avartImage
+  const avatarImageSet=req.body.avatarImageSet
     try {
        const user=await User.findOneAndUpdate({_id:id},{
         avatarImageSet:avatarImageSet,
         avartImage: avartImage
        })
-       return res.status(200).json({msg:user._id})
+       return res.status(200).json({msg:user})
     }catch (error) {
       if(!error.statusCode){
         error.statusCode=500
@@ -137,6 +137,7 @@ const profilePicture=async(req,res,next)=>{
 }
 
 const getAllUsers=async(req,res,next)=>{
+
      try {
          const users=await User.find({_id:{$ne:req.params.id}}).select([
            "email",

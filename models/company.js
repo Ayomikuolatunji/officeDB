@@ -1,3 +1,4 @@
+const { Timestamp } = require("mongodb")
 const mongoose=require("mongoose")
 const Schema=mongoose.Schema
 
@@ -26,6 +27,6 @@ const companySchema=new Schema({
             ref:"users"
         }
       ]
-})
+},Timestamp)
 
 module.exports=mongoose.model("Companies", companySchema)

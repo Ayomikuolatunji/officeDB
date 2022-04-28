@@ -15,8 +15,9 @@ const createCompany=async(req,res,next)=>{
         if(companyExits){
             res.status(422).json({message:"company already exits"})
         }
-        const hashPassword= bcrypt.hash(15, company_password)
-        const newCompany=await  Company.create({company_email, company_type, company_name, hashPassword})
+        const hashPassword= bcrypt.hash(company_password,15)
+        const newCompany=new Company({company_email, company_type, company_name, hashPassword})
+        await newCompany.save()  
         res.status(200).json({newCompany})
         var mailOptions = {
             from: 'ayomikuolatunji@gmail.com',

@@ -22,6 +22,7 @@ const registration=async(req,res,next)=>{
   const email = req.body.email;
   const username = req.body.username;
   const password = req.body.password;
+  const company_id=req.params.id
   const userExist=await User.findOne({email:email})
   if(userExist){
       const error=new Error("User already exist with this email")
@@ -39,9 +40,8 @@ const registration=async(req,res,next)=>{
       await user.save();
     const company=await Company.findById({_id:"626a6414a2c8b2c7ae12fab2"});
     company.company_employes.push(user)
-
+      await company.save()
     res.status(201).json({ message: 'User created successfully!'});
-     company.save()
     var mailOptions = {
       from: 'ayomikuolatunji@gmail.com',
       to: email,

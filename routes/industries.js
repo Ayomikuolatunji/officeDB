@@ -2,7 +2,7 @@ const express=require("express")
 const prepareAllIndustryApi=require("../controllers/industries")
 const router=express.Router()
 
-router.get('/all-country-list',prepareAllIndustryApi)
+router.get('/all-country-lists',prepareAllIndustryApi)
 
 
 module.exports=router

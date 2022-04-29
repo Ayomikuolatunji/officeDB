@@ -6,6 +6,7 @@ const bodyParser=require("body-parser")
 const helmet = require("helmet");
 // call dotenv 
 require("dotenv").config()
+require('express-async-errors');
 const authRoutes=require("./routes/user")
 const ErrorPage=require("./util/errrorPage")
 const chatRoutes=require("./routes/chats")
@@ -24,9 +25,6 @@ const app=express()
 // convert request to json using express middleware
 app.use(bodyParser.json())
 
-// enable cors policy
-app.use(cors())
-
 // error middleware request
 app.use((error,req,res,next)=>{
   console.log(error.message);
@@ -44,12 +42,14 @@ app.use('/graphql', graphqlHTTP({
 }));
 app.use(helmet())
 
+// enable cors policy
+app.use(cors())
 
 // api routes for user auth
+app.use("/office-api",allIndustryLists)
 app.use("/office-api/auth",authRoutes)
 app.use('/office-api',chatRoutes)
 app.use("/office-api",companyRoutes)
-app.use("/office-api",allIndustryLists)
 app.use(ErrorPage)
 
 

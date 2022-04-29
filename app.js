@@ -13,6 +13,7 @@ const Socket=require("./socket-io/socket")
 const buildSchema=require("./graphql/Schema")
 const resolver = require("./graphql/Resolver");
 const companyRoutes=require("./routes/company")
+const allIndustryLists=require("./routes/industries")
 
 
 
@@ -48,6 +49,7 @@ app.use(helmet())
 app.use("/office-api/auth",authRoutes)
 app.use('/office-api',chatRoutes)
 app.use("/office-api",companyRoutes)
+app.use("/office-api",allIndustryLists)
 app.use(ErrorPage)
 
 

@@ -23,6 +23,7 @@ const registration=async(req,res,next)=>{
   const username = req.body.username;
   const password = req.body.password;
   const company_id=req.params.id
+
   const userExist=await User.findOne({email:email})
   if(userExist){
       const error=new Error("User already exist with this email")
@@ -66,6 +67,8 @@ const registration=async(req,res,next)=>{
   }
 }
 
+
+
 const login=async(req,res,next)=>{
   const email = req.body.email;
   const password = req.body.password;
@@ -100,6 +103,8 @@ const login=async(req,res,next)=>{
   }
 } 
 
+
+
 const oneUser=async(req,res,next)=>{
   const {id}=req.params;
    try {
@@ -117,6 +122,10 @@ const oneUser=async(req,res,next)=>{
      next(error)
    }
 }
+
+
+
+
 
 const profilePicture=async(req,res,next)=>{
   const {id}=req.params
@@ -140,6 +149,8 @@ const profilePicture=async(req,res,next)=>{
        next(error) 
     }
 }
+
+
 
 const getAllUsers=async(req,res,next)=>{
 
@@ -166,6 +177,9 @@ const getAllUsers=async(req,res,next)=>{
 
 }
 
+
+
+
 const deleteUser=async(req,res,next)=>{
     try {
       const id=req.params.id;
@@ -186,6 +200,10 @@ const deleteUser=async(req,res,next)=>{
     }
     
 }
+
+
+
+
 
 const resetPassword=async(req,res,next)=>{
     try{
@@ -223,6 +241,8 @@ const resetPassword=async(req,res,next)=>{
     }
 }
 
+
+
 const correctPassword=async(req,res,next)=>{
   const password=req.body.password
   const userId=req.body.userId
@@ -255,6 +275,9 @@ const correctPassword=async(req,res,next)=>{
     throw error
   }
 }
+
+
+
 module.exports={
   registration,
   login,

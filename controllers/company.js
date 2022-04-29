@@ -23,7 +23,7 @@ const createCompany=async(req,res,next)=>{
           company_password:hashedPw
         })
         const result=await newCompany.save()  
-        res.status(201).json({newCompany:result})
+        res.status(201).json({message:"Company account created successfully",companyId:result._id })
         const mailOptions = {
             from: 'ayomikuolatunji@gmail.com',
             to: company_email,
@@ -48,7 +48,6 @@ const createCompany=async(req,res,next)=>{
 
 
 const companiesEmployees=async(req,res,next)=>{
-
      try {
          const users=await Company.find({}).populate("company_employes")
          if(!users){
@@ -64,7 +63,6 @@ const companiesEmployees=async(req,res,next)=>{
        }
        next(error) 
      }   
-
 }
 
 module.exports={createCompany,companiesEmployees}

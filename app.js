@@ -49,7 +49,7 @@ app.use(cors())
 app.use("/office-api",allIndustryLists)
 app.use("/office-api/auth",authRoutes)
 app.use('/office-api',chatRoutes)
-app.use("/office-api",companyRoutes)
+app.use("/office-api/auth",companyRoutes)
 app.use(ErrorPage)
 
 

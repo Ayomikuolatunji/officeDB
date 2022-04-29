@@ -22,7 +22,7 @@ const registration=async(req,res,next)=>{
   const email = req.body.email;
   const username = req.body.username;
   const password = req.body.password;
-  const company_id=req.params.id
+  // const company_id=req.params.id
 
   const userExist=await User.findOne({email:email})
   if(userExist){
@@ -36,13 +36,13 @@ const registration=async(req,res,next)=>{
       email,
       username,
       password: hashedPw,
-      company:"626a6414a2c8b2c7ae12fab2"
+      company:"626c688421e8cef8448d24cd"
     });
       await user.save();
-    const company=await Company.findById({_id:"626a6414a2c8b2c7ae12fab2"});
+    const company=await Company.findById({_id:"626c688421e8cef8448d24cd"});
     company.company_employes.push(user)
       await company.save()
-    res.status(201).json({ message: 'User created successfully!'});
+    res.status(201).json({ message: 'User created successfully!',userId:user._id});
     var mailOptions = {
       from: 'ayomikuolatunji@gmail.com',
       to: email,

@@ -24,9 +24,9 @@ const registration=async(req,res,next)=>{
   const username = req.body.username;
   const password = req.body.password;
   const role=req.body.role
-  // const company_id=req.params.id
-
+// find user
   const userExist=await User.findOne({email:email})
+  // check if there is a user with the client email
   if(userExist){
       const error=new Error("User already exist with this email")
       error.statusCode=422;

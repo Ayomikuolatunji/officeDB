@@ -2,8 +2,7 @@ const express=require("express")
 const cors =require("cors")
 const mongoose =require("mongoose")
 var { graphqlHTTP } = require('express-graphql');
-const bodyParser=require("body-parser")
-const helmet = require("helmet");
+const bodyParser=require("body-parser");
 // call dotenv 
 require("dotenv").config()
 require('express-async-errors');
@@ -31,7 +30,6 @@ app.use('/graphql', graphqlHTTP({
   rootValue: resolver,
   graphiql: true,
 }));
-app.use(helmet())
 
 // enable cors policy
 app.use(cors())

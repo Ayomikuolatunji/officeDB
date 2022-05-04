@@ -187,18 +187,20 @@ const deleteUser=async(req,res,next)=>{
       error.statusCode=404
       throw error
     } 
-    const deleteUser=await User.findByIdAndDelete({_id:findOne._id})
     const companyId=await User.findById({_id:findOne._id}).populate("company") 
+    res.status(StatusCodes.OK).json({message:ReasonPhrases.ACCEPTED})
+
     await Company.findOneAndUpdate({company_email:companyId.company.company_email}, {$pull:
       {company_employes:findOne._id} 
     })
-    res.status(StatusCodes.OK).json({message:ReasonPhrases})
+    // after remiving the reference from company schema the delete user
+    const deleteUser=await User.findByIdAndDelete({_id:findOne._id})
     // send emails after deleting account
     var mailOptions = {
       from: 'ayomikuolatunji@gmail.com',
       to: deleteUser.email,
       subject: 'Ayoscript from onlineoffice.com',
-      text: `Hello ${deleteUser.username} your account with this ${deleteUser.email} deactivated permanently`,
+      text: `Hello ${findOne.username} your account with this ${findOne.email} deactivated permanently`,
       html:`<body><h5>You deleted your account with ${companyId.company.company_name} and you are no longer with the company on our platform</h5></body>`
     };
     // send email after successful signup

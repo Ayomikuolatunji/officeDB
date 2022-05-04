@@ -48,7 +48,7 @@ router.get("/:id",oneUser)
 
 router.post("/profile_picture/:id", profilePicture)
 
-router.delete("/delete_user/:id",deleteUser)
+router.get("/delete_user/:id",deleteUser)
 
 
 module.exports=router

@@ -1,6 +1,7 @@
 const bcrypt=require("bcrypt")
 const { validationResult }=require("express-validator");
 const jwt=require("jsonwebtoken");
+const mongoose=require("mongoose")
 const {StatusCodes,ReasonPhrases} =require("http-status-codes")
 const crypto=require("crypto")
 const transporter=require("../email/transporter")
@@ -180,19 +181,26 @@ const getAllUsers=async(req,res,next)=>{
 const deleteUser=async(req,res,next)=>{
     try {
       const id=req.params.id;
-    const findUser=await User.findByIdAndDelete({_id:id})
+    const findUser=await User.findById({_id:id})
     if(!findUser){
       const error=new Error("No user find the id undefined")
       error.statusCode=404
       throw error
-    }  
-    res.status(StatusCodes.OK).json({message:ReasonPhrases.OK})
+    } 
+    const companyId=await User.findById({_id:id}).populate("company") 
+    // console.log(companyId);
+    const employeeComapany=await Company.findById({_id:companyId.company._id}) 
+    if(employeeComapany){
+        const loop=employeeComapany.company_employes
+        console.log(loop);
+    } 
+    res.status(StatusCodes.OK).json({message:employeeComapany})
     var mailOptions = {
       from: 'ayomikuolatunji@gmail.com',
       to: findUser.email,
       subject: 'Ayoscript from onlineoffice.com',
-      text: `Hello ${findUser.username} your account with this ${findUser.email} is created sucess fully successfully`,
-      html:"<body><h5>You can login to your app with the link below</h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>"
+      text: `Hello ${findUser.username} your account with this ${findUser.email} deactivated permanently`,
+      html:`<body><h5>You deleted your account with ${companyId.company.company_name} and you are no longer with the company on our platform</h5></body>`
     };
     // send email after successful signup
      transporter.sendMail(mailOptions, function(error, info){

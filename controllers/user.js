@@ -23,6 +23,7 @@ const registration=async(req,res,next)=>{
   const email = req.body.email;
   const username = req.body.username;
   const password = req.body.password;
+  const role=req.body.role
   // const company_id=req.params.id
 
   const userExist=await User.findOne({email:email})
@@ -36,6 +37,7 @@ const registration=async(req,res,next)=>{
     const user = new User({
       email,
       username,
+      role,
       password: hashedPw,
     });
       await user.save();

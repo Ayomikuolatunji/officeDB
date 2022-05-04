@@ -41,7 +41,7 @@ const registration=async(req,res,next)=>{
       password: hashedPw,
     });
       await user.save();
-    res.status(201).json({ message: 'User created successfully!',userId:user._id});
+    res.status(201).json({ message: 'Employee account created successfully!',employeeId:user._id});
     // send mail to employee after successfully signup
     var mailOptions = {
       from: 'ayomikuolatunji@gmail.com',
@@ -94,7 +94,7 @@ const login=async(req,res,next)=>{
       'somesupersecretsecret',
       { expiresIn: '30d' }
     );
-    res.status(200).json({ token: token, user:user._id });
+    res.status(200).json({ token: token, employeeId:user._id });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;

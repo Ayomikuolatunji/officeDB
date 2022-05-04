@@ -35,7 +35,7 @@ const userSchema=new Schema({
     },
     avartImage:{
         type:String,
-        default:"",
+        default:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIJF7LAdiF7JlRs24nLsBKz7nWamkcdXPODQ&usqp=CAU",
     }
 })
 

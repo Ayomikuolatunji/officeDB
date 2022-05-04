@@ -50,5 +50,6 @@ router.post("/profile_picture/:id", profilePicture)
 
 router.delete("/delete_user/:id",deleteUser)
 
+router.post("/add_employee_to_company/:id")
 
 module.exports=router

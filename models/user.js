@@ -28,7 +28,6 @@ const userSchema=new Schema({
     company:{
         type:Schema.Types.ObjectId,
         ref:"Companies",
-        required: true
     },
     avartImage:{
         type:String,

@@ -37,12 +37,8 @@ const registration=async(req,res,next)=>{
       email,
       username,
       password: hashedPw,
-      company:"62721ce702dd6f4b2e6e11d5"
     });
       await user.save();
-    const company=await Company.findById({_id:"62721ce702dd6f4b2e6e11d5"});
-    company.company_employes.push(user)
-      await company.save()
     res.status(201).json({ message: 'User created successfully!',userId:user._id});
     // send mail to employee after successfully signup
     var mailOptions = {
@@ -296,6 +292,10 @@ const correctPassword=async(req,res,next)=>{
   }
 }
 
+const populateEmployee=async(req,res,next)=>{
+       
+}
+
 
 
 module.exports={
@@ -306,5 +306,6 @@ module.exports={
   getAllUsers,
   deleteUser,
   resetPassword,
-  correctPassword
+  correctPassword,
+  populateEmployee
 }

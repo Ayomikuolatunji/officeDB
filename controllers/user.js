@@ -109,17 +109,17 @@ const oneUser=async(req,res,next)=>{
   const {id}=req.params;
    try {
     const user=await User.findById({_id:id})
-    if(!user){
-      const error=new Error("No user found")
-      error.statusCode=404
-      throw error
+    if (!user) {
+      const error = new Error('A user with this email could not be found.');
+      error.statusCode = 401;
+      throw error;
     }
     res.status(200).json({user:user})
     } catch (error) {
-     if(!error.statusCode){
-         error.statusCode=500
-     }
-     next(error)
+        if(!error.statusCode){
+          error.statusCode=500
+        }
+        next(error)
    }
 }
 

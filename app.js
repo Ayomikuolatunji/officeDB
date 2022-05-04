@@ -25,13 +25,6 @@ const app=express()
 // convert request to json using express middleware
 app.use(bodyParser.json())
 
-// error middleware request
-app.use((error,req,res,next)=>{
-  console.log(error.message);
-  const message=error.message
-  const status=error.statusCode || 500 
-  res.status(status).json({message})
-})
 
 
 // graphql endpoints
@@ -51,6 +44,15 @@ app.use("/office-api/auth",authRoutes)
 app.use('/office-api',chatRoutes)
 app.use("/office-api/auth",companyRoutes)
 app.use(ErrorPage)
+
+
+// error middleware request
+app.use((error,req,res,next)=>{
+  console.log(error.message);
+  const message=error.message
+  const status=error.statusCode 
+  res.status(status).json({message:message})
+})
 
 
 // connecting server

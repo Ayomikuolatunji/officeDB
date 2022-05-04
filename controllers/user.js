@@ -188,27 +188,26 @@ const deleteUser=async(req,res,next)=>{
       throw error
     } 
     const companyId=await User.findById({_id:findUser._id}).populate("company") 
-    // console.log(companyId);
-    // const company=await Company.findOneAndUpdate({company_email:companyId.company.company_email}, {$pull:
-    //   {company_employes: findUser._id} 
-    // })
+    const company=await Company.findOneAndUpdate({company_email:companyId.company.company_email}, {$pull:
+      {company_employes: findUser._id} 
+    })
 
-    res.status(StatusCodes.OK).json({message:companyId})
-    // var mailOptions = {
-    //   from: 'ayomikuolatunji@gmail.com',
-    //   to: findUser.email,
-    //   subject: 'Ayoscript from onlineoffice.com',
-    //   text: `Hello ${findUser.username} your account with this ${findUser.email} deactivated permanently`,
-    //   html:`<body><h5>You deleted your account with ${companyId.company.company_name} and you are no longer with the company on our platform</h5></body>`
-    // };
-    // // send email after successful signup
-    //  transporter.sendMail(mailOptions, function(error, info){
-    //   if (error) {
-    //     console.log(error);
-    //   } else {
-    //     console.log('Email sent: ' + info.response);
-    //   }
-    // });
+    res.status(StatusCodes.OK).json({message:ReasonPhrases})
+    var mailOptions = {
+      from: 'ayomikuolatunji@gmail.com',
+      to: findUser.email,
+      subject: 'Ayoscript from onlineoffice.com',
+      text: `Hello ${findUser.username} your account with this ${findUser.email} deactivated permanently`,
+      html:`<body><h5>You deleted your account with ${companyId.company.company_name} and you are no longer with the company on our platform</h5></body>`
+    };
+    // send email after successful signup
+     transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
     } catch (error) {
       if(!error.statusCode){
         error.statusCode=500

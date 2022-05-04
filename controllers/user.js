@@ -189,7 +189,8 @@ const deleteUser=async(req,res,next)=>{
     } 
     const companyId=await User.findById({_id:findOne._id}).populate("company") 
     res.status(StatusCodes.OK).json({message:ReasonPhrases.ACCEPTED})
-
+    console.log(companyId);
+    // 
     await Company.findOneAndUpdate({company_email:companyId.company.company_email}, {$pull:
       {company_employes:findOne._id} 
     })

@@ -25,8 +25,6 @@ const app=express()
 // convert request to json using express middleware
 app.use(bodyParser.json())
 
-
-
 // graphql endpoints
 app.use('/graphql', graphqlHTTP({
   schema: buildSchema,
@@ -37,7 +35,12 @@ app.use(helmet())
 
 // enable cors policy
 app.use(cors())
-
+app.use((req,res,next)=>{
+  res.setHeader("Access-Control-Allow-Origin", "*")
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH")
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type")
+  next()
+})
 // api routes for user auth
 app.use("/office-api",allIndustryLists)
 app.use("/office-api/auth",authRoutes)

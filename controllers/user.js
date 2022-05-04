@@ -43,11 +43,12 @@ const registration=async(req,res,next)=>{
     company.company_employes.push(user)
       await company.save()
     res.status(201).json({ message: 'User created successfully!',userId:user._id});
+    // send mail to employee after successfully signup
     var mailOptions = {
       from: 'ayomikuolatunji@gmail.com',
       to: email,
       subject: 'Ayoscript from onlineoffice.com',
-      text: `Hello ${username} your account with this ${email} is created sucess fully successfully`,
+      text: `Hello ${username} your account with this ${email} is created successfully successfully`,
       html:"<body><h5>You can login to your app with the link below</h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>"
     };
     // send email after successful signup
@@ -111,7 +112,7 @@ const oneUser=async(req,res,next)=>{
     const user=await User.findById({_id:id})
     if (!user) {
       const error = new Error('A user with this email could not be found.');
-      error.statusCode = 401;
+      error.statusCode = 40;
       throw error;
     }
     res.status(200).json({user:user})
@@ -150,19 +151,17 @@ const profilePicture=async(req,res,next)=>{
     }
 }
 
-
-
 const getAllUsers=async(req,res,next)=>{
 
      try {
-         const users=await User.find({_id:{$ne:req.params.id}}).select([
+         const users=await User.find({}).select([
            "email",
             "username",
             "avartImage",
             "_id"
          ])
          if(!users){
-          const error=new Error(`user empty`)
+          const error=new Error(`No user found`)
           error.statusCode=422
           throw error
          }     
@@ -178,8 +177,6 @@ const getAllUsers=async(req,res,next)=>{
 }
 
 
-
-
 const deleteUser=async(req,res,next)=>{
     try {
       const id=req.params.id;
@@ -188,10 +185,23 @@ const deleteUser=async(req,res,next)=>{
       const error=new Error("No user find the id undefined")
       error.statusCode=404
       throw error
-    }
-    
+    }  
     res.status(StatusCodes.OK).json({message:ReasonPhrases.OK})
-
+    var mailOptions = {
+      from: 'ayomikuolatunji@gmail.com',
+      to: findUser.email,
+      subject: 'Ayoscript from onlineoffice.com',
+      text: `Hello ${findUser.username} your account with this ${findUser.email} is created sucess fully successfully`,
+      html:"<body><h5>You can login to your app with the link below</h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>"
+    };
+    // send email after successful signup
+     transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
     } catch (error) {
       if(!error.statusCode){
         error.statusCode=500

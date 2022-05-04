@@ -180,8 +180,8 @@ const getAllUsers=async(req,res,next)=>{
 
 const deleteUser=async(req,res,next)=>{
     try {
-      const id=req.params.id;
-    const findUser=await User.findById({_id:id})
+    const id=req.params.id;
+    const findUser=await User.findByIdAndDelete({_id:id})
     if(!findUser){
       const error=new Error("No user find the id undefined")
       error.statusCode=404
@@ -191,8 +191,9 @@ const deleteUser=async(req,res,next)=>{
     await Company.findOneAndUpdate({company_email:companyId.company.company_email}, {$pull:
       {company_employes: findUser._id} 
     })
-
     res.status(StatusCodes.OK).json({message:ReasonPhrases})
+
+    // send emails after deleting account
     var mailOptions = {
       from: 'ayomikuolatunji@gmail.com',
       to: findUser.email,

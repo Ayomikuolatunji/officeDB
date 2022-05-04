@@ -188,7 +188,7 @@ const deleteUser=async(req,res,next)=>{
       throw error
     } 
     const companyId=await User.findById({_id:findUser._id}).populate("company") 
-    const company=await Company.findOneAndUpdate({company_email:companyId.company.company_email}, {$pull:
+    await Company.findOneAndUpdate({company_email:companyId.company.company_email}, {$pull:
       {company_employes: findUser._id} 
     })
 

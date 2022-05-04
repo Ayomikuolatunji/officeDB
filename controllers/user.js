@@ -37,10 +37,10 @@ const registration=async(req,res,next)=>{
       email,
       username,
       password: hashedPw,
-      company:"626c688421e8cef8448d24cd"
+      company:"62721ce702dd6f4b2e6e11d5"
     });
       await user.save();
-    const company=await Company.findById({_id:"626c688421e8cef8448d24cd"});
+    const company=await Company.findById({_id:"62721ce702dd6f4b2e6e11d5"});
     company.company_employes.push(user)
       await company.save()
     res.status(201).json({ message: 'User created successfully!',userId:user._id});
@@ -189,12 +189,11 @@ const deleteUser=async(req,res,next)=>{
     } 
     const companyId=await User.findById({_id:id}).populate("company") 
     // console.log(companyId);
-    const employeeComapany=await Company.findById({_id:companyId.company._id}) 
-    if(employeeComapany){
-        const loop=employeeComapany.company_employes
-        console.log(loop);
-    } 
-    res.status(StatusCodes.OK).json({message:employeeComapany})
+    const company=await Company.findOneAndDelete({_id:companyId.company._id}, {$pull:{
+        "company_employes":{_id:"6272118354f8d8932f51fa1b"}
+    }})
+
+    res.status(StatusCodes.OK).json({message:company})
     var mailOptions = {
       from: 'ayomikuolatunji@gmail.com',
       to: findUser.email,

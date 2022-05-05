@@ -200,7 +200,7 @@ const deleteUser=async(req,res,next)=>{
       to: deleteUser.email,
       subject: 'Ayoscript from onlineoffice.com',
       text: `Hello ${findOne.username} your account with this ${findOne.email} deactivated permanently`,
-      html:`<body><h5>You deleted your account with ${companyId.company.company_name} and you are no longer with the company on our platform. Bye</h5></body>`
+      html:`<body><h5>You deleted your account with ${companyId.company.company_name} and you are no longer with the company on our platformz</h5></body>`
     };
     // send email after successful signup
      transporter.sendMail(mailOptions, function(error, info){

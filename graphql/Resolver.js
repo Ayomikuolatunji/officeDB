@@ -64,16 +64,22 @@ module.exports={
         }
     },
 
-    // update employee role
+    // update employee(user) role
     update_Employee_Role:async({role_update,id},req)=>{
        if(!id){
            const error=new Error("Invalid id")
            error.statusCode=422
        }
-       const findEmployee=await User.findByIdAndUpdate({_id:id})
+       const findEmployee=await User.findByIdAndUpdate({_id:id},{
+            role:role_update.role
+       })
        if(!findEmployee){
         const error=new Error(`No employee found`)
         error.statusCode=404
+      }
+      return {
+        ...findEmployee._doc,
+        _id:findEmployee._id.toString()
     }
     }
 }

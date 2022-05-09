@@ -36,7 +36,7 @@ module.exports={
            next(error)
        }
     },
-
+    // update employee username
     update_Profile_Username:async({update_username, id}, req)=>{
         try {
             if(!id){
@@ -62,5 +62,18 @@ module.exports={
             }
             next(error)
         }
+    },
+
+    // update employee role
+    update_Employee_Role:async({role_update,id},req)=>{
+       if(!id){
+           const error=new Error("Invalid id")
+           error.statusCode=422
+       }
+       const findEmployee=await User.findByIdAndUpdate({_id:id})
+       if(!findEmployee){
+        const error=new Error(`No employee found`)
+        error.statusCode=404
+    }
     }
 }

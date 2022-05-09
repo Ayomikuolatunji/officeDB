@@ -24,9 +24,13 @@ module.exports=buildSchema(`
     input usernameUpdate {
         username:String!
     }
+    input roleUpdate {
+        role: String!
+    }
     type RootMutation {
         update_Profile_Picture(id:ID!,update_picture:pictureUpdate): Users!
         update_Profile_Username(id:ID!,update_username:usernameUpdate): Users!
+        update_Employee_Role(id:ID!,role_update:roleUpdate): Users!
     }
     
     schema {

@@ -16,7 +16,7 @@ const userSchema=new Schema({
     },
     address:{
       type:String,
-      default:false
+      default:"Update your current location"
     },
     role:{
       type:String,

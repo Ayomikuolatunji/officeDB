@@ -35,7 +35,7 @@ const userSchema=new Schema({
     },
     about:{
        type:String,
-       default:""
+       default:"Write about yourself or describe yourself"
     },
     company:{
         type:Schema.Types.ObjectId,

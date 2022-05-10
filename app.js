@@ -14,6 +14,7 @@ const buildSchema=require("./graphql/Schema")
 const resolver = require("./graphql/Resolver");
 const companyRoutes=require("./routes/company")
 const allIndustryLists=require("./routes/industries")
+const s3Route=require("./routes/s3Route")
 
 
 
@@ -23,7 +24,8 @@ const app=express()
 
 // convert request to json using express middleware
 app.use(bodyParser.json())
-
+// enable cors policy
+app.use(cors())
 // graphql endpoints
 app.use('/graphql', graphqlHTTP({
   schema: buildSchema,
@@ -31,8 +33,7 @@ app.use('/graphql', graphqlHTTP({
   graphiql: true,
 }));
 
-// enable cors policy
-// app.use(cors())
+
 app.use((req,res,next)=>{
   res.setHeader("Access-Control-Allow-Origin", "*")
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH")
@@ -44,6 +45,7 @@ app.use("/office-api",allIndustryLists)
 app.use("/office-api/auth",authRoutes)
 app.use('/office-api',chatRoutes)
 app.use("/office-api/auth",companyRoutes)
+app.use("/office-api/",s3Route)
 app.use(ErrorPage)
 
 

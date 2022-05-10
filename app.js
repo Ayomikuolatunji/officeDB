@@ -33,7 +33,16 @@ app.use('/graphql', graphqlHTTP({
   graphiql: true,
 }));
 
+// file upload parser
+app.use((req, res, next) => {
+  const contentType = req.headers["content-type"];
 
+  if (contentType && contentType === "application/x-www-form-urlencoded") {
+    return bodyParser.urlencoded({ extended: true })(req, res, next);
+  }
+
+  return bodyParser.json({ limit: "500mb" })(req, res, next);
+})
 app.use((req,res,next)=>{
   res.setHeader("Access-Control-Allow-Origin", "*")
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH")

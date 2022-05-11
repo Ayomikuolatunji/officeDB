@@ -21,8 +21,8 @@ module.exports={
             key:update_picture.key,
             data:update_picture.data
           });
-          const s3Url=`https://${'college-sigunp-image'}.s3.amazonaws.com/${key}`
-         const updateProfilePicture=await User.findOneAndUpdate("627a2056e4d0048ad86566e7",{
+          const s3Url=`https://${'college-sigunp-image'}.s3.amazonaws.com/${update_picture.key}`
+         const updateProfilePicture=await User.findOneAndUpdate({_id:id},{
             avartImage:s3Url
           })
          if(!updateProfilePicture){
@@ -38,7 +38,7 @@ module.exports={
            if(!error.statusCode){
                error.statusCode=500
            }   
-           next(error)
+        throw error
        }
     },
     // update employee username
@@ -65,7 +65,7 @@ module.exports={
             if(!error.statusCode){
                 error.statusCode=500
             }
-            next(error)
+           throw error
         }
     },
 
@@ -91,7 +91,7 @@ module.exports={
         if(!error.statusCode){  
             error.statusCode=500
         }
-        next(error)
+         throw error
        }
     }
 }

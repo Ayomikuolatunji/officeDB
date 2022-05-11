@@ -3,6 +3,7 @@ const cors =require("cors")
 const mongoose =require("mongoose")
 var { graphqlHTTP } = require('express-graphql');
 const bodyParser=require("body-parser");
+const helmet=require("helmet")
 // call dotenv 
 require("dotenv").config()
 require('express-async-errors');
@@ -23,26 +24,28 @@ const app=express()
 
 
 // convert request to json using express middleware
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json())
+
 // enable cors policy
 app.use(cors())
+// app.use(helmet());
 // graphql endpoints
 app.use('/graphql', graphqlHTTP({
   schema: buildSchema,
   rootValue: resolver,
   graphiql: true,
+  customFormatErrorFn(err) {
+    if (!err.originalError) {
+      return err;
+    }
+    const data = err.originalError.data;
+    const message = err.message || 'An error occurred.';
+    const code = err.originalError.code || 500;
+    return { message: message, status: code, data: data };
+  }
 }));
 
-// file upload parser
-app.use((req, res, next) => {
-  const contentType = req.headers["content-type"];
-
-  if (contentType && contentType === "application/x-www-form-urlencoded") {
-    return bodyParser.urlencoded({ extended: true })(req, res, next);
-  }
-
-  return bodyParser.json({ limit: "500mb" })(req, res, next);
-})
 
 // api routes for user auth
 app.use("/office-api",allIndustryLists)
@@ -59,6 +62,8 @@ app.use((error,req,res,next)=>{
   const message=error.message
   const status=error.statusCode 
   res.status(status).json({message:message, error:"Error message"})
+
+  next()
 })
 
 

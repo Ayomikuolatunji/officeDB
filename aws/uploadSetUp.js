@@ -17,7 +17,7 @@ const upload= async (options) => {
         ACL: "public-read",
         Key: options.key,
         Body: Buffer.from(options.data, "base64"),
-        ContentType: "image/jpeg",
+        ContentType: "image/*",
       })
       .promise();
     return {

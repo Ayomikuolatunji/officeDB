@@ -3,10 +3,8 @@ const cors =require("cors")
 const mongoose =require("mongoose")
 var { graphqlHTTP } = require('express-graphql');
 const bodyParser=require("body-parser");
-const helmet=require("helmet")
 // call dotenv 
 require("dotenv").config()
-require('express-async-errors');
 const authRoutes=require("./routes/user")
 const ErrorPage=require("./util/errrorPage")
 const chatRoutes=require("./routes/chats")
@@ -24,12 +22,9 @@ const app=express()
 
 
 // convert request to json using express middleware
-app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json())
-
 // enable cors policy
 app.use(cors())
-// app.use(helmet());
 // graphql endpoints
 app.use('/graphql', graphqlHTTP({
   schema: buildSchema,
@@ -46,7 +41,22 @@ app.use('/graphql', graphqlHTTP({
   }
 }));
 
+// file upload parser
+app.use((req, res, next) => {
+  const contentType = req.headers["content-type"];
 
+  if (contentType && contentType === "application/x-www-form-urlencoded") {
+    return bodyParser.urlencoded({ extended: true })(req, res, next);
+  }
+
+  return bodyParser.json({ limit: "500mb" })(req, res, next);
+})
+app.use((req,res,next)=>{
+  res.setHeader("Access-Control-Allow-Origin", "*")
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH")
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type")
+  next()
+})
 // api routes for user auth
 app.use("/office-api",allIndustryLists)
 app.use("/office-api/auth",authRoutes)
@@ -62,8 +72,6 @@ app.use((error,req,res,next)=>{
   const message=error.message
   const status=error.statusCode 
   res.status(status).json({message:message, error:"Error message"})
-
-  next()
 })
 
 
@@ -87,4 +95,3 @@ const startConnection=(KEY)=>{
 }
 
 startConnection(process.env.MONGODB_KEY)
-

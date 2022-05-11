@@ -21,7 +21,7 @@ module.exports={
             key:update_picture.key,
             data:update_picture.data
           });
-          const s3Url=`https://${'college-sigunp-image'}.s3.amazonaws.com/${update_picture.key}`
+          const s3Url=`https://officedbfiles.s3.amazonaws.com/${update_picture.key}`
          const updateProfilePicture=await User.findOneAndUpdate({_id:id},{
             avartImage:s3Url
           })

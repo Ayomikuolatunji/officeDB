@@ -11,17 +11,17 @@ const aws = require('aws-sdk');
 const s3 = new aws.S3();
 
 const upload= async (options) => {
-    await s3
+      await s3
       .putObject({
         Bucket:"officedbfiles",
         ACL: "public-read",
         Key: options.key,
         Body: Buffer.from(options.data, "base64"),
-        ContentType: "image/*",
+        ContentType: "image/jpeg",
       })
       .promise();
     return {
-      url: `https://college-sigunp-image.s3.amazonaws.com/${options.key}`,
+      url: `https://officedbfiles.s3.amazonaws.com/${options.key}`,
       name: options.key,
     };
   };

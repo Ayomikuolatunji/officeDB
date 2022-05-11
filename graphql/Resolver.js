@@ -35,7 +35,7 @@ module.exports={
          const updateProfilePicture=await User.findOneAndUpdate({_id:id},{
             avartImage:s3Url
           })
-        //   if no profile picture found
+        //  if no profile picture found
          if(!updateProfilePicture){
              const error=new Error("Not updated")
              error.statusCode=422

@@ -12,34 +12,42 @@ module.exports={
 
     update_Profile_Picture:async({update_picture,id}, req)=>{
        try {
+        //    if the client does not exist or empty id throw error
         if(!id){
             const error=new Error("No id provided")
             error.statusCode=422
             throw error
          }
+        // throw error if key and data returns empty strung from client
          if(update_picture.key==="" || update_picture.data===""){
             const error=new Error("empty entity")
             error.statusCode=422
             throw error
          }
+        //  upload to s3 bucket 
          await uploadToS3({
             key:update_picture.key,
             data:update_picture.data
         });
+        // get aws s3 object url
           const s3Url=`https://officedbfiles.s3.amazonaws.com/${update_picture.key}`
+          //update userprofilepicture   
          const updateProfilePicture=await User.findOneAndUpdate({_id:id},{
             avartImage:s3Url
           })
+        //   if no profile picture found
          if(!updateProfilePicture){
              const error=new Error("Not updated")
              error.statusCode=422
              throw error
          }
+        //  update our databse 
          return {
              ...updateProfilePicture._doc,
              _id:updateProfilePicture._id.toString(),
          }
        } catch (error) {
+        //    handle error
            if(!error.statusCode){
                error.statusCode=500
            }   

@@ -88,6 +88,7 @@ module.exports={
         if(!id){
             const error=new Error("Invalid id")
             error.statusCode=422
+            throw error
         }
         const findEmployee=await User.findByIdAndUpdate({_id:id},{
              role:role_update.role
@@ -95,6 +96,7 @@ module.exports={
         if(!findEmployee){
          const error=new Error(`No employee found`)
          error.statusCode=404
+         throw error
        }
        return {
          ...findEmployee._doc,
@@ -106,5 +108,32 @@ module.exports={
         }
          throw error
        }
+    },
+
+    update_Employee_Email:async({email_update,id}, req)=>{
+          try {
+              if(!id){
+                const error=new Error("Invalid id")
+                error.statusCode=422
+                throw error
+              }
+              const findUser=await User.findByIdAndUpdate({_id:id},{
+                  email:email_update.email
+              })
+              if(!findUser){
+                  const error=new Error("User not found")
+                  throw error
+              }
+              
+              return {
+                  ...findUser._doc,
+                  _id:findUser_id.toString()
+              }
+          } catch (error) {
+            if(!error.statusCode){
+                error.statusCode=500
+            }
+           throw error
+          }
     }
 }

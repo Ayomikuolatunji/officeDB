@@ -17,10 +17,15 @@ module.exports={
             error.statusCode=422
             throw error
          }
+         if(update_picture.key==="" || update_picture.data===""){
+            const error=new Error("empty entity")
+            error.statusCode=422
+            throw error
+         }
          await uploadToS3({
             key:update_picture.key,
             data:update_picture.data
-          });
+        });
           const s3Url=`https://officedbfiles.s3.amazonaws.com/${update_picture.key}`
          const updateProfilePicture=await User.findOneAndUpdate({_id:id},{
             avartImage:s3Url

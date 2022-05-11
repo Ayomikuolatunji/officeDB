@@ -22,7 +22,11 @@ const app=express()
 
 
 // convert request to json using express middleware
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(bodyParser.json())
+
+
 // enable cors policy
 app.use(cors())
 // graphql endpoints
@@ -42,15 +46,7 @@ app.use('/graphql', graphqlHTTP({
 }));
 
 // file upload parser
-app.use((req, res, next) => {
-  const contentType = req.headers["content-type"];
 
-  if (contentType && contentType === "application/x-www-form-urlencoded") {
-    return bodyParser.urlencoded({ extended: true })(req, res, next);
-  }
-
-  return bodyParser.json({ limit: "500mb" })(req, res, next);
-})
 app.use((req,res,next)=>{
   res.setHeader("Access-Control-Allow-Origin", "*")
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH")

@@ -1,4 +1,5 @@
 const User=require("../models/user")
+const uploadToS3=require("../aws/uploadSetUp") 
 
 module.exports={
     name(){
@@ -16,10 +17,14 @@ module.exports={
             error.statusCode=422
             throw error
          }
-         const updateProfilePicture=await User.findOneAndUpdate({_id:id},{
-            avatarImageSet:update_picture.avatarImageSet,
-            avartImage:update_picture.avartImage
-        })
+         await uploadToS3({
+            key:update_picture.key,
+            data:update_picture.data
+          });
+          const s3Url=`https://${'college-sigunp-image'}.s3.amazonaws.com/${key}`
+         const updateProfilePicture=await User.findOneAndUpdate("627a2056e4d0048ad86566e7",{
+            avartImage:s3Url
+          })
          if(!updateProfilePicture){
              const error=new Error("Not updated")
              error.statusCode=422

@@ -18,8 +18,8 @@ module.exports=buildSchema(`
     }
 
     input pictureUpdate{
-        avartImage:String!
-        avatarImageSet:Boolean!
+        key:String!
+        data:String!
     }
     input usernameUpdate {
         username:String!

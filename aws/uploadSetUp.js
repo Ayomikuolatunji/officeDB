@@ -1,11 +1,11 @@
 const aws = require('aws-sdk');
-require("dotenv").config()
+
 
 
  aws.config.update({
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    accessKeyId: process.env.AWS_ACCESS_KEYID,
-    region: process.env.REGION 
+    secretAccessKey: "R838lSMO8uPqSXz7SDvraVql8rhFCdY2BZ+I544r",
+    accessKeyId: "AKIAYEZ2SCIMCPEPOP7Z",
+    region: 'us-east-1' // region of your bucket
 });
 
 const s3 = new aws.S3();

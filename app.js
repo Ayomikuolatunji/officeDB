@@ -43,12 +43,7 @@ app.use((req, res, next) => {
 
   return bodyParser.json({ limit: "500mb" })(req, res, next);
 })
-app.use((req,res,next)=>{
-  res.setHeader("Access-Control-Allow-Origin", "*")
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH")
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type")
-  next()
-})
+
 // api routes for user auth
 app.use("/office-api",allIndustryLists)
 app.use("/office-api/auth",authRoutes)

@@ -112,23 +112,30 @@ module.exports={
 
     update_Employee_Email:async({email_update,id}, req)=>{
           try {
-              if(!id){
-                const error=new Error("Invalid id")
-                error.statusCode=422
-                throw error
+            try{
+                if(!id){
+                    const error=new Error("Invalid id")
+                    error.statusCode=422
+                    throw error
+                }
+                const findEmployee=await User.findByIdAndUpdate({_id:id},{
+                     email:email_update.email
+                })
+                if(!findEmployee){
+                 const error=new Error(`No employee found`)
+                 error.statusCode=404
+                 throw error
+               }
+               return {
+                 ...findEmployee._doc,
+                 _id:findEmployee._id.toString()
               }
-              const findUser=await User.findByIdAndUpdate({_id:id},{
-                  email:email_update.email
-              })
-              if(!findUser){
-                  const error=new Error("User not found")
-                  throw error
-              }
-              
-              return {
-                  ...findUser._doc,
-                  _id:findUser_id.toString()
-              }
+               }catch(error){
+                if(!error.statusCode){  
+                    error.statusCode=500
+                }
+                 throw error
+               }
           } catch (error) {
             if(!error.statusCode){
                 error.statusCode=500

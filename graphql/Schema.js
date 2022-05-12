@@ -38,7 +38,7 @@ module.exports=buildSchema(`
         update_Profile_Picture(id:ID!,update_picture:pictureUpdate): Users!
         update_Profile_Username(id:ID!,update_username:usernameUpdate): Users!
         update_Employee_Role(id:ID!,role_update:roleUpdate): Users!
-        update_Employee_Email(id:ID!, role_email:emailUpdate): Users!
+        update_Employee_Email(id:ID!,email_update:emailUpdate): Users!
     }
     
     schema {

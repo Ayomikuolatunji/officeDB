@@ -11,6 +11,7 @@ module.exports=buildSchema(`
         avatarImageSet: Boolean!   
         avartImage:String!
         role:String!
+        about:String!
     }
 
     type RootQuery {

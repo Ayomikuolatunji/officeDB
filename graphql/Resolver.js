@@ -33,7 +33,8 @@ module.exports={
           const s3Url=`https://officedbfiles.s3.amazonaws.com/${update_picture.key}`
           //update userprofilepicture   
          const updateProfilePicture=await User.findOneAndUpdate({_id:id},{
-            avartImage:s3Url
+            avartImage:s3Url,
+            avatarImageSet:true
           })
         //  if no profile picture found
          if(!updateProfilePicture){

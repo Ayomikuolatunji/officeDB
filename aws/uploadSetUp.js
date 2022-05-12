@@ -15,12 +15,14 @@ const upload= async (options) => {
       await s3
       .putObject({
         Bucket:"officedbfiles",
-        ACL: "public-read",
         Key: options.key,
         Body: Buffer.from(options.data, "base64"),
         ContentType: "image/jpeg",
       })
-      .promise();
+      .promise()
+      .catch(err=>{
+        console.log(err.message)
+      });
     return {
       url: `https://officedbfiles.s3.amazonaws.com/${options.key}`,
       name: options.key,

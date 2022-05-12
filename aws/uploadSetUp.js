@@ -2,7 +2,6 @@ const aws = require('aws-sdk');
 require("dotenv").config()
 
 
-
 aws.config.update({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     accessKeyId: process.env.AWS_ACCESS_KEYID,
@@ -21,12 +20,12 @@ const upload= async (options) => {
       })
       .promise()
       .catch(err=>{
+        
         console.log(err.message)
       });
     return {
       url: `https://officedbfiles.s3.amazonaws.com/${options.key}`,
       name: options.key,
     };
-  };
-
-  module.exports=upload
+};
+module.exports=upload

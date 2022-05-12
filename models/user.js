@@ -42,6 +42,6 @@ const userSchema=new Schema({
         type:String,
         default:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIJF7LAdiF7JlRs24nLsBKz7nWamkcdXPODQ&usqp=CAU",
     }
-})
+},{timestamps:true})
 
 module.exports=mongoose.model("Users", userSchema)

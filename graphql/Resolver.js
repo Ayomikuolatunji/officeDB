@@ -142,5 +142,39 @@ module.exports={
             }
            throw error
           }
+    },
+    update_Employee_About:async({about_update,id})=>{
+        try {
+            try{
+                if(!id){
+                    const error=new Error("Invalid id")
+                    error.statusCode=422
+                    throw error
+                }
+                const findEmployee=await User.findByIdAndUpdate({_id:id},{
+                     about:about_update.about
+                })
+                if(!findEmployee){
+                 const error=new Error(`No employee found`)
+                 error.statusCode=404
+                 throw error
+               }
+               return {
+                 ...findEmployee._doc,
+                 _id:findEmployee._id.toString()
+              }
+               }catch(error){
+                if(!error.statusCode){  
+                    error.statusCode=500
+                }
+                 throw error
+               }
+          } catch (error) {
+            if(!error.statusCode){
+                error.statusCode=500
+            }
+           throw error
+          }     
+
     }
 }

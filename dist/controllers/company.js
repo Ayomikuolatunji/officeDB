@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.companiesEmployees = exports.createCompany = void 0;
 const company_1 = __importDefault(require("../models/company"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const transporter_1 = __importDefault(require("../email/transporter"));
@@ -58,21 +59,22 @@ const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         next(error);
     }
 });
+exports.createCompany = createCompany;
 const companiesEmployees = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield company_1.default.find({}).populate("company_employes");
         if (!users) {
             const error = new Error(`user empty`);
-            error.statusCode = 422;
+            // error.statusCode=422
             throw error;
         }
         res.status(200).json({ users });
     }
     catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
+        // if(!error.statusCode){
+        //      error.statusCode=500
+        //  }
         next(error);
     }
 });
-exports.default = { createCompany, companiesEmployees };
+exports.companiesEmployees = companiesEmployees;

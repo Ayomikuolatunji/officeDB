@@ -7,4 +7,4 @@ router.get("/all_companies_employees",companiesEmployees)
 router.post('/create_company_account',createCompany)
 
 
-module.exports=router
+export default router

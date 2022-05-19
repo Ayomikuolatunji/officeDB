@@ -6,7 +6,7 @@ import { RequestHandler } from "express";
 
 
 
-const createCompany:RequestHandler=async(req,res,next)=>{
+export const createCompany:RequestHandler=async(req,res,next)=>{
   const company_name=req.body.company_name
   const company_type=req.body.company_type
   const company_email=req.body.company_email
@@ -35,7 +35,7 @@ const createCompany:RequestHandler=async(req,res,next)=>{
             html:"<body><h5>You can login to your app with the link below</h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>"
           };
           // send email after successful signup
-           transporter.sendMail(mailOptions, function(error:Error, info:any){
+           transporter.sendMail(mailOptions, function(error, info){
             if (error) {
               console.log(error.message);
             } else {
@@ -50,22 +50,21 @@ const createCompany:RequestHandler=async(req,res,next)=>{
 }
 
 
-const companiesEmployees:RequestHandler=async(req,res,next)=>{
+export const companiesEmployees:RequestHandler=async(req,res,next)=>{
      try {
          const users=await Company.find({}).populate("company_employes")
          if(!users){
           const error=new Error(`user empty`)
-          error.statusCode=422
+          // error.statusCode=422
           throw error
          }     
          res.status(200).json({users})
      } catch (error) {
 
-      if(!error.statusCode){
-           error.statusCode=500
-       }
+      // if(!error.statusCode){
+      //      error.statusCode=500
+      //  }
        next(error) 
      }   
 }
 
-export default {createCompany,companiesEmployees}

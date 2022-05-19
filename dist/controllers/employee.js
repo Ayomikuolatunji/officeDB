@@ -153,7 +153,7 @@ const profilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
 exports.profilePicture = profilePicture;
 const getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const users = yield User.find({}).select([
+        const users = yield employee_1.default.find({}).select([
             "email",
             "username",
             "avartImage",
@@ -262,7 +262,7 @@ const correctPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     const user = yield employee_1.default.findById({ _id: userId });
     if (user || resetToken || userId) {
         const resetPassword = yield bcrypt_1.default.hash(password, 12);
-        yield User.findOneAndUpdate({ _id: user._id }, {
+        yield employee_1.default.findOneAndUpdate({ _id: user._id }, {
             password: resetPassword,
         });
         res.status(200).json({ user: user._id });

@@ -15,6 +15,12 @@ interface update_profileTypes{
    role_update:{
       role:string 
    }
+   email_update:{
+       email:string
+   }
+   about_update:{
+       about:string
+   }
  }
 
 export ={
@@ -94,19 +100,19 @@ export ={
     },
 
     // update employee(user) role
-    update_Employee_Role:async({role_update,id},req)=>{
+    update_Employee_Role:async(profile:update_profileTypes,req:Request)=>{
        try{
-        if(!id){
+        if(!profile.id){
             const error=new Error("Invalid id")
-            error.statusCode=422
+            // error.statusCode=422
             throw error
         }
-        const findEmployee=await User.findByIdAndUpdate({_id:id},{
-             role:role_update.role
+        const findEmployee=await Employee.findByIdAndUpdate({_id:profile.id},{
+             role:profile.role_update.role
         })
         if(!findEmployee){
          const error=new Error(`No employee found`)
-         error.statusCode=404
+        //  error.statusCode=404
          throw error
        }
        return {
@@ -114,76 +120,63 @@ export ={
          _id:findEmployee._id.toString()
       }
        }catch(error){
-        if(!error.statusCode){  
-            error.statusCode=500
-        }
+        // if(!error.statusCode){  
+        //     error.statusCode=500
+        // }
          throw error
        }
     },
 
-    update_Employee_Email:async({email_update,id}, req)=>{
+    update_Employee_Email:async(profile:update_profileTypes, req:Request)=>{
           try {
-            try{
-                if(!id){
+                if(!profile.id){
                     const error=new Error("Invalid id")
-                    error.statusCode=422
+                    // error.statusCode=422
                     throw error
                 }
-                const findEmployee=await User.findByIdAndUpdate({_id:id},{
-                     email:email_update.email
+                const findEmployee=await Employee.findByIdAndUpdate({_id:profile.id},{
+                     email:profile.email_update.email
                 })
                 if(!findEmployee){
                  const error=new Error(`No employee found`)
-                 error.statusCode=404
+                //  error.statusCode=404
                  throw error
                }
                return {
                  ...findEmployee._doc,
                  _id:findEmployee._id.toString()
               }
-               }catch(error){
-                if(!error.statusCode){  
-                    error.statusCode=500
-                }
-                 throw error
-               }
+              
           } catch (error) {
-            if(!error.statusCode){
-                error.statusCode=500
-            }
+            // if(!error.statusCode){
+            //     error.statusCode=500
+            // }
            throw error
           }
     },
-    update_Employee_About:async({about_update,id})=>{
+    update_Employee_About:async(profile:update_profileTypes,req:Request)=>{
         try {
-            try{
-                if(!id){
+                if(!profile.id){
                     const error=new Error("Invalid id")
-                    error.statusCode=422
+                    // error.statusCode=422
                     throw error
                 }
-                const findEmployee=await User.findByIdAndUpdate({_id:id},{
-                     about:about_update.about
+                const findEmployee=await Employee.findByIdAndUpdate({_id:profile.id},{
+                     about:profile.about_update.about
                 })
                 if(!findEmployee){
                  const error=new Error(`No employee found`)
-                 error.statusCode=404
+                //  error.statusCode=404
                  throw error
                }
                return {
                  ...findEmployee._doc,
                  _id:findEmployee._id.toString()
               }
-               }catch(error){
-                if(!error.statusCode){  
-                    error.statusCode=500
-                }
-                 throw error
-               }
           } catch (error) {
-            if(!error.statusCode){
-                error.statusCode=500
-            }
+            // if(!error.statusCode){
+            //     error.statusCode=500
+            // }
            throw error
           }     
 

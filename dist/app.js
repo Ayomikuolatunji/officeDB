@@ -43,9 +43,9 @@ app.use('/graphql', (0, express_graphql_1.graphqlHTTP)({
         if (!err.originalError) {
             return err;
         }
-        const data = err.originalError.data;
+        const data = err.originalError.message;
         const message = err.message || 'An error occurred.';
-        const code = err.originalError.code || 500;
+        const code = err.originalError.message || 500;
         return { message: message, status: code, data: data };
     }
 }));

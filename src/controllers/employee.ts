@@ -152,7 +152,7 @@ export const profilePicture:RequestHandler=async(req,res,next)=>{
 export const getAllUsers:RequestHandler=async(req,res,next)=>{
 
      try {
-         const users=await User.find({}).select([
+         const users=await Employee.find({}).select([
            "email",
             "username",
             "avartImage",
@@ -267,7 +267,7 @@ export const correctPassword:RequestHandler=async(req,res,next)=>{
   const user=await Employee.findById({_id:userId})
   if(user || resetToken ||userId){
     const resetPassword=await bcrypt.hash(password,12)
-    await User.findOneAndUpdate({_id:user._id},{
+    await Employee.findOneAndUpdate({_id:user._id},{
       password:resetPassword,
   })
   res.status(200).json({user:user._id}) 

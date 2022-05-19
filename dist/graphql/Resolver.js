@@ -85,91 +85,75 @@ module.exports = {
         }
     }),
     // update employee(user) role
-    update_Employee_Role: ({ role_update, id }, req) => __awaiter(void 0, void 0, void 0, function* () {
+    update_Employee_Role: (profile, req) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            if (!id) {
+            if (!profile.id) {
                 const error = new Error("Invalid id");
-                error.statusCode = 422;
+                // error.statusCode=422
                 throw error;
             }
-            const findEmployee = yield User.findByIdAndUpdate({ _id: id }, {
-                role: role_update.role
+            const findEmployee = yield employee_1.default.findByIdAndUpdate({ _id: profile.id }, {
+                role: profile.role_update.role
             });
             if (!findEmployee) {
                 const error = new Error(`No employee found`);
-                error.statusCode = 404;
+                //  error.statusCode=404
                 throw error;
             }
             return Object.assign(Object.assign({}, findEmployee._doc), { _id: findEmployee._id.toString() });
         }
         catch (error) {
-            if (!error.statusCode) {
-                error.statusCode = 500;
-            }
+            // if(!error.statusCode){  
+            //     error.statusCode=500
+            // }
             throw error;
         }
     }),
-    update_Employee_Email: ({ email_update, id }, req) => __awaiter(void 0, void 0, void 0, function* () {
+    update_Employee_Email: (profile, req) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            try {
-                if (!id) {
-                    const error = new Error("Invalid id");
-                    error.statusCode = 422;
-                    throw error;
-                }
-                const findEmployee = yield User.findByIdAndUpdate({ _id: id }, {
-                    email: email_update.email
-                });
-                if (!findEmployee) {
-                    const error = new Error(`No employee found`);
-                    error.statusCode = 404;
-                    throw error;
-                }
-                return Object.assign(Object.assign({}, findEmployee._doc), { _id: findEmployee._id.toString() });
-            }
-            catch (error) {
-                if (!error.statusCode) {
-                    error.statusCode = 500;
-                }
+            if (!profile.id) {
+                const error = new Error("Invalid id");
+                // error.statusCode=422
                 throw error;
             }
+            const findEmployee = yield employee_1.default.findByIdAndUpdate({ _id: profile.id }, {
+                email: profile.email_update.email
+            });
+            if (!findEmployee) {
+                const error = new Error(`No employee found`);
+                //  error.statusCode=404
+                throw error;
+            }
+            return Object.assign(Object.assign({}, findEmployee._doc), { _id: findEmployee._id.toString() });
         }
         catch (error) {
-            if (!error.statusCode) {
-                error.statusCode = 500;
-            }
+            // if(!error.statusCode){
+            //     error.statusCode=500
+            // }
             throw error;
         }
     }),
-    update_Employee_About: ({ about_update, id }) => __awaiter(void 0, void 0, void 0, function* () {
+    update_Employee_About: (profile, req) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            try {
-                if (!id) {
-                    const error = new Error("Invalid id");
-                    error.statusCode = 422;
-                    throw error;
-                }
-                const findEmployee = yield User.findByIdAndUpdate({ _id: id }, {
-                    about: about_update.about
-                });
-                if (!findEmployee) {
-                    const error = new Error(`No employee found`);
-                    error.statusCode = 404;
-                    throw error;
-                }
-                return Object.assign(Object.assign({}, findEmployee._doc), { _id: findEmployee._id.toString() });
-            }
-            catch (error) {
-                if (!error.statusCode) {
-                    error.statusCode = 500;
-                }
+            if (!profile.id) {
+                const error = new Error("Invalid id");
+                // error.statusCode=422
                 throw error;
             }
+            const findEmployee = yield employee_1.default.findByIdAndUpdate({ _id: profile.id }, {
+                about: profile.about_update.about
+            });
+            if (!findEmployee) {
+                const error = new Error(`No employee found`);
+                //  error.statusCode=404
+                throw error;
+            }
+            return Object.assign(Object.assign({}, findEmployee._doc), { _id: findEmployee._id.toString() });
         }
         catch (error) {
-            if (!error.statusCode) {
-                error.statusCode = 500;
-            }
+            // if(!error.statusCode){
+            //     error.statusCode=500
+            // }
             throw error;
         }
     })

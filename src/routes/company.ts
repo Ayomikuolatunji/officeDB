@@ -1,0 +1,10 @@
+import {Router} from "express"
+const router=Router()
+import {createCompany,companiesEmployees} from "../controllers/company"
+
+
+router.get("/all_companies_employees",companiesEmployees)
+router.post('/create_company_account',createCompany)
+
+
+module.exports=router

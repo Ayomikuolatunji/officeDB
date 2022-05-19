@@ -7,7 +7,7 @@ import  bodyParser from "body-parser";
 // call dotenv 
 import dotevn from  "dotenv"
 dotevn.config()
-import authRoutes from "./routes/user"
+import employeeRoutes from "./routes/employee"
 import ErrorPage from "./util/errrorPage"
 import chatRoutes from "./routes/chats"
 import Socket from "./socket-io/socket"
@@ -56,7 +56,7 @@ app.use('/graphql', graphqlHTTP({
 
 // api routes for user auth
 app.use("/office-api",allIndustryLists)
-app.use("/office-api/auth",authRoutes)
+app.use("/office-api/auth",employeeRoutes)
 app.use('/office-api',chatRoutes)
 app.use("/office-api/auth",companyRoutes)
 app.use("/office-api/",s3Route)

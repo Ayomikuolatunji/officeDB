@@ -1,6 +1,6 @@
-const express=require("express")
-const {body}=require("express-validator")
-const User=require("../models/user")
+import express from "express"
+import {body} from  "express-validator"
+import User from  "../models/employee"
 const 
    {
     registration,
@@ -52,4 +52,4 @@ router.delete("/delete_user/:id",deleteUser)
 
 router.post("/add_employee_to_company/:id")
 
-module.exports=router
+export default router

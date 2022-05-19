@@ -8,7 +8,7 @@ export const fetchChat:RequestHandler=async(req,res,next)=>{
         const messages=await Chat.find({users:{$all:[from,to]}}).sort({updatedAt:1})
         if(!messages){
             const error=new Error("No similar chats found")
-            error.statusCode=404
+            // error.statusCode=404
             throw error
         }
         const sendChat=messages.map(chat=>{
@@ -19,9 +19,9 @@ export const fetchChat:RequestHandler=async(req,res,next)=>{
         })
         res.status(200).json({sendChat})
     } catch (error) {
-         if(!error.statusCode){
-           error.statusCode=500
-       }
+        //  if(!error.statusCode){
+        //    error.statusCode=500
+        //  }
        next(error)
     }
 }
@@ -40,17 +40,16 @@ export const postChat:RequestHandler=async(req,res,next)=>{
     })
     if(!chatsCreated){
         const error=new Error("failed to create message chat")
-        error.statusCode=422
+        // error.statusCode=422
         throw error
     }
     res.status(201).json({message:"succesfully sent",chats:chatsCreated})
    } catch (error) {
-       if(!error.statusCode){
-           error.statusCode=500
-       }
+    //    if(!error.statusCode){
+    //        error.statusCode=500
+    //    }
        next(error)
    }
     
 }
 
-module.exports={postChat,fetchChat}

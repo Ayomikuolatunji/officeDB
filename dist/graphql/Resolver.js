@@ -8,47 +8,44 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const User = require("../models/user");
-const uploadToS3 = require("../aws/uploadSetUp");
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+const employee_1 = __importDefault(require("../models/employee"));
+const uploadSetUp_1 = __importDefault(require("../aws/uploadSetUp"));
 module.exports = {
-    name() {
-        return "hello world";
-    },
-    Init() {
-        return 100;
-    },
-    update_Profile_Picture: ({ update_picture, id }, req) => __awaiter(void 0, void 0, void 0, function* () {
+    update_Profile_Picture: (profile, req) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             //    if the client does not exist or empty id throw error
-            if (!id) {
+            if (!profile.id) {
                 const error = new Error("No id provided");
-                error.statusCode = 422;
+                // error.statusCode=422
                 throw error;
             }
             // throw error if key and data returns empty strung from client
-            if (update_picture.key === "" || update_picture.data === "") {
+            if (profile.update_picture.key === "" || profile.update_picture.data === "") {
                 const error = new Error("empty entity");
-                error.statusCode = 422;
+                // error.statusCode=422
                 throw error;
             }
             //  upload to s3 bucket 
-            yield uploadToS3({
+            yield (0, uploadSetUp_1.default)({
                 Bucket: "officedbfiles",
-                key: update_picture.key,
-                data: update_picture.data,
+                key: profile.update_picture.key,
+                data: profile.update_picture.data,
                 ContentType: "image/jpeg"
             });
             // get aws s3 object url
-            const s3Url = `https://officedbfiles.s3.amazonaws.com/${update_picture.key}`;
+            const s3Url = `https://officedbfiles.s3.amazonaws.com/${profile.update_picture.key}`;
             //update userprofilepicture   
-            const updateProfilePicture = yield User.findOneAndUpdate({ _id: id }, {
+            const updateProfilePicture = yield employee_1.default.findOneAndUpdate({ _id: profile.id }, {
                 avartImage: s3Url,
                 avatarImageSet: true
             });
             //  if no profile picture found
             if (!updateProfilePicture) {
                 const error = new Error("Not updated");
-                error.statusCode = 422;
+                //  error.statusCode=422
                 throw error;
             }
             //  update our databse 
@@ -56,34 +53,34 @@ module.exports = {
         }
         catch (error) {
             //    handle error
-            if (!error.statusCode) {
-                error.statusCode = 500;
-            }
+            //    if(!error.statusCode){
+            //        error.statusCode=500
+            //    }   
             throw error;
         }
     }),
     // update employee username
-    update_Profile_Username: ({ update_username, id }, req) => __awaiter(void 0, void 0, void 0, function* () {
+    update_Profile_Username: (profile, req) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            if (!id) {
+            if (!profile.id) {
                 const error = new Error("Can't find Id");
-                error.statusCode = 404;
+                // error.statusCode=404
                 throw error;
             }
-            const findUser = yield User.findByIdAndUpdate({ _id: id }, {
-                username: update_username.username
+            const findUser = yield employee_1.default.findByIdAndUpdate({ _id: profile.id }, {
+                username: profile.update_username.username
             });
             if (!findUser) {
                 const error = new Error("No user with this id found");
-                error.statusCode = 404;
+                // error.statusCode=404
                 throw error;
             }
             return Object.assign(Object.assign({}, findUser._doc), { _id: findUser._id.toString() });
         }
         catch (error) {
-            if (!error.statusCode) {
-                error.statusCode = 500;
-            }
+            // if(!error.statusCode){
+            //     error.statusCode=500
+            // }
             throw error;
         }
     }),

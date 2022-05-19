@@ -21,7 +21,7 @@ const fetchChat = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         const messages = yield chat_1.default.find({ users: { $all: [from, to] } }).sort({ updatedAt: 1 });
         if (!messages) {
             const error = new Error("No similar chats found");
-            error.statusCode = 404;
+            // error.statusCode=404
             throw error;
         }
         const sendChat = messages.map(chat => {
@@ -33,9 +33,9 @@ const fetchChat = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         res.status(200).json({ sendChat });
     }
     catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
+        //  if(!error.statusCode){
+        //    error.statusCode=500
+        //  }
         next(error);
     }
 });
@@ -52,17 +52,16 @@ const postChat = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         });
         if (!chatsCreated) {
             const error = new Error("failed to create message chat");
-            error.statusCode = 422;
+            // error.statusCode=422
             throw error;
         }
         res.status(201).json({ message: "succesfully sent", chats: chatsCreated });
     }
     catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
+        //    if(!error.statusCode){
+        //        error.statusCode=500
+        //    }
         next(error);
     }
 });
 exports.postChat = postChat;
-module.exports = { postChat: exports.postChat, fetchChat: exports.fetchChat };

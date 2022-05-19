@@ -14,7 +14,6 @@ dotenv_1.default.config();
 const employee_1 = __importDefault(require("./routes/employee"));
 const errrorPage_1 = __importDefault(require("./util/errrorPage"));
 const chats_1 = __importDefault(require("./routes/chats"));
-const socket_1 = __importDefault(require("./socket-io/socket"));
 const Schema_1 = __importDefault(require("./graphql/Schema"));
 const Resolver_1 = __importDefault(require("./graphql/Resolver"));
 const company_1 = __importDefault(require("./routes/company"));
@@ -61,25 +60,25 @@ app.use(errrorPage_1.default);
 app.use((error, req, res, next) => {
     console.log(error.message);
     const message = error.message;
-    const status = error.statusCode;
-    res.status(status).json({ message: message, error: "Error message" });
+    // const status=error.statusCode 
+    res.status(500).json({ message: message, error: "Error message" });
 });
+const MONGODB_KEY = process.env.MONGODB_KEY;
 // connecting server
-const startConnection = (KEY) => {
+const startConnection = () => {
     mongoose_1.default
-        .connect(KEY, {
+        .connect(MONGODB_KEY, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
         .then(Db => {
         console.log("connected to database");
-        const server = app.listen(process.env.PORT, () => {
+        app.listen(process.env.PORT, () => {
             console.log(`App running locally on ${process.env.PORT}`);
         });
-        (0, socket_1.default)(server);
     })
         .catch(err => {
         console.log(err.message);
     });
 };
-startConnection(process.env.MONGODB_KEY);
+startConnection();

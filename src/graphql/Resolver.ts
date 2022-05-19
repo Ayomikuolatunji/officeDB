@@ -1,47 +1,55 @@
-const User=require("../models/user")
-const uploadToS3=require("../aws/uploadSetUp") 
+import Employee from "../models/employee"
+import uploadToS3 from "../aws/uploadSetUp" 
+import { Request } from "express"
 
-module.exports={
-    name(){
-        return "hello world"
-    },
 
-    Init(){
-        return 100
-    },
+interface update_profileTypes{
+   update_picture:{
+    key:string
+    data:string
+   }
+   id:string,
+   update_username :{
+    username:string
+   }
+   role_update:{
+      role:string 
+   }
+ }
 
-    update_Profile_Picture:async({update_picture,id}, req)=>{
+export ={
+    update_Profile_Picture:async(profile:update_profileTypes, req:Request)=>{
        try {
         //    if the client does not exist or empty id throw error
-        if(!id){
+        if(!profile.id){
             const error=new Error("No id provided")
-            error.statusCode=422
+            // error.statusCode=422
             throw error
          }
         // throw error if key and data returns empty strung from client
-         if(update_picture.key==="" || update_picture.data===""){
+         if(profile.update_picture.key==="" || profile.update_picture.data===""){
             const error=new Error("empty entity")
-            error.statusCode=422
+            // error.statusCode=422
             throw error
          }
         //  upload to s3 bucket 
          await uploadToS3({
             Bucket:"officedbfiles", 
-            key:update_picture.key,
-            data:update_picture.data,
+            key:profile.update_picture.key,
+            data:profile.update_picture.data,
             ContentType:"image/jpeg"
         });
         // get aws s3 object url
-          const s3Url=`https://officedbfiles.s3.amazonaws.com/${update_picture.key}`
+          const s3Url=`https://officedbfiles.s3.amazonaws.com/${profile.update_picture.key}`
           //update userprofilepicture   
-         const updateProfilePicture=await User.findOneAndUpdate({_id:id},{
+         const updateProfilePicture=await Employee.findOneAndUpdate({_id:profile.id},{
             avartImage:s3Url,
             avatarImageSet:true
           })
         //  if no profile picture found
          if(!updateProfilePicture){
              const error=new Error("Not updated")
-             error.statusCode=422
+            //  error.statusCode=422
              throw error
          }
         //  update our databse 
@@ -51,26 +59,26 @@ module.exports={
          }
        } catch (error) {
         //    handle error
-           if(!error.statusCode){
-               error.statusCode=500
-           }   
+        //    if(!error.statusCode){
+        //        error.statusCode=500
+        //    }   
         throw error
        }
     },
     // update employee username
-    update_Profile_Username:async({update_username, id}, req)=>{
+    update_Profile_Username:async(profile:update_profileTypes, req:Request)=>{
         try {
-            if(!id){
+            if(!profile.id){
                 const  error=new Error("Can't find Id")
-                error.statusCode=404
+                // error.statusCode=404
                 throw error
             }
-            const findUser=await User.findByIdAndUpdate({_id:id},{
-                username:update_username.username
+            const findUser=await Employee.findByIdAndUpdate({_id:profile.id},{
+                username:profile.update_username.username
             })
             if(!findUser){
                 const error=new Error("No user with this id found")
-                error.statusCode=404
+                // error.statusCode=404
                 throw error
             }
             return {
@@ -78,9 +86,9 @@ module.exports={
                 _id:findUser._id.toString()
             }
         } catch (error) {
-            if(!error.statusCode){
-                error.statusCode=500
-            }
+            // if(!error.statusCode){
+            //     error.statusCode=500
+            // }
            throw error
         }
     },

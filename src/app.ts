@@ -10,7 +10,6 @@ dotevn.config()
 import employeeRoutes from "./routes/employee"
 import ErrorPage from "./util/errrorPage"
 import chatRoutes from "./routes/chats"
-import Socket from "./socket-io/socket"
 import buildSchema from "./graphql/Schema"
 import resolver  from "./graphql/Resolver"
 import companyRoutes from "./routes/company"
@@ -67,28 +66,31 @@ app.use(ErrorPage)
 app.use((error:Error,req:Request,res:Response,next:NextFunction)=>{
   console.log(error.message);
   const message=error.message
-  const status=error.statusCode 
-  res.status(status).json({message:message, error:"Error message"})
+  // const status=error.statusCode 
+  res.status(500).json({message:message, error:"Error message"})
 })
 
 
+const MONGODB_KEY:any=process.env.MONGODB_KEY
+interface connectTypes {
+        
+}
 // connecting server
-const startConnection=(KEY)=>{
+const startConnection=()=>{
   mongoose
-  .connect(KEY,{
-         useNewUrlParser: true,
-         useUnifiedTopology: true 
+  .connect(MONGODB_KEY,<connectTypes>{
+    useNewUrlParser: true,
+    useUnifiedTopology: true   
   })
   .then(Db=>{
       console.log("connected to database")
-     const server=app.listen(process.env.PORT,()=>{
+        app.listen(process.env.PORT,()=>{
         console.log(`App running locally on ${process.env.PORT}`)
     })
-    Socket(server)
   })
   .catch(err => {
     console.log(err.message);
   });
 }
 
-startConnection(process.env.MONGODB_KEY)
+startConnection()

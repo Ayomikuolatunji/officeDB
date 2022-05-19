@@ -5,8 +5,9 @@ import mongoose from "mongoose";
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import crypto from "crypto";
 import transporter from "../email/transporter";
-import User from "../models/user";
+import Employee from "../models/user";
 import Company from "../models/company";
+import { RequestHandler } from "express";
 
 
 
@@ -25,7 +26,7 @@ export const registration=async(req,res,next)=>{
   const password = req.body.password;
   const role=req.body.role
 // find user
-  const userExist=await User.findOne({email:email})
+  const userExist=await Employee.findOne({email:email})
   // check if there is a user with the client email
   if(userExist){
       const error=new Error("User already exist with this email")
@@ -73,7 +74,7 @@ export const login=async(req,res,next)=>{
   const email = req.body.email;
   const password = req.body.password;
   try {
-    const user = await User.findOne({ email: email });
+    const user = await Employee.findOne({ email: email });
     if (!user) {
       const error = new Error('A user with this email could not be found.');
       error.statusCode = 401;
@@ -108,7 +109,7 @@ export const login=async(req,res,next)=>{
 export const singleEmployee=async(req,res,next)=>{
   const {id}=req.params;
    try {
-    const user=await User.findById({_id:id})
+    const user=await Employee.findById({_id:id})
     if (!user) {
       const error = new Error('A user with this email could not be found.');
       error.statusCode = 40;
@@ -127,30 +128,30 @@ export const singleEmployee=async(req,res,next)=>{
 
 
 
-export const profilePicture=async(req,res,next)=>{
+export const profilePicture:RequestHandler=async(req,res,next)=>{
   const {id}=req.params
   if(!id){
     const error=new Error(`Cant uplaod image with this ${id}`)
-    error.statusCode=422
+    // error.statusCode=422
     throw error
   }
   const avartImage=req.body.avartImage
   const avatarImageSet=req.body.avatarImageSet
     try {
-       const user=await User.findOneAndUpdate({_id:id},{
+       const user=await Employee.findOneAndUpdate({_id:id},{
         avatarImageSet:avatarImageSet,
         avartImage: avartImage
        })
        return res.status(200).json({msg:user})
     }catch (error) {
-      if(!error.statusCode){
-        error.statusCode=500
-       }
+      //   if(!error.statusCode){
+      //   error.statusCode=500
+      //  }
        next(error) 
     }
 }
 
-export const getAllUsers=async(req,res,next)=>{
+export const getAllUsers:RequestHandler=async(req,res,next)=>{
 
      try {
          const users=await User.find({}).select([
@@ -161,31 +162,31 @@ export const getAllUsers=async(req,res,next)=>{
          ])
          if(!users){
           const error=new Error(`No user found`)
-          error.statusCode=422
+          // error.statusCode=422
           throw error
          }     
          res.status(200).json({users})
      } catch (error) {
 
-      if(!error.statusCode){
-           error.statusCode=500
-       }
+      // if(!error.statusCode){
+      //      error.statusCode=500
+      //  }
        next(error) 
      }   
 
 }
 
 
-export const deleteEmployee=async(req,res,next)=>{
+export const deleteEmployee:RequestHandler=async(req,res,next)=>{
     try {
     const id=req.params.id;
-    const findOne=await User.findById({_id:id})
+    const findOne=await Employee.findById({_id:id})
     if(!findOne){
       const error=new Error("No user find  with the id undefined")
-      error.statusCode=404
+      // error.statusCode=404
       throw error
     } 
-    const companyId=await User.findById({_id:findOne._id}).populate("company") 
+    const companyId=await Employee.findById({_id:findOne._id}).populate("company") 
     res.status(StatusCodes.OK).json({message:ReasonPhrases.ACCEPTED})
     console.log(companyId);
     // 
@@ -193,7 +194,7 @@ export const deleteEmployee=async(req,res,next)=>{
       {company_employes:findOne._id} 
     })
     // after remiving the reference from company schema the delete user
-    const deleteUser=await User.findByIdAndDelete({_id:findOne._id})
+    const deleteUser=await Employee.findByIdAndDelete({_id:findOne._id})
     // send emails after deleting account
     var mailOptions = {
       from: 'ayomikuolatunji@gmail.com',
@@ -211,9 +212,9 @@ export const deleteEmployee=async(req,res,next)=>{
       }
     });
     } catch (error) {
-      if(!error.statusCode){
-        error.statusCode=500
-      }
+      // if(!error.statusCode){
+      //   error.statusCode=500
+      // }
       next(error)
     }
     
@@ -223,13 +224,13 @@ export const deleteEmployee=async(req,res,next)=>{
 
 
 
-export const resetPassword=async(req,res,next)=>{
+export const resetPassword:RequestHandler=async(req,res,next)=>{
     try{
       const email=req.body.email
-      const user=await User.findOne({email:email})
+      const user=await Employee.findOne({email:email})
       if(!user){
         const error=new Error("No user with the email found")
-        error.statusCode=404
+        // error.statusCode=404
         throw error
       }
       const random= crypto.randomBytes(300)
@@ -261,11 +262,11 @@ export const resetPassword=async(req,res,next)=>{
 
 
 
-export const correctPassword=async(req,res,next)=>{
+export const correctPassword:RequestHandler=async(req,res,next)=>{
   const password=req.body.password
   const userId=req.body.userId
   const resetToken=req.body.resetToken
-  const user=await User.findById({_id:userId})
+  const user=await Employee.findById({_id:userId})
   if(user || resetToken ||userId){
     const resetPassword=await bcrypt.hash(password,12)
     await User.findOneAndUpdate({_id:user._id},{
@@ -289,12 +290,12 @@ export const correctPassword=async(req,res,next)=>{
   });
   }else{
     const error=new Error("You are not allowed")
-    error.statusCode=404
+    // error.statusCode=404
     throw error
   }
 }
 
-const populateEmployee=async(req,res,next)=>{
+const populateEmployee:RequestHandler=async(req,res,next)=>{
        
 }
 

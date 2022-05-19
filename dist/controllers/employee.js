@@ -44,7 +44,7 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     }
     try {
         const hashedPw = yield bcrypt_1.default.hash(password, 12);
-        const user = new user_1.default({
+        const user = new User({
             email,
             username,
             role,
@@ -132,7 +132,7 @@ const profilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     const { id } = req.params;
     if (!id) {
         const error = new Error(`Cant uplaod image with this ${id}`);
-        error.statusCode = 422;
+        // error.statusCode=422
         throw error;
     }
     const avartImage = req.body.avartImage;
@@ -145,16 +145,16 @@ const profilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         return res.status(200).json({ msg: user });
     }
     catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
+        //   if(!error.statusCode){
+        //   error.statusCode=500
+        //  }
         next(error);
     }
 });
 exports.profilePicture = profilePicture;
 const getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const users = yield user_1.default.find({}).select([
+        const users = yield User.find({}).select([
             "email",
             "username",
             "avartImage",
@@ -162,15 +162,15 @@ const getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         ]);
         if (!users) {
             const error = new Error(`No user found`);
-            error.statusCode = 422;
+            // error.statusCode=422
             throw error;
         }
         res.status(200).json({ users });
     }
     catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
+        // if(!error.statusCode){
+        //      error.statusCode=500
+        //  }
         next(error);
     }
 });
@@ -181,7 +181,7 @@ const deleteEmployee = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         const findOne = yield user_1.default.findById({ _id: id });
         if (!findOne) {
             const error = new Error("No user find  with the id undefined");
-            error.statusCode = 404;
+            // error.statusCode=404
             throw error;
         }
         const companyId = yield user_1.default.findById({ _id: findOne._id }).populate("company");
@@ -211,9 +211,9 @@ const deleteEmployee = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         });
     }
     catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
+        // if(!error.statusCode){
+        //   error.statusCode=500
+        // }
         next(error);
     }
 });
@@ -224,7 +224,7 @@ const resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         const user = yield user_1.default.findOne({ email: email });
         if (!user) {
             const error = new Error("No user with the email found");
-            error.statusCode = 404;
+            // error.statusCode=404
             throw error;
         }
         const random = crypto_1.default.randomBytes(300);
@@ -263,7 +263,7 @@ const correctPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     const user = yield user_1.default.findById({ _id: userId });
     if (user || resetToken || userId) {
         const resetPassword = yield bcrypt_1.default.hash(password, 12);
-        yield user_1.default.findOneAndUpdate({ _id: user._id }, {
+        yield User.findOneAndUpdate({ _id: user._id }, {
             password: resetPassword,
         });
         res.status(200).json({ user: user._id });
@@ -286,7 +286,7 @@ const correctPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     }
     else {
         const error = new Error("You are not allowed");
-        error.statusCode = 404;
+        // error.statusCode=404
         throw error;
     }
 });

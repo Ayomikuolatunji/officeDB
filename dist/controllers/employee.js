@@ -22,21 +22,21 @@ const transporter_1 = __importDefault(require("../email/transporter"));
 const employee_1 = __importDefault(require("../models/employee"));
 const company_1 = __importDefault(require("../models/company"));
 const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const errors = (0, validation_result_1.validationResult)(req);
-    if (!errors.isEmpty()) {
-        const error = new Error('Validation failed.');
-        error.statusCode = 422;
-        throw error;
-    }
     // get client data from request body   
     const email = req.body.email;
     const username = req.body.username;
     const password = req.body.password;
     const role = req.body.role;
     try {
+        const errors = (0, validation_result_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            const error = new Error('Validation failed.');
+            error.statusCode = 422;
+            throw error;
+        }
         // send error to the client if the inputs are empty
         if (!email || !username || !password || !role) {
-            const error = new Error("not found");
+            const error = new Error("No input field must be empty");
             error.statusCode = 422;
             throw error;
         }
@@ -78,6 +78,10 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         //  catch errors
     }
     catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+            throw error;
+        }
         next(error);
     }
 });

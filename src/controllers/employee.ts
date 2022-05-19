@@ -13,21 +13,21 @@ import Error from "../middleware/errorInterface";
 
 
 export const registration:RequestHandler=async(req,res,next)=>{
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const error:any = new Error('Validation failed.');
-    error.statusCode = 422;
-    throw error;
-  }
  // get client data from request body   
   const email =(req.body as {email:string}).email;
   const username = (req.body as {username:string}).username;
   const password = (req.body as {password:string}).password;
   const role=(req.body as {role:string}).role
   try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        const error:Error = new Error('Validation failed.');
+        error.statusCode = 422;
+        throw error;
+      }
       // send error to the client if the inputs are empty
       if(!email || !username || !password || !role){
-        const error:Error=new Error("not found")
+        const error:Error=new Error("No input field must be empty")
         error.statusCode=422
         throw error
       }
@@ -35,7 +35,7 @@ export const registration:RequestHandler=async(req,res,next)=>{
       const userExist=await Employee.findOne({email:email})
       // check if there is a user with the client email
       if(userExist){
-          const error:any=new Error("User already exist with this email")
+          const error:Error=new Error("User already exist with this email")
           error.statusCode=422;
           throw error
       } 
@@ -66,7 +66,11 @@ export const registration:RequestHandler=async(req,res,next)=>{
       }
     });
     //  catch errors
-    } catch (error) {
+    } catch (error:any) {
+      if(!error.statusCode){
+        error.statusCode=500
+        throw error
+      }
        next(error);
   }
 }

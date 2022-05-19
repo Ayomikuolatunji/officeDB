@@ -4,6 +4,7 @@ import cors from "cors"
 import mongoose from "mongoose"
 import { graphqlHTTP } from 'express-graphql'
 import  bodyParser from "body-parser";
+import methodOverride from "method-override"
 // call dotenv 
 import dotevn from  "dotenv"
 dotevn.config()
@@ -26,6 +27,7 @@ const app=express()
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(bodyParser.json())
+app.use(methodOverride())
 // file upload parser
 
 app.use((req,res,next)=>{

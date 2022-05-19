@@ -8,6 +8,7 @@ const cors_1 = __importDefault(require("cors"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const express_graphql_1 = require("express-graphql");
 const body_parser_1 = __importDefault(require("body-parser"));
+const method_override_1 = __importDefault(require("method-override"));
 // call dotenv 
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
@@ -25,6 +26,7 @@ const app = (0, express_1.default)();
 app.use(body_parser_1.default.json({ limit: '50mb' }));
 app.use(body_parser_1.default.urlencoded({ limit: '50mb', extended: true }));
 app.use(body_parser_1.default.json());
+app.use((0, method_override_1.default)());
 // file upload parser
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");

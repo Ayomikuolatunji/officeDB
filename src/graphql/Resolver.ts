@@ -1,27 +1,9 @@
 import Employee from "../models/employee"
 import uploadToS3 from "../aws/uploadSetUp" 
 import { Request } from "express"
+import update_profileTypes from "../middleware/graphqlInterface"
 
 
-interface update_profileTypes{
-   update_picture:{
-    key:string
-    data:string
-   }
-   id:string,
-   update_username :{
-    username:string
-   }
-   role_update:{
-      role:string 
-   }
-   email_update:{
-       email:string
-   }
-   about_update:{
-       about:string
-   }
- }
 
 export ={
     update_Profile_Picture:async(profile:update_profileTypes, req:Request)=>{

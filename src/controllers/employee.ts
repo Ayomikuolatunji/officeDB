@@ -7,7 +7,6 @@ import transporter from "../email/transporter";
 import Employee from "../models/employee";
 import Company from "../models/company";
 import { RequestHandler } from "express";
-import errorInterface from "../middleware/errorInterface";
 
 
 
@@ -15,15 +14,20 @@ import errorInterface from "../middleware/errorInterface";
 export const registration:RequestHandler=async(req,res,next)=>{
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const error = new Error('Validation failed.');
-    // error.statusCode = 422;
+    const error:any = new Error('Validation failed.');
+    error.statusCode = 422;
     throw error;
   }
  // get client data from request body   
   const email =(req.body as {email:string}).email;
   const username = (req.body as {username:string}).username;
-  const password = req.body.password;
-  const role=req.body.role
+  const password = (req.body as {password:string}).password;
+  const role=(req.body as {role:string}).role
+  if(!email || !username || !password || !role){
+    const error:any=new Error("One of the input field is empty")
+    error.statusCode=422;
+    throw error
+  }
 // find user
   const userExist=await Employee.findOne({email:email})
   // check if there is a user with the client email
@@ -41,6 +45,7 @@ export const registration:RequestHandler=async(req,res,next)=>{
       password: hashedPw,
     });
       await user.save();
+      // send request and email to the employee
     res.status(201).json({ message: 'Employee account created successfully!',employeeId:user._id});
     // send mail to employee after successfully signup
     var mailOptions = {
@@ -59,10 +64,10 @@ export const registration:RequestHandler=async(req,res,next)=>{
       }
     });
     //  catch errors
-    } catch (err) {
-    //  if (!err.statusCode) {
-    //    err.statusCode = 500;
-    //  }
+    } catch (err:any) {
+     if (!err.statusCode) {
+       err.statusCode = 500;
+     }
     next(err);
   }
 }

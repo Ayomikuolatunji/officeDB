@@ -25,7 +25,7 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     const errors = (0, validation_result_1.validationResult)(req);
     if (!errors.isEmpty()) {
         const error = new Error('Validation failed.');
-        // error.statusCode = 422;
+        error.statusCode = 422;
         throw error;
     }
     // get client data from request body   
@@ -33,6 +33,11 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     const username = req.body.username;
     const password = req.body.password;
     const role = req.body.role;
+    if (!email || !username || !password || !role) {
+        const error = new Error("One of the input field is empty");
+        error.statusCode = 422;
+        throw error;
+    }
     // find user
     const userExist = yield employee_1.default.findOne({ email: email });
     // check if there is a user with the client email
@@ -50,6 +55,7 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             password: hashedPw,
         });
         yield user.save();
+        // send request and email to the employee
         res.status(201).json({ message: 'Employee account created successfully!', employeeId: user._id });
         // send mail to employee after successfully signup
         var mailOptions = {
@@ -71,9 +77,9 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         //  catch errors
     }
     catch (err) {
-        //  if (!err.statusCode) {
-        //    err.statusCode = 500;
-        //  }
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
         next(err);
     }
 });

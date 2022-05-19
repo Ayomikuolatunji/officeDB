@@ -23,10 +23,10 @@ export const registration:RequestHandler=async(req,res,next)=>{
   const username = (req.body as {username:string}).username;
   const password = (req.body as {password:string}).password;
   const role=(req.body as {role:string}).role
+  // send error to the client if the inputs are empty
   if(!email || !username || !password || !role){
-    const error:any=new Error("One of the input field is empty")
-    error.statusCode=422;
-    throw error
+   const error=new Error("not found")
+   
   }
 // find user
   const userExist=await Employee.findOne({email:email})
@@ -64,11 +64,8 @@ export const registration:RequestHandler=async(req,res,next)=>{
       }
     });
     //  catch errors
-    } catch (err:any) {
-     if (!err.statusCode) {
-       err.statusCode = 500;
-     }
-    next(err);
+    } catch (error) {
+       next(error);
   }
 }
 

@@ -20,6 +20,7 @@ const Resolver_1 = __importDefault(require("./graphql/Resolver"));
 const company_1 = __importDefault(require("./routes/company"));
 const industries_1 = __importDefault(require("./routes/industries"));
 const s3Route_1 = __importDefault(require("./routes/s3Route"));
+const errorHandler_1 = __importDefault(require("./middleware/errorHandler"));
 // initialise app
 const app = (0, express_1.default)();
 // convert request to json using express middleware
@@ -59,12 +60,7 @@ app.use("/office-api/auth", company_1.default);
 app.use("/office-api/", s3Route_1.default);
 app.use(errrorPage_1.default);
 // error middleware request
-app.use((error, req, res, next) => {
-    console.log(error.message);
-    const message = error.message;
-    const status = error.statusCode;
-    res.status(status).json({ message: message, error: "Error message" });
-});
+app.use(errorHandler_1.default);
 const MONGODB_KEY = process.env.MONGODB_KEY;
 // connecting server
 const startConnection = () => {

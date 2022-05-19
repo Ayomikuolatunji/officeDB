@@ -1,5 +1,7 @@
-interface errorInterface {
-    statusCode: number,
+interface Error {
+    status?: number;
+    message:string,
+    statusCode:number
 }
    
-export default errorInterface
+export default Error

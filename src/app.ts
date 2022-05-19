@@ -16,6 +16,7 @@ import resolver  from "./graphql/Resolver"
 import companyRoutes from "./routes/company"
 import allIndustryLists from "./routes/industries"
 import s3Route from "./routes/s3Route"
+import errorHandler from './middleware/errorHandler';
 
 
 
@@ -65,12 +66,7 @@ app.use(ErrorPage)
 
 
 // error middleware request
-app.use((error:any,req:Request,res:Response,next:NextFunction)=>{
-  console.log(error.message);
-  const message=error.message
-  const status=error.statusCode 
-  res.status(status).json({message:message, error:"Error message"})
-})
+app.use(errorHandler)
 
 
 const MONGODB_KEY:any=process.env.MONGODB_KEY

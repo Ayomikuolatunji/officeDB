@@ -3,6 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const errorHandler = (error, req, res, next) => {
     const message = error.message || "encounter error";
     const status = error.statusCode || 500;
-    return res.status(status).json({ message: message, error: "Error message" });
+    res.status(status).json({ message: message, error: "Error message" });
 };
 exports.default = errorHandler;

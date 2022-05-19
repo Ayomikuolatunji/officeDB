@@ -69,13 +69,18 @@ app.use(ErrorPage)
 app.use(errorHandler)
 
 
-const MONGODB_KEY:any=process.env.MONGODB_KEY
-interface connectTypes {
-        
-}
+
+// database connections
+
+type MongoDBType =string | undefined
+const MONGODB_KEY:MongoDBType=process.env.MONGODB_KEY
+interface connectTypes {}
 // connecting server
 const startConnection=()=>{
-  mongoose
+  if(MONGODB_KEY===undefined) {
+     console.log("MongoDB key is not set")
+  }else{
+    mongoose
   .connect(MONGODB_KEY,<connectTypes>{
     useNewUrlParser: true,
     useUnifiedTopology: true   
@@ -89,6 +94,7 @@ const startConnection=()=>{
   .catch(err => {
     console.log(err.message);
   });
+  }
 }
 
 startConnection()

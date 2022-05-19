@@ -25,7 +25,7 @@ router
     (0, express_validator_1.body)("username").trim(),
     (0, express_validator_1.body)("password").trim()
 ], employee_2.registration);
-router.post("/auth/employee_login", employee_2.login);
+router.post("/auth/login_employee", employee_2.login);
 router.post("/auth/reset_employee_password", employee_2.resetPassword);
 router.post("/auth/set_employee_newpassword", employee_2.correctPassword);
 router.get("auth/:id", employee_2.singleEmployee);

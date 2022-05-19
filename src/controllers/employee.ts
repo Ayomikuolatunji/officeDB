@@ -67,10 +67,6 @@ export const registration:RequestHandler=async(req,res,next)=>{
     });
     //  catch errors
     } catch (error:any) {
-      if(!error.statusCode){
-        error.statusCode=500
-        throw error
-      }
        next(error);
   }
 }
@@ -83,15 +79,15 @@ export const login:RequestHandler=async(req,res,next)=>{
   try {
     const user = await Employee.findOne({ email: email });
     if (!user) {
-      const error = new Error('A user with this email could not be found.');
-      // error.statusCode = 401;
+      const error:Error = new Error('A user with this email could not be found.');
+      error.statusCode = 401;
       throw error;
     }
 
     const isEqual = await bcrypt.compare(password, user.password);
     if (!isEqual) {
-      const error = new Error('Wrong password!');
-      // error.statusCode = 401;
+      const error:Error = new Error('Wrong password!');
+      error.statusCode = 401;
       throw error;
     }
     const token = jwt.sign(
@@ -104,9 +100,6 @@ export const login:RequestHandler=async(req,res,next)=>{
     );
     res.status(200).json({ token: token, employeeId:user._id });
   } catch (err) {
-    // if (!err.statusCode) {
-    //   err.statusCode = 500;
-    // }
     next(err);
   }
 } 

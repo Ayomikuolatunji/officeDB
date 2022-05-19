@@ -37,7 +37,7 @@ router
     ],
     registration
 )
-router.post("/auth/employee_login",login)
+router.post("/auth/login_employee",login)
 
 
 router.post("/auth/reset_employee_password",resetPassword)

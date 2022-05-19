@@ -64,19 +64,24 @@ app.use(errorHandler_1.default);
 const MONGODB_KEY = process.env.MONGODB_KEY;
 // connecting server
 const startConnection = () => {
-    mongoose_1.default
-        .connect(MONGODB_KEY, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
-        .then(Db => {
-        console.log("connected to database");
-        app.listen(process.env.PORT, () => {
-            console.log(`App running locally on ${process.env.PORT}`);
+    if (MONGODB_KEY === undefined) {
+        console.log("MongoDB key is not set");
+    }
+    else {
+        mongoose_1.default
+            .connect(MONGODB_KEY, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        })
+            .then(Db => {
+            console.log("connected to database");
+            app.listen(process.env.PORT, () => {
+                console.log(`App running locally on ${process.env.PORT}`);
+            });
+        })
+            .catch(err => {
+            console.log(err.message);
         });
-    })
-        .catch(err => {
-        console.log(err.message);
-    });
+    }
 };
 startConnection();

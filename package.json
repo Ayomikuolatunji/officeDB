@@ -12,6 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-ses": "^3.76.0",
+    "@types/express": "^4.17.13",
+    "@types/node": "^17.0.34",
     "aws-sdk": "^2.1131.0",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",

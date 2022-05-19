@@ -1,19 +1,21 @@
-const express=require("express")
-const cors =require("cors")
-const mongoose =require("mongoose")
-var { graphqlHTTP } = require('express-graphql');
-const bodyParser=require("body-parser");
+
+import express, { NextFunction, Request, Response } from 'express'
+import cors from "cors"
+import mongoose from "mongoose"
+import { graphqlHTTP } from 'express-graphql'
+import  bodyParser from "body-parser";
 // call dotenv 
-require("dotenv").config()
-const authRoutes=require("./routes/user")
-const ErrorPage=require("./util/errrorPage")
-const chatRoutes=require("./routes/chats")
-const Socket=require("./socket-io/socket")
-const buildSchema=require("./graphql/Schema")
-const resolver = require("./graphql/Resolver");
-const companyRoutes=require("./routes/company")
-const allIndustryLists=require("./routes/industries")
-const s3Route=require("./routes/s3Route")
+import dotevn from  "dotenv"
+dotevn.config()
+import authRoutes from "./routes/user"
+import ErrorPage from "./util/errrorPage"
+import chatRoutes from "./routes/chats"
+import Socket from "./socket-io/socket"
+import buildSchema from "./graphql/Schema"
+import resolver  from "./graphql/Resolver"
+import companyRoutes from "./routes/company"
+import allIndustryLists from "./routes/industries"
+import s3Route from "./routes/s3Route"
 
 
 
@@ -62,7 +64,7 @@ app.use(ErrorPage)
 
 
 // error middleware request
-app.use((error,req,res,next)=>{
+app.use((error:Error,req:Request,res:Response,next:NextFunction)=>{
   console.log(error.message);
   const message=error.message
   const status=error.statusCode 

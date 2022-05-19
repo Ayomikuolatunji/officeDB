@@ -1,5 +1,7 @@
-const aws = require('aws-sdk');
-require("dotenv").config()
+import aws from 'aws-sdk';
+import dotenv from "dotenv"
+
+dotenv.config()
 
 
 aws.config.update({
@@ -10,7 +12,7 @@ aws.config.update({
 
 const s3 = new aws.S3();
 
-const upload= async (options) => {
+const upload= async (options:{Bucket:string, key:string, Body:string, ContentType:string,data:string}) => {
       await s3
       .putObject({
         Bucket:"officedbfiles",
@@ -20,7 +22,6 @@ const upload= async (options) => {
       })
       .promise()
       .catch(err=>{
-        
         console.log(err.message)
       });
     return {
@@ -28,4 +29,4 @@ const upload= async (options) => {
       name: options.key,
     };
 };
-module.exports=upload
+export default upload

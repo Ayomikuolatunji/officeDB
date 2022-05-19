@@ -1,7 +1,6 @@
 import bcrypt from  "bcrypt"
 import { validationResult } from "express-validator/src/validation-result";
 import jwt from "jsonwebtoken"
-import mongoose from "mongoose";
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import crypto from "crypto";
 import transporter from "../email/transporter";

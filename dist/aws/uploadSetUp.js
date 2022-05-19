@@ -12,21 +12,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const router = express_1.default.Router();
-const uploadSetUp_1 = __importDefault(require("../aws/uploadSetUp"));
-const employee_1 = __importDefault(require("../models/employee"));
-router.post("/upload", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const data = req.body.data;
-    const key = req.body.key;
-    yield (0, uploadSetUp_1.default)({
-        key: key,
-        data: data
+const aws_sdk_1 = __importDefault(require("aws-sdk"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+aws_sdk_1.default.config.update({
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.AWS_ACCESS_KEYID,
+    region: 'us-east-1' // region of your bucket
+});
+const s3 = new aws_sdk_1.default.S3();
+const upload = (options) => __awaiter(void 0, void 0, void 0, function* () {
+    yield s3
+        .putObject({
+        Bucket: "officedbfiles",
+        Key: options.key,
+        Body: Buffer.from(options.data, "base64"),
+        ContentType: "image/jpeg",
+    })
+        .promise()
+        .catch(err => {
+        console.log(err.message);
     });
-    const s3Url = `https://${'college-sigunp-image'}.s3.amazonaws.com/${key}`;
-    const finderUser = yield employee_1.default.findOneAndUpdate("627a2056e4d0048ad86566e7", {
-        avartImage: s3Url
-    });
-    res.send(finderUser);
-}));
-module.exports = router;
+    return {
+        url: `https://officedbfiles.s3.amazonaws.com/${options.key}`,
+        name: options.key,
+    };
+});
+exports.default = upload;

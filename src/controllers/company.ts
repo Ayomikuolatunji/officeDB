@@ -1,11 +1,12 @@
-const Company = require("../models/company")
-const bcrypt=require("bcrypt")
-const  transporter  = require("../email/transporter");
+import Company from "../models/company"
+import bcrypt from "bcrypt"
+import  transporter from "../email/transporter";
+import { RequestHandler } from "express";
 
 
 
 
-const createCompany=async(req,res,next)=>{
+const createCompany:RequestHandler=async(req,res,next)=>{
   const company_name=req.body.company_name
   const company_type=req.body.company_type
   const company_email=req.body.company_email
@@ -34,7 +35,7 @@ const createCompany=async(req,res,next)=>{
             html:"<body><h5>You can login to your app with the link below</h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>"
           };
           // send email after successful signup
-           transporter.sendMail(mailOptions, function(error, info){
+           transporter.sendMail(mailOptions, function(error:Error, info:any){
             if (error) {
               console.log(error.message);
             } else {
@@ -49,7 +50,7 @@ const createCompany=async(req,res,next)=>{
 }
 
 
-const companiesEmployees=async(req,res,next)=>{
+const companiesEmployees:RequestHandler=async(req,res,next)=>{
      try {
          const users=await Company.find({}).populate("company_employes")
          if(!users){
@@ -67,4 +68,4 @@ const companiesEmployees=async(req,res,next)=>{
      }   
 }
 
-module.exports={createCompany,companiesEmployees}
+export default {createCompany,companiesEmployees}

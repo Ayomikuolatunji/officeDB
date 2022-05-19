@@ -1,4 +1,4 @@
-const mongoose=require("mongoose")
+import mongoose from "mongoose"
 const Schema=mongoose.Schema
 
 const companySchema=new Schema({
@@ -32,4 +32,4 @@ const companySchema=new Schema({
       ]
 },{timestamps:true})
 
-module.exports=mongoose.model("Companies", companySchema)
+export default mongoose.model("Companies", companySchema)

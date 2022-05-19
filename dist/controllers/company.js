@@ -8,22 +8,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const Company = require("../models/company");
-const bcrypt = require("bcrypt");
-const transporter = require("../email/transporter");
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const company_1 = __importDefault(require("../models/company"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const transporter_1 = __importDefault(require("../email/transporter"));
 const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const company_name = req.body.company_name;
     const company_type = req.body.company_type;
     const company_email = req.body.company_email;
     const company_password = req.body.company_password;
     const company_location = req.body.company_location;
-    const companyExits = yield Company.findOne({ email: company_email });
+    const companyExits = yield company_1.default.findOne({ email: company_email });
     if (companyExits) {
         res.status(422).json({ message: "company already exits" });
     }
     try {
-        const hashedPw = yield bcrypt.hash(company_password, 12);
-        const newCompany = new Company({
+        const hashedPw = yield bcrypt_1.default.hash(company_password, 12);
+        const newCompany = new company_1.default({
             company_email: company_email,
             company_location: company_location,
             company_type: company_type,
@@ -40,7 +44,7 @@ const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, func
             html: "<body><h5>You can login to your app with the link below</h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>"
         };
         // send email after successful signup
-        transporter.sendMail(mailOptions, function (error, info) {
+        transporter_1.default.sendMail(mailOptions, function (error, info) {
             if (error) {
                 console.log(error.message);
             }
@@ -56,7 +60,7 @@ const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, func
 });
 const companiesEmployees = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const users = yield Company.find({}).populate("company_employes");
+        const users = yield company_1.default.find({}).populate("company_employes");
         if (!users) {
             const error = new Error(`user empty`);
             error.statusCode = 422;
@@ -71,4 +75,4 @@ const companiesEmployees = (req, res, next) => __awaiter(void 0, void 0, void 0,
         next(error);
     }
 });
-module.exports = { createCompany, companiesEmployees };
+exports.default = { createCompany, companiesEmployees };

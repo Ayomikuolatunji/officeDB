@@ -1,6 +1,10 @@
 "use strict";
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = __importDefault(require("mongoose"));
+const Schema = mongoose_1.default.Schema;
 const companySchema = new Schema({
     company_name: {
         type: String,
@@ -31,4 +35,4 @@ const companySchema = new Schema({
         }
     ]
 }, { timestamps: true });
-module.exports = mongoose.model("Companies", companySchema);
+exports.default = mongoose_1.default.model("Companies", companySchema);

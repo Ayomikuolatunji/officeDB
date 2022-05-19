@@ -19,14 +19,13 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const http_status_codes_1 = require("http-status-codes");
 const crypto_1 = __importDefault(require("crypto"));
 const transporter_1 = __importDefault(require("../email/transporter"));
-const user_1 = __importDefault(require("../models/user"));
+const employee_1 = __importDefault(require("../models/employee"));
 const company_1 = __importDefault(require("../models/company"));
 const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = (0, validation_result_1.validationResult)(req);
     if (!errors.isEmpty()) {
         const error = new Error('Validation failed.');
-        error.statusCode = 422;
-        error.data = errors.array();
+        // error.statusCode = 422;
         throw error;
     }
     // get client data from request body   
@@ -35,16 +34,16 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     const password = req.body.password;
     const role = req.body.role;
     // find user
-    const userExist = yield user_1.default.findOne({ email: email });
+    const userExist = yield employee_1.default.findOne({ email: email });
     // check if there is a user with the client email
     if (userExist) {
         const error = new Error("User already exist with this email");
-        error.statusCode = 422;
+        // error.statusCode=422;
         throw error;
     }
     try {
         const hashedPw = yield bcrypt_1.default.hash(password, 12);
-        const user = new User({
+        const user = new employee_1.default({
             email,
             username,
             role,
@@ -72,9 +71,9 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         //  catch errors
     }
     catch (err) {
-        if (!err.statusCode) {
-            err.statusCode = 500;
-        }
+        //  if (!err.statusCode) {
+        //    err.statusCode = 500;
+        //  }
         next(err);
     }
 });
@@ -83,16 +82,16 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
     const email = req.body.email;
     const password = req.body.password;
     try {
-        const user = yield user_1.default.findOne({ email: email });
+        const user = yield employee_1.default.findOne({ email: email });
         if (!user) {
             const error = new Error('A user with this email could not be found.');
-            error.statusCode = 401;
+            // error.statusCode = 401;
             throw error;
         }
         const isEqual = yield bcrypt_1.default.compare(password, user.password);
         if (!isEqual) {
             const error = new Error('Wrong password!');
-            error.statusCode = 401;
+            // error.statusCode = 401;
             throw error;
         }
         const token = jsonwebtoken_1.default.sign({
@@ -102,9 +101,9 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(200).json({ token: token, employeeId: user._id });
     }
     catch (err) {
-        if (!err.statusCode) {
-            err.statusCode = 500;
-        }
+        // if (!err.statusCode) {
+        //   err.statusCode = 500;
+        // }
         next(err);
     }
 });
@@ -112,18 +111,18 @@ exports.login = login;
 const singleEmployee = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const user = yield user_1.default.findById({ _id: id });
+        const user = yield employee_1.default.findById({ _id: id });
         if (!user) {
             const error = new Error('A user with this email could not be found.');
-            error.statusCode = 40;
+            // error.statusCode = 40;
             throw error;
         }
         res.status(200).json({ user: user });
     }
     catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
+        // if(!error.statusCode){
+        //   error.statusCode=500
+        // }
         next(error);
     }
 });
@@ -138,7 +137,7 @@ const profilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     const avartImage = req.body.avartImage;
     const avatarImageSet = req.body.avatarImageSet;
     try {
-        const user = yield user_1.default.findOneAndUpdate({ _id: id }, {
+        const user = yield employee_1.default.findOneAndUpdate({ _id: id }, {
             avatarImageSet: avatarImageSet,
             avartImage: avartImage
         });
@@ -178,20 +177,20 @@ exports.getAllUsers = getAllUsers;
 const deleteEmployee = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
-        const findOne = yield user_1.default.findById({ _id: id });
+        const findOne = yield employee_1.default.findById({ _id: id });
         if (!findOne) {
             const error = new Error("No user find  with the id undefined");
             // error.statusCode=404
             throw error;
         }
-        const companyId = yield user_1.default.findById({ _id: findOne._id }).populate("company");
+        const companyId = yield employee_1.default.findById({ _id: findOne._id }).populate("company");
         res.status(http_status_codes_1.StatusCodes.OK).json({ message: http_status_codes_1.ReasonPhrases.ACCEPTED });
         console.log(companyId);
         // 
         yield company_1.default.findOneAndUpdate({ company_email: companyId.company.company_email }, { $pull: { company_employes: findOne._id }
         });
         // after remiving the reference from company schema the delete user
-        const deleteUser = yield user_1.default.findByIdAndDelete({ _id: findOne._id });
+        const deleteUser = yield employee_1.default.findByIdAndDelete({ _id: findOne._id });
         // send emails after deleting account
         var mailOptions = {
             from: 'ayomikuolatunji@gmail.com',
@@ -221,7 +220,7 @@ exports.deleteEmployee = deleteEmployee;
 const resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const email = req.body.email;
-        const user = yield user_1.default.findOne({ email: email });
+        const user = yield employee_1.default.findOne({ email: email });
         if (!user) {
             const error = new Error("No user with the email found");
             // error.statusCode=404
@@ -260,7 +259,7 @@ const correctPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     const password = req.body.password;
     const userId = req.body.userId;
     const resetToken = req.body.resetToken;
-    const user = yield user_1.default.findById({ _id: userId });
+    const user = yield employee_1.default.findById({ _id: userId });
     if (user || resetToken || userId) {
         const resetPassword = yield bcrypt_1.default.hash(password, 12);
         yield User.findOneAndUpdate({ _id: user._id }, {

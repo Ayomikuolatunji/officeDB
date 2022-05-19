@@ -5,19 +5,18 @@ import mongoose from "mongoose";
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import crypto from "crypto";
 import transporter from "../email/transporter";
-import Employee from "../models/user";
+import Employee from "../models/employee";
 import Company from "../models/company";
 import { RequestHandler } from "express";
 
 
 
 
-export const registration=async(req,res,next)=>{
+export const registration:RequestHandler=async(req,res,next)=>{
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error('Validation failed.');
-    error.statusCode = 422;
-    error.data = errors.array();
+    // error.statusCode = 422;
     throw error;
   }
  // get client data from request body   
@@ -30,12 +29,12 @@ export const registration=async(req,res,next)=>{
   // check if there is a user with the client email
   if(userExist){
       const error=new Error("User already exist with this email")
-      error.statusCode=422;
+      // error.statusCode=422;
       throw error
   } 
   try {
     const hashedPw = await bcrypt.hash(password, 12);
-    const user = new User({
+    const user = new Employee({
       email,
       username,
       role,
@@ -61,30 +60,30 @@ export const registration=async(req,res,next)=>{
     });
     //  catch errors
     } catch (err) {
-     if (!err.statusCode) {
-       err.statusCode = 500;
-     }
+    //  if (!err.statusCode) {
+    //    err.statusCode = 500;
+    //  }
     next(err);
   }
 }
 
 
 
-export const login=async(req,res,next)=>{
+export const login:RequestHandler=async(req,res,next)=>{
   const email = req.body.email;
   const password = req.body.password;
   try {
     const user = await Employee.findOne({ email: email });
     if (!user) {
       const error = new Error('A user with this email could not be found.');
-      error.statusCode = 401;
+      // error.statusCode = 401;
       throw error;
     }
 
     const isEqual = await bcrypt.compare(password, user.password);
     if (!isEqual) {
       const error = new Error('Wrong password!');
-      error.statusCode = 401;
+      // error.statusCode = 401;
       throw error;
     }
     const token = jwt.sign(
@@ -97,29 +96,29 @@ export const login=async(req,res,next)=>{
     );
     res.status(200).json({ token: token, employeeId:user._id });
   } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
+    // if (!err.statusCode) {
+    //   err.statusCode = 500;
+    // }
     next(err);
   }
 } 
 
 
 
-export const singleEmployee=async(req,res,next)=>{
+export const singleEmployee:RequestHandler=async(req,res,next)=>{
   const {id}=req.params;
    try {
     const user=await Employee.findById({_id:id})
     if (!user) {
       const error = new Error('A user with this email could not be found.');
-      error.statusCode = 40;
+      // error.statusCode = 40;
       throw error;
     }
     res.status(200).json({user:user})
     } catch (error) {
-        if(!error.statusCode){
-          error.statusCode=500
-        }
+        // if(!error.statusCode){
+        //   error.statusCode=500
+        // }
         next(error)
    }
 }

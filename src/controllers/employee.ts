@@ -7,6 +7,7 @@ import transporter from "../email/transporter";
 import Employee from "../models/employee";
 import Company from "../models/company";
 import { RequestHandler } from "express";
+import errorInterface from "../middleware/errorInterface";
 
 
 
@@ -19,16 +20,16 @@ export const registration:RequestHandler=async(req,res,next)=>{
     throw error;
   }
  // get client data from request body   
-  const email = req.body.email;
-  const username = req.body.username;
+  const email =(req.body as {email:string}).email;
+  const username = (req.body as {username:string}).username;
   const password = req.body.password;
   const role=req.body.role
 // find user
   const userExist=await Employee.findOne({email:email})
   // check if there is a user with the client email
   if(userExist){
-      const error=new Error("User already exist with this email")
-      // error.statusCode=422;
+      const error:any=new Error("User already exist with this email")
+      error.statusCode=422;
       throw error
   } 
   try {
@@ -149,7 +150,7 @@ export const profilePicture:RequestHandler=async(req,res,next)=>{
     }
 }
 
-export const getAllUsers:RequestHandler=async(req,res,next)=>{
+export const getAllEmployees:RequestHandler=async(req,res,next)=>{
 
      try {
          const users=await Employee.find({}).select([
@@ -159,16 +160,15 @@ export const getAllUsers:RequestHandler=async(req,res,next)=>{
             "_id"
          ])
          if(!users){
-          const error=new Error(`No user found`)
-          // error.statusCode=422
+          const error:any=new Error(`No user found`)
+          error.statusCode=422
           throw error
          }     
          res.status(200).json({users})
-     } catch (error) {
-
-      // if(!error.statusCode){
-      //      error.statusCode=500
-      //  }
+     } catch (error:any) {
+      if(!error.statusCode){
+           error.statusCode=500
+       }
        next(error) 
      }   
 

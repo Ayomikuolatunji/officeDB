@@ -7,7 +7,7 @@ import
     login,
     singleEmployee,
     profilePicture,
-    getAllUsers,
+    getAllEmployees,
     deleteEmployee,
     resetPassword,
     correctPassword
@@ -17,7 +17,7 @@ const router=Router()
 
 
 router
-.get("/auth/all_employees",getAllUsers)
+.get("/auth/all_employees",getAllEmployees)
 
 .post("/auth/register_employee",
     [

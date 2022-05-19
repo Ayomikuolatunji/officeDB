@@ -53,7 +53,7 @@ app.use('/graphql', (0, express_graphql_1.graphqlHTTP)({
 }));
 // api routes for user auth
 app.use("/office-api", industries_1.default);
-app.use("/office-api/auth", employee_1.default);
+app.use("/office-api", employee_1.default);
 app.use('/office-api', chats_1.default);
 app.use("/office-api/auth", company_1.default);
 app.use("/office-api/", s3Route_1.default);
@@ -62,8 +62,8 @@ app.use(errrorPage_1.default);
 app.use((error, req, res, next) => {
     console.log(error.message);
     const message = error.message;
-    // const status=error.statusCode 
-    res.status(500).json({ message: message, error: "Error message" });
+    const status = error.statusCode;
+    res.status(status).json({ message: message, error: "Error message" });
 });
 const MONGODB_KEY = process.env.MONGODB_KEY;
 // connecting server

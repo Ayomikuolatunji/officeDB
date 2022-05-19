@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.correctPassword = exports.resetPassword = exports.deleteEmployee = exports.getAllUsers = exports.profilePicture = exports.singleEmployee = exports.login = exports.registration = void 0;
+exports.correctPassword = exports.resetPassword = exports.deleteEmployee = exports.getAllEmployees = exports.profilePicture = exports.singleEmployee = exports.login = exports.registration = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const validation_result_1 = require("express-validator/src/validation-result");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -38,7 +38,7 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     // check if there is a user with the client email
     if (userExist) {
         const error = new Error("User already exist with this email");
-        // error.statusCode=422;
+        error.statusCode = 422;
         throw error;
     }
     try {
@@ -151,7 +151,7 @@ const profilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.profilePicture = profilePicture;
-const getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllEmployees = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield employee_1.default.find({}).select([
             "email",
@@ -161,19 +161,19 @@ const getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         ]);
         if (!users) {
             const error = new Error(`No user found`);
-            // error.statusCode=422
+            error.statusCode = 422;
             throw error;
         }
         res.status(200).json({ users });
     }
     catch (error) {
-        // if(!error.statusCode){
-        //      error.statusCode=500
-        //  }
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
         next(error);
     }
 });
-exports.getAllUsers = getAllUsers;
+exports.getAllEmployees = getAllEmployees;
 const deleteEmployee = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;

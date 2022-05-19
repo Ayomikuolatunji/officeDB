@@ -9,7 +9,7 @@ const employee_1 = __importDefault(require("../models/employee"));
 const employee_2 = require("../controllers/employee");
 const router = (0, express_1.Router)();
 router
-    .get("/auth/all_employees", employee_2.getAllUsers)
+    .get("/auth/all_employees", employee_2.getAllEmployees)
     .post("/auth/register_employee", [
     (0, express_validator_1.body)("email").isEmail().withMessage("Enter valid email address").custom((value, { req }) => {
         return employee_1.default.findOne({ email: value })

@@ -57,7 +57,7 @@ app.use('/graphql', graphqlHTTP({
 
 // api routes for user auth
 app.use("/office-api",allIndustryLists)
-app.use("/office-api/auth",employeeRoutes)
+app.use("/office-api",employeeRoutes)
 app.use('/office-api',chatRoutes)
 app.use("/office-api/auth",companyRoutes)
 app.use("/office-api/",s3Route)
@@ -65,11 +65,11 @@ app.use(ErrorPage)
 
 
 // error middleware request
-app.use((error:Error,req:Request,res:Response,next:NextFunction)=>{
+app.use((error:any,req:Request,res:Response,next:NextFunction)=>{
   console.log(error.message);
   const message=error.message
-  // const status=error.statusCode 
-  res.status(500).json({message:message, error:"Error message"})
+  const status=error.statusCode 
+  res.status(status).json({message:message, error:"Error message"})
 })
 
 

@@ -12,17 +12,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.correctPassword = exports.resetPassword = exports.deleteEmployee = exports.getAllUsers = exports.profilePicture = exports.singleEmployee = exports.login = exports.registration = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const { validationResult } = require("express-validator");
-const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
-const { StatusCodes, ReasonPhrases } = require("http-status-codes");
-const crypto = require("crypto");
-const transporter = require("../email/transporter");
-const User = require("../models/user");
-const Company = require("../models/company");
+const validation_result_1 = require("express-validator/src/validation-result");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const http_status_codes_1 = require("http-status-codes");
+const crypto_1 = __importDefault(require("crypto"));
+const transporter_1 = __importDefault(require("../email/transporter"));
+const user_1 = __importDefault(require("../models/user"));
+const company_1 = __importDefault(require("../models/company"));
 const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const errors = validationResult(req);
+    const errors = (0, validation_result_1.validationResult)(req);
     if (!errors.isEmpty()) {
         const error = new Error('Validation failed.');
         error.statusCode = 422;
@@ -35,7 +35,7 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     const password = req.body.password;
     const role = req.body.role;
     // find user
-    const userExist = yield User.findOne({ email: email });
+    const userExist = yield user_1.default.findOne({ email: email });
     // check if there is a user with the client email
     if (userExist) {
         const error = new Error("User already exist with this email");
@@ -44,7 +44,7 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     }
     try {
         const hashedPw = yield bcrypt_1.default.hash(password, 12);
-        const user = new User({
+        const user = new user_1.default({
             email,
             username,
             role,
@@ -61,7 +61,7 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             html: "<body><h5>You can login to your app with the link below</h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>"
         };
         // send email after successful signup
-        transporter.sendMail(mailOptions, function (error, info) {
+        transporter_1.default.sendMail(mailOptions, function (error, info) {
             if (error) {
                 console.log(error);
             }
@@ -78,11 +78,12 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         next(err);
     }
 });
+exports.registration = registration;
 const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const email = req.body.email;
     const password = req.body.password;
     try {
-        const user = yield User.findOne({ email: email });
+        const user = yield user_1.default.findOne({ email: email });
         if (!user) {
             const error = new Error('A user with this email could not be found.');
             error.statusCode = 401;
@@ -94,7 +95,7 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
             error.statusCode = 401;
             throw error;
         }
-        const token = jwt.sign({
+        const token = jsonwebtoken_1.default.sign({
             email: user.email,
             userId: user._id.toString()
         }, 'somesupersecretsecret', { expiresIn: '30d' });
@@ -107,10 +108,11 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         next(err);
     }
 });
-const oneUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.login = login;
+const singleEmployee = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const user = yield User.findById({ _id: id });
+        const user = yield user_1.default.findById({ _id: id });
         if (!user) {
             const error = new Error('A user with this email could not be found.');
             error.statusCode = 40;
@@ -125,6 +127,7 @@ const oneUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         next(error);
     }
 });
+exports.singleEmployee = singleEmployee;
 const profilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     if (!id) {
@@ -135,7 +138,7 @@ const profilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     const avartImage = req.body.avartImage;
     const avatarImageSet = req.body.avatarImageSet;
     try {
-        const user = yield User.findOneAndUpdate({ _id: id }, {
+        const user = yield user_1.default.findOneAndUpdate({ _id: id }, {
             avatarImageSet: avatarImageSet,
             avartImage: avartImage
         });
@@ -148,9 +151,10 @@ const profilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         next(error);
     }
 });
+exports.profilePicture = profilePicture;
 const getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const users = yield User.find({}).select([
+        const users = yield user_1.default.find({}).select([
             "email",
             "username",
             "avartImage",
@@ -170,23 +174,24 @@ const getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         next(error);
     }
 });
-const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getAllUsers = getAllUsers;
+const deleteEmployee = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
-        const findOne = yield User.findById({ _id: id });
+        const findOne = yield user_1.default.findById({ _id: id });
         if (!findOne) {
             const error = new Error("No user find  with the id undefined");
             error.statusCode = 404;
             throw error;
         }
-        const companyId = yield User.findById({ _id: findOne._id }).populate("company");
-        res.status(StatusCodes.OK).json({ message: ReasonPhrases.ACCEPTED });
+        const companyId = yield user_1.default.findById({ _id: findOne._id }).populate("company");
+        res.status(http_status_codes_1.StatusCodes.OK).json({ message: http_status_codes_1.ReasonPhrases.ACCEPTED });
         console.log(companyId);
         // 
-        yield Company.findOneAndUpdate({ company_email: companyId.company.company_email }, { $pull: { company_employes: findOne._id }
+        yield company_1.default.findOneAndUpdate({ company_email: companyId.company.company_email }, { $pull: { company_employes: findOne._id }
         });
         // after remiving the reference from company schema the delete user
-        const deleteUser = yield User.findByIdAndDelete({ _id: findOne._id });
+        const deleteUser = yield user_1.default.findByIdAndDelete({ _id: findOne._id });
         // send emails after deleting account
         var mailOptions = {
             from: 'ayomikuolatunji@gmail.com',
@@ -196,7 +201,7 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             html: `<body><h5>You deleted your account with ${companyId.company.company_name} and you are no longer with the company on our platformz</h5></body>`
         };
         // send email after successful signup
-        transporter.sendMail(mailOptions, function (error, info) {
+        transporter_1.default.sendMail(mailOptions, function (error, info) {
             if (error) {
                 console.log(error);
             }
@@ -212,16 +217,17 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         next(error);
     }
 });
+exports.deleteEmployee = deleteEmployee;
 const resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const email = req.body.email;
-        const user = yield User.findOne({ email: email });
+        const user = yield user_1.default.findOne({ email: email });
         if (!user) {
             const error = new Error("No user with the email found");
             error.statusCode = 404;
             throw error;
         }
-        const random = crypto.randomBytes(300);
+        const random = crypto_1.default.randomBytes(300);
         if (!random) {
             return console.log("err");
         }
@@ -235,7 +241,7 @@ const resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, func
             html: `<body><h5>You set your password with the link below</h5><div><a href='http://localhost:3000/reset-password/new-password?code=${token}&id=${user._id}'>Click to correct password</a></div></body>`
         };
         // send email after successful signup
-        transporter.sendMail(mailOptions, function (error, info) {
+        transporter_1.default.sendMail(mailOptions, function (error, info) {
             if (error) {
                 console.log(error);
             }
@@ -249,14 +255,15 @@ const resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         next();
     }
 });
+exports.resetPassword = resetPassword;
 const correctPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const password = req.body.password;
     const userId = req.body.userId;
     const resetToken = req.body.resetToken;
-    const user = yield User.findById({ _id: userId });
+    const user = yield user_1.default.findById({ _id: userId });
     if (user || resetToken || userId) {
         const resetPassword = yield bcrypt_1.default.hash(password, 12);
-        yield User.findOneAndUpdate({ _id: user._id }, {
+        yield user_1.default.findOneAndUpdate({ _id: user._id }, {
             password: resetPassword,
         });
         res.status(200).json({ user: user._id });
@@ -268,7 +275,7 @@ const correctPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
             html: `<body><h5>Your password has been reset </h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>`
         };
         // send email after successful signup
-        transporter.sendMail(mailOptions, function (error, info) {
+        transporter_1.default.sendMail(mailOptions, function (error, info) {
             if (error) {
                 console.log(error);
             }
@@ -283,16 +290,6 @@ const correctPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         throw error;
     }
 });
+exports.correctPassword = correctPassword;
 const populateEmployee = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
 });
-module.exports = {
-    registration,
-    login,
-    oneUser,
-    profilePicture,
-    getAllUsers,
-    deleteUser,
-    resetPassword,
-    correctPassword,
-    populateEmployee
-};

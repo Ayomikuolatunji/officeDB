@@ -1,17 +1,17 @@
 import bcrypt from  "bcrypt"
-const { validationResult }=require("express-validator");
-const jwt=require("jsonwebtoken");
-const mongoose=require("mongoose")
-const {StatusCodes,ReasonPhrases} =require("http-status-codes")
-const crypto=require("crypto")
-const transporter=require("../email/transporter")
-const User=require("../models/user");
-const Company = require("../models/company");
+import { validationResult } from "express-validator/src/validation-result";
+import jwt from "jsonwebtoken"
+import mongoose from "mongoose";
+import { StatusCodes, ReasonPhrases } from "http-status-codes";
+import crypto from "crypto";
+import transporter from "../email/transporter";
+import User from "../models/user";
+import Company from "../models/company";
 
 
 
 
-const registration=async(req,res,next)=>{
+export const registration=async(req,res,next)=>{
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error('Validation failed.');
@@ -69,7 +69,7 @@ const registration=async(req,res,next)=>{
 
 
 
-const login=async(req,res,next)=>{
+export const login=async(req,res,next)=>{
   const email = req.body.email;
   const password = req.body.password;
   try {
@@ -105,7 +105,7 @@ const login=async(req,res,next)=>{
 
 
 
-const oneUser=async(req,res,next)=>{
+export const singleEmployee=async(req,res,next)=>{
   const {id}=req.params;
    try {
     const user=await User.findById({_id:id})
@@ -127,7 +127,7 @@ const oneUser=async(req,res,next)=>{
 
 
 
-const profilePicture=async(req,res,next)=>{
+export const profilePicture=async(req,res,next)=>{
   const {id}=req.params
   if(!id){
     const error=new Error(`Cant uplaod image with this ${id}`)
@@ -150,7 +150,7 @@ const profilePicture=async(req,res,next)=>{
     }
 }
 
-const getAllUsers=async(req,res,next)=>{
+export const getAllUsers=async(req,res,next)=>{
 
      try {
          const users=await User.find({}).select([
@@ -176,7 +176,7 @@ const getAllUsers=async(req,res,next)=>{
 }
 
 
-const deleteUser=async(req,res,next)=>{
+export const deleteEmployee=async(req,res,next)=>{
     try {
     const id=req.params.id;
     const findOne=await User.findById({_id:id})
@@ -223,7 +223,7 @@ const deleteUser=async(req,res,next)=>{
 
 
 
-const resetPassword=async(req,res,next)=>{
+export const resetPassword=async(req,res,next)=>{
     try{
       const email=req.body.email
       const user=await User.findOne({email:email})
@@ -261,7 +261,7 @@ const resetPassword=async(req,res,next)=>{
 
 
 
-const correctPassword=async(req,res,next)=>{
+export const correctPassword=async(req,res,next)=>{
   const password=req.body.password
   const userId=req.body.userId
   const resetToken=req.body.resetToken
@@ -298,16 +298,3 @@ const populateEmployee=async(req,res,next)=>{
        
 }
 
-
-
-module.exports={
-  registration,
-  login,
-  oneUser,
-  profilePicture,
-  getAllUsers,
-  deleteUser,
-  resetPassword,
-  correctPassword,
-  populateEmployee
-}

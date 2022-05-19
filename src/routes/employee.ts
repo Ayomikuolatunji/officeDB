@@ -5,10 +5,10 @@ import
    {
     registration,
     login,
-    oneUser,
+    singleEmployee,
     profilePicture,
     getAllUsers,
-    deleteUser,
+    deleteEmployee,
     resetPassword,
     correctPassword
   }

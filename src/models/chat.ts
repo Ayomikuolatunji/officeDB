@@ -1,4 +1,4 @@
-const mongoose=require("mongoose")
+import mongoose from "mongoose"
 
 
 const Schema=mongoose.Schema
@@ -19,4 +19,4 @@ const chatSchema=new Schema({
 
 
 
-module.exports=mongoose.model("chats", chatSchema)
+export default mongoose.model("chats", chatSchema)

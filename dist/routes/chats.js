@@ -1,9 +1,10 @@
 "use strict";
-const express = require("express");
-const { postChat, fetchChat } = require("../controllers/Chat");
-const router = express.Router();
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const Chat_1 = require("../controllers/Chat");
+const router = (0, express_1.Router)();
 router
-    .post("/fetch-chats", fetchChat)
-    .post("/chats", postChat);
+    .post("/fetch-chats", Chat_1.fetchChat)
+    .post("/chats", Chat_1.postChat);
 // .delete("/chats/:")
-module.exports = router;
+exports.default = router;

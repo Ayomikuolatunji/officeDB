@@ -1,6 +1,7 @@
-const Chat =require("../models/chat")
+import { RequestHandler } from "express"
+import Chat from "../models/chat"
 
-const fetchChat=async(req,res,next)=>{
+export const fetchChat:RequestHandler=async(req,res,next)=>{
     const from=req.body.from
     const to=req.body.to
     try {
@@ -26,7 +27,7 @@ const fetchChat=async(req,res,next)=>{
 }
 
 
-const postChat=async(req,res,next)=>{
+export const postChat:RequestHandler=async(req,res,next)=>{
  
    try {
     const message=req.body.chat

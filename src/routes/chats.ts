@@ -1,7 +1,7 @@
-const express=require("express")
-const {postChat,fetchChat}=require("../controllers/Chat")
+import express, { Router } from "express"
+import { postChat, fetchChat } from "../controllers/Chat"
 
-const router=express.Router()
+const router=Router()
 
 
 
@@ -12,4 +12,4 @@ router
 .post("/chats", postChat)
 // .delete("/chats/:")
 
-module.exports=router
+export default router

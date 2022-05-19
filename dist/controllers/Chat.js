@@ -8,12 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const Chat = require("../models/chat");
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.postChat = exports.fetchChat = void 0;
+const chat_1 = __importDefault(require("../models/chat"));
 const fetchChat = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const from = req.body.from;
     const to = req.body.to;
     try {
-        const messages = yield Chat.find({ users: { $all: [from, to] } }).sort({ updatedAt: 1 });
+        const messages = yield chat_1.default.find({ users: { $all: [from, to] } }).sort({ updatedAt: 1 });
         if (!messages) {
             const error = new Error("No similar chats found");
             error.statusCode = 404;
@@ -34,12 +39,13 @@ const fetchChat = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         next(error);
     }
 });
+exports.fetchChat = fetchChat;
 const postChat = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const message = req.body.chat;
         const from = req.body.from;
         const to = req.body.to;
-        const chatsCreated = yield Chat.create({
+        const chatsCreated = yield chat_1.default.create({
             chats: message,
             users: [from, to],
             sender: from
@@ -58,4 +64,5 @@ const postChat = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         next(error);
     }
 });
-module.exports = { postChat, fetchChat };
+exports.postChat = postChat;
+module.exports = { postChat: exports.postChat, fetchChat: exports.fetchChat };

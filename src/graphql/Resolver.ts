@@ -26,8 +26,10 @@ module.exports={
          }
         //  upload to s3 bucket 
          await uploadToS3({
+            Bucket:"officedbfiles", 
             key:update_picture.key,
-            data:update_picture.data
+            data:update_picture.data,
+            ContentType:"image/jpeg"
         });
         // get aws s3 object url
           const s3Url=`https://officedbfiles.s3.amazonaws.com/${update_picture.key}`

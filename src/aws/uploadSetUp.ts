@@ -12,13 +12,13 @@ aws.config.update({
 
 const s3 = new aws.S3();
 
-const upload= async (options:{Bucket:string, key:string, Body:string, ContentType:string,data:string}) => {
+const upload= async (options:{Bucket:string, key:string, ContentType:string,data:string}) => {
       await s3
       .putObject({
-        Bucket:"officedbfiles",
+        Bucket:options.Bucket,
         Key: options.key,
         Body: Buffer.from(options.data, "base64"),
-        ContentType: "image/jpeg",
+        ContentType: options.ContentType
       })
       .promise()
       .catch(err=>{

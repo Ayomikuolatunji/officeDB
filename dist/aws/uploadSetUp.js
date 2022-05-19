@@ -24,10 +24,10 @@ const s3 = new aws_sdk_1.default.S3();
 const upload = (options) => __awaiter(void 0, void 0, void 0, function* () {
     yield s3
         .putObject({
-        Bucket: "officedbfiles",
+        Bucket: options.Bucket,
         Key: options.key,
         Body: Buffer.from(options.data, "base64"),
-        ContentType: "image/jpeg",
+        ContentType: options.ContentType
     })
         .promise()
         .catch(err => {

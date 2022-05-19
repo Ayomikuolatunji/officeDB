@@ -1,6 +1,7 @@
 
 class BaseError extends Error {
-    constructor (name, statusCode, isOperational, description) {
+    
+    constructor (public name:string, public statusCode:number, public isOperational:string, public description:string) {
     super(description)
    
     Object.setPrototypeOf(this, new.target.prototype)
@@ -11,4 +12,4 @@ class BaseError extends Error {
     }
    }
    
-   module.exports = BaseError
+   export default BaseError

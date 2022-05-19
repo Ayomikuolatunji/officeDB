@@ -89,13 +89,13 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         const user = yield employee_1.default.findOne({ email: email });
         if (!user) {
             const error = new Error('A user with this email could not be found.');
-            error.statusCode = 401;
+            error.statusCode = 404;
             throw error;
         }
         const isEqual = yield bcrypt_1.default.compare(password, user.password);
         if (!isEqual) {
             const error = new Error('Wrong password!');
-            error.statusCode = 401;
+            error.statusCode = 422;
             throw error;
         }
         const token = jsonwebtoken_1.default.sign({
@@ -132,7 +132,7 @@ const profilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     const { id } = req.params;
     if (!id) {
         const error = new Error(`Cant uplaod image with this ${id}`);
-        // error.statusCode=422
+        error.statusCode = 422;
         throw error;
     }
     const avartImage = req.body.avartImage;
@@ -145,9 +145,9 @@ const profilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         return res.status(200).json({ msg: user });
     }
     catch (error) {
-        //   if(!error.statusCode){
-        //   error.statusCode=500
-        //  }
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
         next(error);
     }
 });

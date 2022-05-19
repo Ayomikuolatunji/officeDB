@@ -74,20 +74,20 @@ export const registration:RequestHandler=async(req,res,next)=>{
 
 
 export const login:RequestHandler=async(req,res,next)=>{
-  const email = req.body.email;
-  const password = req.body.password;
+  const email = (req.body as {email:string}).email;
+  const password = (req.body as {password:string}).password;
   try {
     const user = await Employee.findOne({ email: email });
     if (!user) {
       const error:Error = new Error('A user with this email could not be found.');
-      error.statusCode = 401;
+      error.statusCode = 404;
       throw error;
     }
 
     const isEqual = await bcrypt.compare(password, user.password);
     if (!isEqual) {
       const error:Error = new Error('Wrong password!');
-      error.statusCode = 401;
+      error.statusCode = 422;
       throw error;
     }
     const token = jwt.sign(
@@ -131,22 +131,22 @@ export const singleEmployee:RequestHandler=async(req,res,next)=>{
 export const profilePicture:RequestHandler=async(req,res,next)=>{
   const {id}=req.params
   if(!id){
-    const error=new Error(`Cant uplaod image with this ${id}`)
-    // error.statusCode=422
+    const error:Error=new Error(`Cant uplaod image with this ${id}`)
+    error.statusCode=422
     throw error
   }
-  const avartImage=req.body.avartImage
-  const avatarImageSet=req.body.avatarImageSet
+  const avartImage=(req.body as {avartImage:string}).avartImage
+  const avatarImageSet=(req.body as {avatarImageSet:boolean}).avatarImageSet
     try {
        const user=await Employee.findOneAndUpdate({_id:id},{
         avatarImageSet:avatarImageSet,
         avartImage: avartImage
        })
        return res.status(200).json({msg:user})
-    }catch (error) {
-      //   if(!error.statusCode){
-      //   error.statusCode=500
-      //  }
+    }catch (error:any) {
+        if(!error.statusCode){
+        error.statusCode=500
+       }
        next(error) 
     }
 }

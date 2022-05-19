@@ -22,5 +22,5 @@ router.post("/upload", async (req, res) => {
     res.send(finderUser);
   });
 
-module.exports=router
+export default router
 

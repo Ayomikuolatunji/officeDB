@@ -32,4 +32,4 @@ router.post("/upload", (req, res) => __awaiter(void 0, void 0, void 0, function*
     });
     res.send(finderUser);
 }));
-module.exports = router;
+exports.default = router;

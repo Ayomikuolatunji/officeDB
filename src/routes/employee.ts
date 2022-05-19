@@ -1,7 +1,7 @@
-import express from "express"
+import { Router } from "express"
 import {body} from  "express-validator"
 import User from  "../models/employee"
-const 
+import
    {
     registration,
     login,
@@ -12,14 +12,14 @@ const
     resetPassword,
     correctPassword
   }
-= require("../controllers/user")
-const router=express.Router()
+ from "../controllers/employee"
+const router=Router()
 
 
 router
-.get("/all_users",getAllUsers)
+.get("/auth/all_employees",getAllUsers)
 
-.post("/register",
+.post("/auth/register_employee",
     [
     body("email").isEmail().withMessage("Enter valid email address").custom((value,{req})=>{
         return User.findOne({email:value})
@@ -37,19 +37,19 @@ router
     ],
     registration
 )
-router.post("/login",login)
+router.post("/auth/employee_login",login)
 
 
-router.post("/reset_password",resetPassword)
+router.post("/auth/reset_employee_password",resetPassword)
 
-router.post("/set_newpassword",correctPassword)
+router.post("/auth/set_employee_newpassword",correctPassword)
 
-router.get("/:id",oneUser)
+router.get("auth/:id",singleEmployee)
 
-router.post("/profile_picture/:id", profilePicture)
+router.post("/auth/employee_profile_picture/:id", profilePicture)
 
-router.delete("/delete_user/:id",deleteUser)
+router.delete("/auth/delete_employee/:id",deleteEmployee)
 
-router.post("/add_employee_to_company/:id")
+router.post("/auth/add_employee_to_company/:id")
 
 export default router

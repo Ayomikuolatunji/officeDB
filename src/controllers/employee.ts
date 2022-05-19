@@ -1,4 +1,4 @@
-const bcrypt=require("bcrypt")
+import bcrypt from  "bcrypt"
 const { validationResult }=require("express-validator");
 const jwt=require("jsonwebtoken");
 const mongoose=require("mongoose")

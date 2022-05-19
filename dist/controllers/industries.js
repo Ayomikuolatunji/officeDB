@@ -8,17 +8,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const Industry = require("../models/industry");
-const prepareAllIndustry = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getAllIndustry = void 0;
+const industry_1 = __importDefault(require("../models/industry"));
+const getAllIndustry = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const industries = yield Industry.find({});
+        const industries = yield industry_1.default.find({});
         if (!industries) {
             throw new Error("No industries found");
         }
-        const totalIndustries = yield Industry.find({}).countDocuments();
+        const totalIndustries = yield industry_1.default.find({}).countDocuments();
         res.status(200).json({ total: `${totalIndustries} industries`, industries: industries });
     }
     catch (error) {
+        next(error);
     }
 });
-module.exports = prepareAllIndustry;
+exports.getAllIndustry = getAllIndustry;

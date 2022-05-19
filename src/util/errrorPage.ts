@@ -1,7 +1,8 @@
+import { RequestHandler } from "express"
 
 
-const ErrorPage=(req,res,next)=>{
+const ErrorPage:RequestHandler=(req,res,next)=>{
     res.status(404).json({message:"Route page found"})
 }
 
-module.exports=ErrorPage
+export default ErrorPage

@@ -1,7 +1,9 @@
-const Industry=require("../models/industry")
+import { RequestHandler } from "express"
+import { nextTick } from "process"
+import Industry from "../models/industry"
 
 
-const prepareAllIndustry=async(req,res)=>{
+export const getAllIndustry:RequestHandler=async(req,res,next)=>{
      try{
         const industries= await Industry.find({})
         if(!industries){
@@ -10,8 +12,6 @@ const prepareAllIndustry=async(req,res)=>{
         const totalIndustries=await Industry.find({}).countDocuments()
         res.status(200).json({total:`${totalIndustries} industries`, industries:industries})
      }catch(error){
-
+         next(error)
      }
 }
-
-module.exports=prepareAllIndustry

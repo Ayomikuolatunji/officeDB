@@ -1,8 +1,8 @@
 import { Router } from "express"
-import prepareAllIndustryApi from "../controllers/industries"
+import {getAllIndustry} from "../controllers/industries"
 const router=Router()
 
-router.get('/all-country-lists',prepareAllIndustryApi)
+router.get('/all-country-lists',getAllIndustry)
 
 
 export default router

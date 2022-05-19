@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const industrySchema = Schema({
@@ -7,4 +8,4 @@ const industrySchema = Schema({
         required: true
     }
 });
-module.exports = mongoose.model("All_Industries", industrySchema);
+exports.default = mongoose.model("All_Industries", industrySchema);

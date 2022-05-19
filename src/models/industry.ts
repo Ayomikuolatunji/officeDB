@@ -9,4 +9,4 @@ const industrySchema=Schema({
         required:true
     }
 })
-module.exports=mongoose.model("All_Industries", industrySchema)
+export default mongoose.model("All_Industries", industrySchema)

@@ -18,5 +18,6 @@ interface update_profileTypes{
     }
   }
 
+  
 
   export default update_profileTypes

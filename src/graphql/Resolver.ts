@@ -1,7 +1,7 @@
 import Employee from "../models/employee"
 import uploadToS3 from "../aws/uploadSetUp" 
 import { Request } from "express"
-import update_profileTypes from "../middleware/graphqlInterface"
+import update_profileTypes from "../interface/graphqlInterface"
 
 
 

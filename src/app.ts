@@ -1,5 +1,5 @@
 
-import express, { NextFunction, Request, Response } from 'express'
+import express  from 'express'
 import cors from "cors"
 import mongoose from "mongoose"
 import { graphqlHTTP } from 'express-graphql'
@@ -11,12 +11,12 @@ dotevn.config()
 import employeeRoutes from "./routes/employee"
 import ErrorPage from "./util/errrorPage"
 import chatRoutes from "./routes/chats"
-import buildSchema from "./graphql/Schema"
-import resolver  from "./graphql/Resolver"
 import companyRoutes from "./routes/company"
 import allIndustryLists from "./routes/industries"
 import s3Route from "./routes/s3Route"
 import errorHandler from './middleware/errorHandler';
+import requestHeaders from './middleware/requestHeader';
+import graphql from './graphql/graphql';
 
 
 
@@ -31,30 +31,13 @@ app.use(bodyParser.json())
 app.use(methodOverride())
 // file upload parser
 
-app.use((req,res,next)=>{
-  res.setHeader("Access-Control-Allow-Origin", "*")
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH")
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type")
-  next()
-})
+// request headers middleware
+app.use(requestHeaders)
 
 // enable cors policy
 app.use(cors())
 // graphql endpoints
-app.use('/graphql', graphqlHTTP({
-  schema: buildSchema,
-  rootValue: resolver,
-  graphiql: true,
-  customFormatErrorFn(err) {
-    if (!err.originalError) {
-      return err;
-    }
-    const data = err.originalError.message;
-    const message = err.message || 'An error occurred.';
-    const code = err.originalError.message || 500;
-    return { message: message, status: code, data: data };
-  }
-}));
+app.use('/graphql', graphqlHTTP(graphql()));
 
 // api routes for user auth
 app.use("/office-api",allIndustryLists)

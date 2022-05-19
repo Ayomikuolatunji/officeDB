@@ -1,5 +1,5 @@
 import {NextFunction, Request, RequestHandler, Response } from "express"
-import Error from "./errorInterface";
+import Error from "../interface/errorInterface";
 
 
 

@@ -7,7 +7,7 @@ import transporter from "../email/transporter";
 import Employee from "../models/employee";
 import Company from "../models/company";
 import { RequestHandler } from "express";
-import Error from "../middleware/errorInterface";
+import Error from "../interface/errorInterface";
 
 
 

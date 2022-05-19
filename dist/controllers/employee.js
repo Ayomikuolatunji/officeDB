@@ -33,19 +33,21 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     const username = req.body.username;
     const password = req.body.password;
     const role = req.body.role;
-    // send error to the client if the inputs are empty
-    if (!email || !username || !password || !role) {
-        const error = new Error("not found");
-    }
-    // find user
-    const userExist = yield employee_1.default.findOne({ email: email });
-    // check if there is a user with the client email
-    if (userExist) {
-        const error = new Error("User already exist with this email");
-        error.statusCode = 422;
-        throw error;
-    }
     try {
+        // send error to the client if the inputs are empty
+        if (!email || !username || !password || !role) {
+            const error = new Error("not found");
+            error.statusCode = 422;
+            throw error;
+        }
+        // find user
+        const userExist = yield employee_1.default.findOne({ email: email });
+        // check if there is a user with the client email
+        if (userExist) {
+            const error = new Error("User already exist with this email");
+            error.statusCode = 422;
+            throw error;
+        }
         const hashedPw = yield bcrypt_1.default.hash(password, 12);
         const user = new employee_1.default({
             email,

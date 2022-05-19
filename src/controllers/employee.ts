@@ -7,6 +7,7 @@ import transporter from "../email/transporter";
 import Employee from "../models/employee";
 import Company from "../models/company";
 import { RequestHandler } from "express";
+import Error from "../middleware/errorInterface";
 
 
 
@@ -23,20 +24,21 @@ export const registration:RequestHandler=async(req,res,next)=>{
   const username = (req.body as {username:string}).username;
   const password = (req.body as {password:string}).password;
   const role=(req.body as {role:string}).role
-  // send error to the client if the inputs are empty
-  if(!email || !username || !password || !role){
-   const error=new Error("not found")
-   
-  }
-// find user
-  const userExist=await Employee.findOne({email:email})
-  // check if there is a user with the client email
-  if(userExist){
-      const error:any=new Error("User already exist with this email")
-      error.statusCode=422;
-      throw error
-  } 
   try {
+      // send error to the client if the inputs are empty
+      if(!email || !username || !password || !role){
+        const error:Error=new Error("not found")
+        error.statusCode=422
+        throw error
+      }
+    // find user
+      const userExist=await Employee.findOne({email:email})
+      // check if there is a user with the client email
+      if(userExist){
+          const error:any=new Error("User already exist with this email")
+          error.statusCode=422;
+          throw error
+      } 
     const hashedPw = await bcrypt.hash(password, 12);
     const user = new Employee({
       email,

@@ -179,6 +179,27 @@ export ={
             }
            throw error
           }     
+    },
+    update_Employee_Location:async(profile:update_profileTypes, req:Request)=>{
+        if(!profile.id){
+            const error:Error=new Error("Id is invalid")
+            error.statusCode=422
+            throw error
+        }
+        const findEmployee=await Employee.findByIdAndUpdate({_id:profile.id},{
+            location:profile.location_update.location
+        })
 
+        if(!findEmployee){
+             const error:Error=new Error("user not found")
+             error.statusCode=404
+             throw error
+        }
+
+        return {
+            ...findEmployee._doc,
+            _id:findEmployee._id.toString()
+        }
     }
+
 }

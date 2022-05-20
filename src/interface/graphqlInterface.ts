@@ -15,6 +15,9 @@ interface update_profileTypes{
     }
     about_update:{
         about:string
+    },
+    location_update:{
+        location:string
     }
   }
 

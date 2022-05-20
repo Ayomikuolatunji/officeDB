@@ -38,6 +38,10 @@ const employeeSchema = new Schema({
         type: String,
         default: "Write about yourself or describe yourself"
     },
+    location: {
+        type: String,
+        default: "your location"
+    },
     company: {
         type: Schema.Types.ObjectId,
         ref: "Companies",

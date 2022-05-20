@@ -13,19 +13,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 const employee_1 = __importDefault(require("../models/employee"));
 const uploadSetUp_1 = __importDefault(require("../aws/uploadSetUp"));
+const transporter_1 = __importDefault(require("../email/transporter"));
 module.exports = {
     update_Profile_Picture: (profile, req) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             //    if the client does not exist or empty id throw error
             if (!profile.id) {
                 const error = new Error("No id provided");
-                // error.statusCode=422
+                error.statusCode = 422;
                 throw error;
             }
             // throw error if key and data returns empty strung from client
             if (profile.update_picture.key === "" || profile.update_picture.data === "") {
                 const error = new Error("empty entity");
-                // error.statusCode=422
+                error.statusCode = 422;
                 throw error;
             }
             //  upload to s3 bucket 
@@ -45,7 +46,7 @@ module.exports = {
             //  if no profile picture found
             if (!updateProfilePicture) {
                 const error = new Error("Not updated");
-                //  error.statusCode=422
+                error.statusCode = 422;
                 throw error;
             }
             //  update our databse 
@@ -53,9 +54,9 @@ module.exports = {
         }
         catch (error) {
             //    handle error
-            //    if(!error.statusCode){
-            //        error.statusCode=500
-            //    }   
+            if (!error.statusCode) {
+                error.statusCode = 500;
+            }
             throw error;
         }
     }),
@@ -64,7 +65,7 @@ module.exports = {
         try {
             if (!profile.id) {
                 const error = new Error("Can't find Id");
-                // error.statusCode=404
+                error.statusCode = 404;
                 throw error;
             }
             const findUser = yield employee_1.default.findByIdAndUpdate({ _id: profile.id }, {
@@ -72,15 +73,15 @@ module.exports = {
             });
             if (!findUser) {
                 const error = new Error("No user with this id found");
-                // error.statusCode=404
+                error.statusCode = 404;
                 throw error;
             }
             return Object.assign(Object.assign({}, findUser._doc), { _id: findUser._id.toString() });
         }
         catch (error) {
-            // if(!error.statusCode){
-            //     error.statusCode=500
-            // }
+            if (!error.statusCode) {
+                error.statusCode = 500;
+            }
             throw error;
         }
     }),
@@ -89,7 +90,7 @@ module.exports = {
         try {
             if (!profile.id) {
                 const error = new Error("Invalid id");
-                // error.statusCode=422
+                error.statusCode = 422;
                 throw error;
             }
             const findEmployee = yield employee_1.default.findByIdAndUpdate({ _id: profile.id }, {
@@ -97,15 +98,15 @@ module.exports = {
             });
             if (!findEmployee) {
                 const error = new Error(`No employee found`);
-                //  error.statusCode=404
+                error.statusCode = 404;
                 throw error;
             }
             return Object.assign(Object.assign({}, findEmployee._doc), { _id: findEmployee._id.toString() });
         }
         catch (error) {
-            // if(!error.statusCode){  
-            //     error.statusCode=500
-            // }
+            if (!error.statusCode) {
+                error.statusCode = 500;
+            }
             throw error;
         }
     }),
@@ -113,7 +114,7 @@ module.exports = {
         try {
             if (!profile.id) {
                 const error = new Error("Invalid id");
-                // error.statusCode=422
+                error.statusCode = 422;
                 throw error;
             }
             const findEmployee = yield employee_1.default.findByIdAndUpdate({ _id: profile.id }, {
@@ -121,15 +122,32 @@ module.exports = {
             });
             if (!findEmployee) {
                 const error = new Error(`No employee found`);
-                //  error.statusCode=404
+                error.statusCode = 404;
                 throw error;
             }
+            // send mail to employee after successfully email update
+            var mailOptions = {
+                from: 'ayomikuolatunji@gmail.com',
+                to: findEmployee.email,
+                subject: 'Ayoscript from onlineoffice.com',
+                text: `Hello ${findEmployee.username} your account with this ${findEmployee.email} is created successfully successfully`,
+                html: "<body><h5>Your email has been successfully updated </h5><div></div></body>"
+            };
+            // send email after successful signup
+            transporter_1.default.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    console.log(error);
+                }
+                else {
+                    console.log('Email sent: ' + info.response);
+                }
+            });
             return Object.assign(Object.assign({}, findEmployee._doc), { _id: findEmployee._id.toString() });
         }
         catch (error) {
-            // if(!error.statusCode){
-            //     error.statusCode=500
-            // }
+            if (!error.statusCode) {
+                error.statusCode = 500;
+            }
             throw error;
         }
     }),
@@ -137,7 +155,7 @@ module.exports = {
         try {
             if (!profile.id) {
                 const error = new Error("Invalid id");
-                // error.statusCode=422
+                error.statusCode = 422;
                 throw error;
             }
             const findEmployee = yield employee_1.default.findByIdAndUpdate({ _id: profile.id }, {
@@ -145,15 +163,15 @@ module.exports = {
             });
             if (!findEmployee) {
                 const error = new Error(`No employee found`);
-                //  error.statusCode=404
+                error.statusCode = 404;
                 throw error;
             }
             return Object.assign(Object.assign({}, findEmployee._doc), { _id: findEmployee._id.toString() });
         }
         catch (error) {
-            // if(!error.statusCode){
-            //     error.statusCode=500
-            // }
+            if (!error.statusCode) {
+                error.statusCode = 500;
+            }
             throw error;
         }
     })

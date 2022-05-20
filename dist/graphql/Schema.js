@@ -12,6 +12,7 @@ exports.default = (0, graphql_1.buildSchema)(`
         avartImage:String!
         role:String!
         about:String!
+        location:String!
     }
 
     type RootQuery {

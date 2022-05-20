@@ -12,6 +12,7 @@ export default buildSchema(`
         avartImage:String!
         role:String!
         about:String!
+        location:String!
     }
 
     type RootQuery {

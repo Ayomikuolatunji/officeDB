@@ -174,5 +174,21 @@ module.exports = {
             }
             throw error;
         }
+    }),
+    update_Employee_Location: (profile, req) => __awaiter(void 0, void 0, void 0, function* () {
+        if (!profile.id) {
+            const error = new Error("Id is invalid");
+            error.statusCode = 422;
+            throw error;
+        }
+        const findEmployee = yield employee_1.default.findByIdAndUpdate({ _id: profile.id }, {
+            location: profile.location_update.location
+        });
+        if (!findEmployee) {
+            const error = new Error("user not found");
+            error.statusCode = 404;
+            throw error;
+        }
+        return Object.assign(Object.assign({}, findEmployee._doc), { _id: findEmployee._id.toString() });
     })
 };

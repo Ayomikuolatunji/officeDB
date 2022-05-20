@@ -111,15 +111,15 @@ export const singleEmployee:RequestHandler=async(req,res,next)=>{
    try {
     const user=await Employee.findById({_id:id})
     if (!user) {
-      const error = new Error('A user with this email could not be found.');
-      // error.statusCode = 40;
+      const error:Error= new Error('A user with this email could not be found.');
+      error.statusCode = 40;
       throw error;
     }
     res.status(200).json({user:user})
-    } catch (error) {
-        // if(!error.statusCode){
-        //   error.statusCode=500
-        // }
+    } catch (error:any) {
+        if(!error.statusCode){
+          error.statusCode=500
+        }
         next(error)
    }
 }

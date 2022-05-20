@@ -115,15 +115,15 @@ const singleEmployee = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         const user = yield employee_1.default.findById({ _id: id });
         if (!user) {
             const error = new Error('A user with this email could not be found.');
-            // error.statusCode = 40;
+            error.statusCode = 40;
             throw error;
         }
         res.status(200).json({ user: user });
     }
     catch (error) {
-        // if(!error.statusCode){
-        //   error.statusCode=500
-        // }
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
         next(error);
     }
 });

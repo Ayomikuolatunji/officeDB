@@ -2,16 +2,7 @@
 import buildSchema from "./Schema"
 import resolver  from "./Resolver"
 
-// interface graphqlInterface {
-//     originalError: any
-//     message: string
-//     err:{
-//         originalError:{
-//             message:string
-//         },
-//         message:string,
-//     }
-// }
+
 
 const graphql=()=>{
     return {

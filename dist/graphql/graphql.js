@@ -5,16 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Schema_1 = __importDefault(require("./Schema"));
 const Resolver_1 = __importDefault(require("./Resolver"));
-// interface graphqlInterface {
-//     originalError: any
-//     message: string
-//     err:{
-//         originalError:{
-//             message:string
-//         },
-//         message:string,
-//     }
-// }
 const graphql = () => {
     return {
         schema: Schema_1.default,

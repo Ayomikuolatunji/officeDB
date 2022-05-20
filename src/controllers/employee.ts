@@ -126,8 +126,6 @@ export const singleEmployee:RequestHandler=async(req,res,next)=>{
 
 
 
-
-
 export const profilePicture:RequestHandler=async(req,res,next)=>{
   const {id}=req.params
   if(!id){

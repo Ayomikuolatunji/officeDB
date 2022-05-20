@@ -44,7 +44,7 @@ router.post("/auth/reset_employee_password",resetPassword)
 
 router.post("/auth/set_employee_newpassword",correctPassword)
 
-router.get("auth/:id",singleEmployee)
+router.get("/auth/employee/:id",singleEmployee)
 
 router.post("/auth/employee_profile_picture/:id", profilePicture)
 

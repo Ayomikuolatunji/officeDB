@@ -44,7 +44,7 @@ app.use("/office-api",allIndustryLists)
 app.use("/office-api",employeeRoutes)
 app.use('/office-api',chatRoutes)
 app.use("/office-api/auth",companyRoutes)
-app.use("/office-api/",s3Route)
+app.use("/office-api",s3Route)
 app.use(ErrorPage)
 
 

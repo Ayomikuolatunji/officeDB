@@ -40,7 +40,7 @@ app.use("/office-api", industries_1.default);
 app.use("/office-api", employee_1.default);
 app.use('/office-api', chats_1.default);
 app.use("/office-api/auth", company_1.default);
-app.use("/office-api/", s3Route_1.default);
+app.use("/office-api", s3Route_1.default);
 app.use(errrorPage_1.default);
 // error middleware request
 app.use(errorHandler_1.default);

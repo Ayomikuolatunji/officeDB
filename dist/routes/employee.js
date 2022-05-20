@@ -28,7 +28,7 @@ router
 router.post("/auth/login_employee", employee_2.login);
 router.post("/auth/reset_employee_password", employee_2.resetPassword);
 router.post("/auth/set_employee_newpassword", employee_2.correctPassword);
-router.get("auth/:id", employee_2.singleEmployee);
+router.get("/auth/employee/:id", employee_2.singleEmployee);
 router.post("/auth/employee_profile_picture/:id", employee_2.profilePicture);
 router.delete("/auth/delete_employee/:id", employee_2.deleteEmployee);
 router.post("/auth/add_employee_to_company/:id");

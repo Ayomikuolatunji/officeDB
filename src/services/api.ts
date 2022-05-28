@@ -18,4 +18,4 @@ api.use("/office-api",s3Route)
 
 
 
-export  api
+export default api

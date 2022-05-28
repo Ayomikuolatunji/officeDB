@@ -18,7 +18,7 @@ const errrorPage_1 = __importDefault(require("./util/errrorPage"));
 const errorHandler_1 = __importDefault(require("./middleware/errorHandler"));
 const requestHeader_1 = __importDefault(require("./middleware/requestHeader"));
 const graphql_1 = __importDefault(require("./graphql/graphql"));
-const employeesApi_1 = __importDefault(require("./services/employeesApi"));
+const v1Api_1 = __importDefault(require("./services/v1Api"));
 // initialise app
 const app = (0, express_1.default)();
 // convert request to json using express middleware
@@ -34,7 +34,7 @@ app.use((0, cors_1.default)());
 // graphql endpoints
 app.use('/graphql', (0, express_graphql_1.graphqlHTTP)((0, graphql_1.default)()));
 //all api routes api routes 
-app.use(employeesApi_1.default);
+app.use("v1", v1Api_1.default);
 app.use(errrorPage_1.default);
 // error middleware request
 app.use(errorHandler_1.default);

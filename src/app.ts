@@ -14,7 +14,7 @@ import ErrorPage from "./util/errrorPage"
 import errorHandler from './middleware/errorHandler';
 import requestHeaders from './middleware/requestHeader';
 import graphql from './graphql/graphql';
-import api from "./services/employeesApi"
+import api from "./services/v1Api"
 
 
 
@@ -38,7 +38,7 @@ app.use(cors())
 app.use('/graphql', graphqlHTTP(graphql()));
 
 //all api routes api routes 
-app.use(api)
+app.use("v1",api)
 app.use(ErrorPage)
 
 

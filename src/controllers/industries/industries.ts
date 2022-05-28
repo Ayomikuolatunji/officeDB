@@ -1,6 +1,6 @@
 import { RequestHandler } from "express"
 import { nextTick } from "process"
-import Industry from "../models/industry"
+import Industry from "../../models/industry"
 
 
 export const getAllIndustry:RequestHandler=async(req,res,next)=>{

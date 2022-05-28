@@ -1,5 +1,5 @@
 import { RequestHandler } from "express"
-import Chat from "../models/chat"
+import Chat from "../../models/chat"
 
 export const fetchChat:RequestHandler=async(req,res,next)=>{
     const from=req.body.from

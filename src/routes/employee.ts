@@ -12,7 +12,7 @@ import
     resetPassword,
     correctPassword
   }
- from "../controllers/employee"
+ from "../controllers/employees/employee"
 const router=Router()
 
 

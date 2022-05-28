@@ -3,11 +3,11 @@ import { validationResult } from "express-validator/src/validation-result";
 import jwt from "jsonwebtoken"
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import crypto from "crypto";
-import transporter from "../email/transporter";
-import Employee from "../models/employee";
-import Company from "../models/company";
+import transporter from "../../email/transporter";
+import Employee from "../../models/employee";
+import Company from "../../models/company";
 import { RequestHandler } from "express";
-import Error from "../interface/errorInterface";
+import Error from "../../interface/errorInterface";
 
 
 

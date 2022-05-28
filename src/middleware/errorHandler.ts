@@ -7,7 +7,7 @@ const errorHandler=(error:Error,req:Request,res:Response,next:NextFunction)=>{
 
     const message=error.message || "encounter error"
     const status=error.statusCode || 500
-    res.status(status).json({message:message, error:"Error message",errorType:status})
+    res.status(status).json({message:message, error:"Error message",errorStatus:status})
 }
 
 

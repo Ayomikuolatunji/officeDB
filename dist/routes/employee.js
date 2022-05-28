@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const express_validator_1 = require("express-validator");
 const employee_1 = __importDefault(require("../models/employee"));
-const employee_2 = require("../controllers/employee");
+const employee_2 = require("../controllers/employees/employee");
 const router = (0, express_1.Router)();
 router
     .get("/auth/all_employees", employee_2.getAllEmployees)

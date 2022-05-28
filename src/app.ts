@@ -17,6 +17,7 @@ import s3Route from "./routes/s3Route"
 import errorHandler from './middleware/errorHandler';
 import requestHeaders from './middleware/requestHeader';
 import graphql from './graphql/graphql';
+import api from "./services/api"
 
 
 

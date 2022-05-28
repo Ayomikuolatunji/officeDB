@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// dependency import modules
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const mongoose_1 = __importDefault(require("mongoose"));
@@ -12,6 +13,7 @@ const method_override_1 = __importDefault(require("method-override"));
 // call dotenv 
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
+// external import modules
 const errrorPage_1 = __importDefault(require("./util/errrorPage"));
 const errorHandler_1 = __importDefault(require("./middleware/errorHandler"));
 const requestHeader_1 = __importDefault(require("./middleware/requestHeader"));
@@ -31,7 +33,7 @@ app.use(requestHeader_1.default);
 app.use((0, cors_1.default)());
 // graphql endpoints
 app.use('/graphql', (0, express_graphql_1.graphqlHTTP)((0, graphql_1.default)()));
-// api routes for user auth
+//all api routes api routes 
 app.use(employeesApi_1.default);
 app.use(errrorPage_1.default);
 // error middleware request

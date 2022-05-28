@@ -18,7 +18,7 @@ const validation_result_1 = require("express-validator/src/validation-result");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const http_status_codes_1 = require("http-status-codes");
 const crypto_1 = __importDefault(require("crypto"));
-const transporter_1 = __importDefault(require("../../email/transporter"));
+const transporter_1 = __importDefault(require("../../transporter/transporter"));
 const employee_1 = __importDefault(require("../../models/employee"));
 const company_1 = __importDefault(require("../../models/company"));
 const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

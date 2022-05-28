@@ -1,6 +1,6 @@
 import {Router} from "express"
 const router=Router()
-import {createCompany,companiesEmployees} from "../controllers/company/company"
+import {createCompany,companiesEmployees} from "../../controllers/company/company"
 
 
 router.get("/all_companies_employees",companiesEmployees)

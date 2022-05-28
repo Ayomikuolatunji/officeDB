@@ -1,4 +1,5 @@
 
+// dependency import modules
 import express  from 'express'
 import cors from "cors"
 import mongoose from "mongoose"
@@ -8,12 +9,8 @@ import methodOverride from "method-override"
 // call dotenv 
 import dotevn from  "dotenv"
 dotevn.config()
-import employeeRoutes from "./routes/employee"
+// external import modules
 import ErrorPage from "./util/errrorPage"
-import chatRoutes from "./routes/chats"
-import companyRoutes from "./routes/company"
-import allIndustryLists from "./routes/industries"
-import s3Route from "./routes/s3Route"
 import errorHandler from './middleware/errorHandler';
 import requestHeaders from './middleware/requestHeader';
 import graphql from './graphql/graphql';
@@ -40,7 +37,7 @@ app.use(cors())
 // graphql endpoints
 app.use('/graphql', graphqlHTTP(graphql()));
 
-// api routes for user auth
+//all api routes api routes 
 app.use(api)
 app.use(ErrorPage)
 

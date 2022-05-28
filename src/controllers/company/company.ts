@@ -1,6 +1,6 @@
 import Company from "../../models/company"
 import bcrypt from "bcrypt"
-import  transporter from "../../email/transporter";
+import  transporter from "../../transporter/transporter";
 import { RequestHandler } from "express";
 
 

@@ -10,6 +10,7 @@ const industries_1 = __importDefault(require("../routes/industries/industries"))
 const s3Route_1 = __importDefault(require("../routes/s3routes/s3Route"));
 const employee_1 = __importDefault(require("../routes/employees/employee"));
 const api = express_1.default.Router();
+// version1 apis
 api.use("/office-api", industries_1.default);
 api.use("/office-api", employee_1.default);
 api.use('/office-api', chats_1.default);

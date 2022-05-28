@@ -47,9 +47,6 @@ app.use(errorHandler)
 
 
 
-// database connections
-
-
 
 // connecting server
 const startConnection=async()=>{

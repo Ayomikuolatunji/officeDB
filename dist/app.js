@@ -47,7 +47,6 @@ app.use("v1", v1Api_1.default);
 app.use(errrorPage_1.default);
 // error middleware request
 app.use(errorHandler_1.default);
-// database connections
 // connecting server
 const startConnection = () => __awaiter(void 0, void 0, void 0, function* () {
     try {

@@ -1,6 +1,4 @@
-
 // dependency import modules
-import express  from 'express'
 import cors from "cors"
 import { graphqlHTTP } from 'express-graphql'
 import  bodyParser from "body-parser";
@@ -8,7 +6,11 @@ import methodOverride from "method-override"
 // call dotenv 
 import dotevn from  "dotenv"
 dotevn.config()
+
+
+
 // external import modules
+import app from "./services/app";
 import ErrorPage from "./util/errrorPage"
 import errorHandler from './middleware/errorHandler';
 import requestHeaders from './middleware/requestHeader';
@@ -18,8 +20,7 @@ import connectFunction from './database/mongoDB';
 
 
 
-// initialise app
-const app=express()
+
 
 
 // convert request to json using express middleware

@@ -55,7 +55,9 @@ const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         });
     }
     catch (error) {
-        res.status(500).json({ message: "Internal servel error detected" });
+        if (error instanceof Error) {
+            throw error.message;
+        }
         next(error);
     }
 });
@@ -71,9 +73,9 @@ const companiesEmployees = (req, res, next) => __awaiter(void 0, void 0, void 0,
         res.status(200).json({ users });
     }
     catch (error) {
-        // if(!error.statusCode){
-        //      error.statusCode=500
-        //  }
+        if (error instanceof Error) {
+            throw error.message;
+        }
         next(error);
     }
 });

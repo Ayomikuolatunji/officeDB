@@ -78,6 +78,9 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         //  catch errors
     }
     catch (error) {
+        if (error instanceof Error) {
+            throw error.message;
+        }
         next(error);
     }
 });
@@ -104,8 +107,11 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         }, 'somesupersecretsecret', { expiresIn: '30d' });
         res.status(200).json({ token: token, employeeId: user._id });
     }
-    catch (err) {
-        next(err);
+    catch (error) {
+        if (error instanceof Error) {
+            throw error.message;
+        }
+        next(error);
     }
 });
 exports.login = login;
@@ -121,8 +127,8 @@ const singleEmployee = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         res.status(200).json({ user: user });
     }
     catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
+        if (error instanceof Error) {
+            throw error.message;
         }
         next(error);
     }
@@ -145,8 +151,8 @@ const profilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         return res.status(200).json({ msg: user });
     }
     catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
+        if (error instanceof Error) {
+            throw error.message;
         }
         next(error);
     }
@@ -168,8 +174,8 @@ const getAllEmployees = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         res.status(200).json({ users });
     }
     catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
+        if (error instanceof Error) {
+            throw error.message;
         }
         next(error);
     }
@@ -211,9 +217,9 @@ const deleteEmployee = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         });
     }
     catch (error) {
-        // if(!error.statusCode){
-        //   error.statusCode=500
-        // }
+        if (error instanceof Error) {
+            throw error.message;
+        }
         next(error);
     }
 });
@@ -224,7 +230,7 @@ const resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         const user = yield employee_1.default.findOne({ email: email });
         if (!user) {
             const error = new Error("No user with the email found");
-            // error.statusCode=404
+            error.statusCode = 404;
             throw error;
         }
         const random = crypto_1.default.randomBytes(300);
@@ -250,44 +256,54 @@ const resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, func
             }
         });
     }
-    catch (err) {
-        console.log(err);
-        next();
+    catch (error) {
+        if (error instanceof Error) {
+            throw error.message;
+        }
+        next(error);
     }
 });
 exports.resetPassword = resetPassword;
 const correctPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const password = req.body.password;
-    const userId = req.body.userId;
-    const resetToken = req.body.resetToken;
-    const user = yield employee_1.default.findById({ _id: userId });
-    if (user || resetToken || userId) {
-        const resetPassword = yield bcrypt_1.default.hash(password, 12);
-        yield employee_1.default.findOneAndUpdate({ _id: user._id }, {
-            password: resetPassword,
-        });
-        res.status(200).json({ user: user._id });
-        var mailOptions = {
-            from: 'ayomikuolatunji@gmail.com',
-            to: user.email,
-            subject: 'Ayoscript from onlineoffice.com',
-            text: `Your request to change password with ${user.email} is sucessful `,
-            html: `<body><h5>Your password has been reset </h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>`
-        };
-        // send email after successful signup
-        transporter_1.default.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                console.log(error);
-            }
-            else {
-                console.log('Email sent: ' + info.response);
-            }
-        });
+    try {
+        const password = req.body.password;
+        const userId = req.body.userId;
+        const resetToken = req.body.resetToken;
+        const user = yield employee_1.default.findById({ _id: userId });
+        if (user || resetToken || userId) {
+            const resetPassword = yield bcrypt_1.default.hash(password, 12);
+            yield employee_1.default.findOneAndUpdate({ _id: user._id }, {
+                password: resetPassword,
+            });
+            res.status(200).json({ user: user._id });
+            var mailOptions = {
+                from: 'ayomikuolatunji@gmail.com',
+                to: user.email,
+                subject: 'Ayoscript from onlineoffice.com',
+                text: `Your request to change password with ${user.email} is sucessful `,
+                html: `<body><h5>Your password has been reset </h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>`
+            };
+            // send email after successful signup
+            transporter_1.default.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    console.log(error);
+                }
+                else {
+                    console.log('Email sent: ' + info.response);
+                }
+            });
+        }
+        else {
+            const error = new Error("You are not allowed");
+            // error.statusCode=404
+            throw error;
+        }
     }
-    else {
-        const error = new Error("You are not allowed");
-        // error.statusCode=404
-        throw error;
+    catch (error) {
+        if (error instanceof Error) {
+            throw error.message;
+        }
+        next(error);
     }
 });
 exports.correctPassword = correctPassword;

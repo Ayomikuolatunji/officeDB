@@ -66,8 +66,11 @@ export const registration:RequestHandler=async(req,res,next)=>{
       }
     });
     //  catch errors
-    } catch (error:any) {
-       next(error);
+    } catch (error:unknown) {
+      if(error instanceof Error){
+        throw error.message
+      }
+      next(error)
   }
 }
 
@@ -99,9 +102,12 @@ export const login:RequestHandler=async(req,res,next)=>{
       { expiresIn: '30d' }
     );
     res.status(200).json({ token: token, employeeId:user._id });
-  } catch (err) {
-    next(err);
-  }
+  } catch (error:unknown) {
+    if(error instanceof Error){
+      throw error.message
+    }
+    next(error)
+}
 } 
 
 
@@ -116,12 +122,12 @@ export const singleEmployee:RequestHandler=async(req,res,next)=>{
       throw error;
     }
     res.status(200).json({user:user})
-    } catch (error:any) {
-        if(!error.statusCode){
-          error.statusCode=500
-        }
-        next(error)
-   }
+    } catch (error:unknown) {
+      if(error instanceof Error){
+        throw error.message
+      }
+      next(error)
+  }
 }
 
 
@@ -141,12 +147,12 @@ export const profilePicture:RequestHandler=async(req,res,next)=>{
         avartImage: avartImage
        })
        return res.status(200).json({msg:user})
-    }catch (error:any) {
-        if(!error.statusCode){
-        error.statusCode=500
-       }
-       next(error) 
-    }
+    }catch (error:unknown) {
+      if(error instanceof Error){
+        throw error.message
+      }
+      next(error)
+  }
 }
 
 export const getAllEmployees:RequestHandler=async(req,res,next)=>{
@@ -164,12 +170,12 @@ export const getAllEmployees:RequestHandler=async(req,res,next)=>{
           throw error
          }     
          res.status(200).json({users})
-     } catch (error:any) {
-      if(!error.statusCode){
-           error.statusCode=500
-       }
-       next(error) 
-     }   
+     } catch (error:unknown) {
+      if(error instanceof Error){
+        throw error.message
+      }
+      next(error)
+  }
 
 }
 
@@ -208,12 +214,12 @@ export const deleteEmployee:RequestHandler=async(req,res,next)=>{
         console.log('Email sent: ' + info.response);
       }
     });
-    } catch (error) {
-      // if(!error.statusCode){
-      //   error.statusCode=500
-      // }
+    }catch (error:unknown) {
+      if(error instanceof Error){
+        throw error.message
+      }
       next(error)
-    }
+  }
     
 }
 
@@ -226,8 +232,8 @@ export const resetPassword:RequestHandler=async(req,res,next)=>{
       const email=req.body.email
       const user=await Employee.findOne({email:email})
       if(!user){
-        const error=new Error("No user with the email found")
-        // error.statusCode=404
+        const error:Error=new Error("No user with the email found")
+        error.statusCode=404
         throw error
       }
       const random= crypto.randomBytes(300)
@@ -251,48 +257,57 @@ export const resetPassword:RequestHandler=async(req,res,next)=>{
         console.log('Email sent: ' + info.response);
       }
     });
-    }catch(err){
-       console.log(err);
-       next()
-    }
+    }catch (error:unknown) {
+      if(error instanceof Error){
+        throw error.message
+      }
+      next(error)
+  }
 }
 
 
 
 export const correctPassword:RequestHandler=async(req,res,next)=>{
-  const password=req.body.password
-  const userId=req.body.userId
-  const resetToken=req.body.resetToken
-  const user=await Employee.findById({_id:userId})
-  if(user || resetToken ||userId){
-    const resetPassword=await bcrypt.hash(password,12)
-    await Employee.findOneAndUpdate({_id:user._id},{
-      password:resetPassword,
-  })
-  res.status(200).json({user:user._id}) 
-  var mailOptions = {
-    from: 'ayomikuolatunji@gmail.com',
-    to: user.email,
-    subject: 'Ayoscript from onlineoffice.com',
-    text: `Your request to change password with ${user.email} is sucessful `,
-    html:`<body><h5>Your password has been reset </h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>`
-  };
-  // send email after successful signup
-   transporter.sendMail(mailOptions, function(error, info){
-    if (error) {
-      console.log(error);
-    } else {
-      console.log('Email sent: ' + info.response);
+   try {
+    const password=req.body.password
+    const userId=req.body.userId
+    const resetToken=req.body.resetToken
+    const user=await Employee.findById({_id:userId})
+    if(user || resetToken ||userId){
+      const resetPassword=await bcrypt.hash(password,12)
+      await Employee.findOneAndUpdate({_id:user._id},{
+        password:resetPassword,
+    })
+    res.status(200).json({user:user._id}) 
+    var mailOptions = {
+      from: 'ayomikuolatunji@gmail.com',
+      to: user.email,
+      subject: 'Ayoscript from onlineoffice.com',
+      text: `Your request to change password with ${user.email} is sucessful `,
+      html:`<body><h5>Your password has been reset </h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>`
+    };
+    // send email after successful signup
+     transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+    }else{
+      const error=new Error("You are not allowed")
+      // error.statusCode=404
+      throw error
     }
-  });
-  }else{
-    const error=new Error("You are not allowed")
-    // error.statusCode=404
-    throw error
-  }
+   } catch (error:unknown) {
+    if(error instanceof Error){
+      throw error.message
+    }
+    next(error)
+}     
 }
 
 const populateEmployee:RequestHandler=async(req,res,next)=>{
-       
+   
 }
 

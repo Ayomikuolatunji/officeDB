@@ -43,10 +43,12 @@ export const createCompany:RequestHandler=async(req,res,next)=>{
             }
           });
         
-    }catch(error){
-        res.status(500).json({message:"Internal servel error detected"})
-        next(error)
-    }
+    } catch (error:unknown) {
+      if(error instanceof Error){
+        throw error.message
+      }
+      next(error)
+  }
 }
 
 
@@ -59,12 +61,11 @@ export const companiesEmployees:RequestHandler=async(req,res,next)=>{
           throw error
          }     
          res.status(200).json({users})
-     } catch (error) {
-
-      // if(!error.statusCode){
-      //      error.statusCode=500
-      //  }
-       next(error) 
-     }   
+     }catch (error:unknown) {
+      if(error instanceof Error){
+        throw error.message
+      }
+      next(error)
+  }  
 }
 

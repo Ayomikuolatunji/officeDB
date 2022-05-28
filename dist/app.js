@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -6,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // dependency import modules
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
-const mongoose_1 = __importDefault(require("mongoose"));
 const express_graphql_1 = require("express-graphql");
 const body_parser_1 = __importDefault(require("body-parser"));
 const method_override_1 = __importDefault(require("method-override"));
@@ -19,6 +27,7 @@ const errorHandler_1 = __importDefault(require("./middleware/errorHandler"));
 const requestHeader_1 = __importDefault(require("./middleware/requestHeader"));
 const graphql_1 = __importDefault(require("./graphql/graphql"));
 const v1Api_1 = __importDefault(require("./services/v1Api"));
+const mongoDB_1 = __importDefault(require("./database/mongoDB"));
 // initialise app
 const app = (0, express_1.default)();
 // convert request to json using express middleware
@@ -38,27 +47,19 @@ app.use("v1", v1Api_1.default);
 app.use(errrorPage_1.default);
 // error middleware request
 app.use(errorHandler_1.default);
-const MONGODB_KEY = process.env.MONGODB_KEY;
+// database connections
 // connecting server
-const startConnection = () => {
-    if (MONGODB_KEY === undefined) {
-        console.log("MongoDB key is not set");
-    }
-    else {
-        mongoose_1.default
-            .connect(MONGODB_KEY, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        })
-            .then(Db => {
-            console.log("connected to database");
-            app.listen(process.env.PORT, () => {
-                console.log(`App running locally on ${process.env.PORT}`);
-            });
-        })
-            .catch(err => {
-            console.log(err.message);
+const startConnection = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield (0, mongoDB_1.default)();
+        app.listen(process.env.PORT, () => {
+            console.log(`App runing on port ${process.env.PORT}`);
         });
     }
-};
+    catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        }
+    }
+});
 startConnection();

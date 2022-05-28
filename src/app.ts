@@ -2,7 +2,6 @@
 // dependency import modules
 import express  from 'express'
 import cors from "cors"
-import mongoose from "mongoose"
 import { graphqlHTTP } from 'express-graphql'
 import  bodyParser from "body-parser";
 import methodOverride from "method-override"
@@ -15,6 +14,7 @@ import errorHandler from './middleware/errorHandler';
 import requestHeaders from './middleware/requestHeader';
 import graphql from './graphql/graphql';
 import api from "./services/v1Api"
+import connectFunction from './database/mongoDB';
 
 
 
@@ -49,29 +49,20 @@ app.use(errorHandler)
 
 // database connections
 
-type MongoDBType =string | undefined
-const MONGODB_KEY:MongoDBType=process.env.MONGODB_KEY
-interface connectTypes {}
+
+
 // connecting server
-const startConnection=()=>{
-  if(MONGODB_KEY===undefined) {
-     console.log("MongoDB key is not set")
-  }else{
-    mongoose
-  .connect(MONGODB_KEY,<connectTypes>{
-    useNewUrlParser: true,
-    useUnifiedTopology: true   
-  })
-  .then(Db=>{
-      console.log("connected to database")
-        app.listen(process.env.PORT,()=>{
-        console.log(`App running locally on ${process.env.PORT}`)
+const startConnection=async()=>{
+  try {
+    await connectFunction()
+    app.listen(process.env.PORT,()=>{
+      console.log(`App runing on port ${process.env.PORT}`)
     })
-  })
-  .catch(err => {
-    console.log(err.message);
-  });
+  } catch (error:unknown) {
+      if(error instanceof Error){
+          console.log(error.message)
+      }
   }
 }
-
 startConnection()
+

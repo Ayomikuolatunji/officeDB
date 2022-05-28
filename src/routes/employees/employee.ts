@@ -1,6 +1,6 @@
 import { Router } from "express"
 import {body} from  "express-validator"
-import User from  "../models/employee"
+import User from  "../../models/employee"
 import
    {
     registration,
@@ -12,7 +12,7 @@ import
     resetPassword,
     correctPassword
   }
- from "../controllers/employees/employee"
+ from "../../controllers/employees/employee"
 const router=Router()
 
 
@@ -21,7 +21,7 @@ router
 
 .post("/auth/register_employee",
     [
-    body("email").isEmail().withMessage("Enter valid email address").custom((value,{req})=>{
+    body("email").isEmail().withMessage("Enter valid email address").custom((value,{})=>{
         return User.findOne({email:value})
         .then(userDoc=>{
             if(userDoc){

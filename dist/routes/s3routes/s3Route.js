@@ -14,8 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
-const uploadSetUp_1 = __importDefault(require("../aws/uploadSetUp"));
-const employee_1 = __importDefault(require("../models/employee"));
+const uploadSetUp_1 = __importDefault(require("../../aws/uploadSetUp"));
+const employee_1 = __importDefault(require("../../models/employee"));
 router.post("/upload", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body.data;
     const key = req.body.key;

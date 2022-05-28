@@ -1,7 +1,7 @@
 import express from "express";
 const router=express.Router()
-import uploadToS3 from "../aws/uploadSetUp"; 
-import Employee from "../models/employee"; 
+import uploadToS3 from "../../aws/uploadSetUp"; 
+import Employee from "../../models/employee"; 
 
 
 

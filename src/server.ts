@@ -6,9 +6,6 @@ import methodOverride from "method-override"
 // call dotenv 
 import dotevn from  "dotenv"
 dotevn.config()
-
-
-
 // external import modules
 import app from "./services/app";
 import ErrorPage from "./util/errrorPage"

@@ -39,7 +39,7 @@ app.use(cors())
 app.use('/graphql', graphqlHTTP(graphql()));
 
 //all api routes api routes 
-app.use("v1",api)
+app.use("/v1",api)
 app.use(ErrorPage)
 
 

@@ -41,7 +41,7 @@ app_1.default.use((0, cors_1.default)());
 // graphql endpoints
 app_1.default.use('/graphql', (0, express_graphql_1.graphqlHTTP)((0, graphql_1.default)()));
 //all api routes api routes 
-app_1.default.use("v1", v1Api_1.default);
+app_1.default.use("/v1", v1Api_1.default);
 app_1.default.use(errrorPage_1.default);
 // error middleware request
 app_1.default.use(errorHandler_1.default);

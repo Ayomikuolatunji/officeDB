@@ -12,15 +12,11 @@ const method_override_1 = __importDefault(require("method-override"));
 // call dotenv 
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const employee_1 = __importDefault(require("./routes/employee"));
 const errrorPage_1 = __importDefault(require("./util/errrorPage"));
-const chats_1 = __importDefault(require("./routes/chats"));
-const company_1 = __importDefault(require("./routes/company"));
-const industries_1 = __importDefault(require("./routes/industries"));
-const s3Route_1 = __importDefault(require("./routes/s3Route"));
 const errorHandler_1 = __importDefault(require("./middleware/errorHandler"));
 const requestHeader_1 = __importDefault(require("./middleware/requestHeader"));
 const graphql_1 = __importDefault(require("./graphql/graphql"));
+const employeesApi_1 = __importDefault(require("./services/employeesApi"));
 // initialise app
 const app = (0, express_1.default)();
 // convert request to json using express middleware
@@ -36,11 +32,7 @@ app.use((0, cors_1.default)());
 // graphql endpoints
 app.use('/graphql', (0, express_graphql_1.graphqlHTTP)((0, graphql_1.default)()));
 // api routes for user auth
-app.use("/office-api", industries_1.default);
-app.use("/office-api", employee_1.default);
-app.use('/office-api', chats_1.default);
-app.use("/office-api/auth", company_1.default);
-app.use("/office-api", s3Route_1.default);
+app.use(employeesApi_1.default);
 app.use(errrorPage_1.default);
 // error middleware request
 app.use(errorHandler_1.default);

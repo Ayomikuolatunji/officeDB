@@ -17,7 +17,7 @@ import s3Route from "./routes/s3Route"
 import errorHandler from './middleware/errorHandler';
 import requestHeaders from './middleware/requestHeader';
 import graphql from './graphql/graphql';
-import api from "./services/api"
+import api from "./services/employeesApi"
 
 
 
@@ -41,11 +41,7 @@ app.use(cors())
 app.use('/graphql', graphqlHTTP(graphql()));
 
 // api routes for user auth
-app.use("/office-api",allIndustryLists)
-app.use("/office-api",employeeRoutes)
-app.use('/office-api',chatRoutes)
-app.use("/office-api/auth",companyRoutes)
-app.use("/office-api",s3Route)
+app.use(api)
 app.use(ErrorPage)
 
 

@@ -43,14 +43,6 @@ app.use(ErrorPage)
 // error middleware request
 app.use(errorHandler)
 
-
-app.get("/hi",(req,res,next)=>{
-     res.send('hello')
-})
-
-app.get("/more",(req,res,next)=>{
-  res.send('hello')
-})
 // connecting server
 const startConnection=async()=>{
   try {

@@ -19,7 +19,7 @@ const router=Router()
 router
 .get("/auth/all_employees",getAllEmployees)
 
-.post("/auth/register_employee",
+.post("/auth/register_employees",
     [
     body("email").isEmail().withMessage("Enter valid email address").custom((value,{})=>{
         return User.findOne({email:value})

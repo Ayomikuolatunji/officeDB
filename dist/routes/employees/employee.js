@@ -10,7 +10,7 @@ const employee_2 = require("../../controllers/employees/employee");
 const router = (0, express_1.Router)();
 router
     .get("/auth/all_employees", employee_2.getAllEmployees)
-    .post("/auth/register_employee", [
+    .post("/auth/register_employees", [
     (0, express_validator_1.body)("email").isEmail().withMessage("Enter valid email address").custom((value, {}) => {
         return employee_1.default.findOne({ email: value })
             .then(userDoc => {
@@ -27,7 +27,7 @@ router
 ], employee_2.registration);
 router.post("/auth/login_employee", employee_2.login);
 router.post("/auth/reset_employee_password", employee_2.resetPassword);
-router.post("/auth/set_employee_newpassword", employee_2.correctPassword);
+router.post("/auth/set_employee_new_password", employee_2.correctPassword);
 router.get("/auth/employee/:id", employee_2.singleEmployee);
 router.post("/auth/employee_profile_picture/:id", employee_2.profilePicture);
 router.delete("/auth/delete_employee/:id", employee_2.deleteEmployee);

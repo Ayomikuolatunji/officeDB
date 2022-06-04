@@ -244,7 +244,7 @@ export const resetPassword:RequestHandler=async(req,res,next)=>{
       to: email,
       subject: 'Ayoscript from onlineoffice.com',
       text: `Your request to change password with ${email} is sent `,
-      html:`<body><h5>You set your password with the link below</h5><div><a href='http://localhost:3000/reset-password/new-password?code=${token}&id=${user._id}'>Click to correct password</a></div></body>`
+      html:`<body><h5>You set your password with the link below</h5><div><a href='http://localhost:3000/forgot-password/new-password?code=${token}&id=${user._id}'>Click to correct password</a></div></body>`
     };
     // send email after successful signup
      transporter.sendMail(mailOptions, function(error, info){

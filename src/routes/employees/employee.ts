@@ -42,7 +42,7 @@ router.post("/auth/login_employee",login)
 
 router.post("/auth/reset_employee_password",resetPassword)
 
-router.post("/auth/set_employee_newpassword",correctPassword)
+router.post("/auth/set_employee_new_password",correctPassword)
 
 router.get("/auth/employee/:id",singleEmployee)
 

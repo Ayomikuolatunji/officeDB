@@ -86,9 +86,9 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.registration = registration;
 const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const email = req.body.email;
-    const password = req.body.password;
     try {
+        const email = req.body.email;
+        const password = req.body.password;
         const user = yield employee_1.default.findOne({ email: email });
         if (!user) {
             const error = new Error('A user with this email could not be found.');
@@ -108,9 +108,6 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(200).json({ token: token, employeeId: user._id });
     }
     catch (error) {
-        if (error instanceof Error) {
-            throw error.message;
-        }
         next(error);
     }
 });

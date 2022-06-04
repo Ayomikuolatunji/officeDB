@@ -45,6 +45,12 @@ app_1.default.use("/v1", v1Api_1.default);
 app_1.default.use(errrorPage_1.default);
 // error middleware request
 app_1.default.use(errorHandler_1.default);
+app_1.default.get("/hi", (req, res, next) => {
+    res.send('hello');
+});
+app_1.default.get("/more", (req, res, next) => {
+    res.send('hello');
+});
 // connecting server
 const startConnection = () => __awaiter(void 0, void 0, void 0, function* () {
     try {

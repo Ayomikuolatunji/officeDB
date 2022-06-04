@@ -77,9 +77,9 @@ export const registration:RequestHandler=async(req,res,next)=>{
 
 
 export const login:RequestHandler=async(req,res,next)=>{
-  const email = (req.body as {email:string}).email;
-  const password = (req.body as {password:string}).password;
   try {
+    const email = (req.body as {email:string}).email;
+    const password = (req.body as {password:string}).password;
     const user = await Employee.findOne({ email: email });
     if (!user) {
       const error:Error = new Error('A user with this email could not be found.');
@@ -102,10 +102,7 @@ export const login:RequestHandler=async(req,res,next)=>{
       { expiresIn: '30d' }
     );
     res.status(200).json({ token: token, employeeId:user._id });
-  } catch (error:unknown) {
-    if(error instanceof Error){
-      throw error.message
-    }
+  } catch (error) {
     next(error)
 }
 } 
@@ -308,6 +305,6 @@ export const correctPassword:RequestHandler=async(req,res,next)=>{
 }
 
 const populateEmployee:RequestHandler=async(req,res,next)=>{
-    
+     
 }
 

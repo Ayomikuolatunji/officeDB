@@ -146,9 +146,6 @@ const profilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         return res.status(200).json({ msg: user });
     }
     catch (error) {
-        if (error instanceof Error) {
-            throw error.message;
-        }
         next(error);
     }
 });
@@ -169,9 +166,6 @@ const getAllEmployees = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         res.status(200).json({ users });
     }
     catch (error) {
-        if (error instanceof Error) {
-            throw error.message;
-        }
         next(error);
     }
 });
@@ -212,9 +206,6 @@ const deleteEmployee = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         });
     }
     catch (error) {
-        if (error instanceof Error) {
-            throw error.message;
-        }
         next(error);
     }
 });
@@ -252,9 +243,6 @@ const resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         });
     }
     catch (error) {
-        if (error instanceof Error) {
-            throw error.message;
-        }
         next(error);
     }
 });
@@ -295,37 +283,39 @@ const correctPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         }
     }
     catch (error) {
-        if (error instanceof Error) {
-            throw error.message;
-        }
         next(error);
     }
 });
 exports.correctPassword = correctPassword;
 const addEmployeeToCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const companyId = req.body.companyId;
+        const employeeId = req.params.id;
         // find the employee by id
-        const employee = yield employee_1.default.findById({ _id: req.params.id });
+        const employee = yield employee_1.default.findById({ _id: employeeId });
+        // if no employee found throw error
         if (!employee) {
             const error = new Error("Employee not found");
             error.statusCode = 404;
             throw error;
         }
+        employee.companies.push(companyId);
+        yield employee.save();
         // find the company by id
-        const company = yield company_1.default.findById({ _id: employee.company });
+        const company = yield company_1.default.findById({ _id: companyId });
+        // if no company found throw error
         if (!company) {
-            const error = new Error("Company not found");
+            const error = new Error("Employee not found");
             error.statusCode = 404;
             throw error;
         }
-        const addEmployee = yield employee_1.default.updateOne({ _id: employee._id }, {
-            company: company._id,
-        }, { new: true });
-        console.log(company);
-        res.status(200).json({ employee: addEmployee });
+        // update employee id to company_employes array
+        company.company_employes.push(employeeId);
+        yield company.save();
+        res.status(200).json({ message: `employee added sucessfully to company ${company.company_name}` });
     }
     catch (error) {
-        throw error;
+        next(error);
     }
 });
 exports.addEmployeeToCompany = addEmployeeToCompany;

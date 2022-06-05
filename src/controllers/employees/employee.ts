@@ -143,10 +143,7 @@ export const profilePicture:RequestHandler=async(req,res,next)=>{
         avartImage: avartImage
        })
        return res.status(200).json({msg:user})
-    }catch (error:unknown) {
-      if(error instanceof Error){
-        throw error.message
-      }
+    }catch (error) {
       next(error)
   }
 }
@@ -166,10 +163,7 @@ export const getAllEmployees:RequestHandler=async(req,res,next)=>{
           throw error
          }     
          res.status(200).json({users})
-     } catch (error:unknown) {
-      if(error instanceof Error){
-        throw error.message
-      }
+     } catch (error:any) {
       next(error)
   }
 
@@ -210,10 +204,7 @@ export const deleteEmployee:RequestHandler=async(req,res,next)=>{
         console.log('Email sent: ' + info.response);
       }
     });
-    }catch (error:unknown) {
-      if(error instanceof Error){
-        throw error.message
-      }
+    }catch (error) {
       next(error)
   }
     
@@ -253,10 +244,7 @@ export const resetPassword:RequestHandler=async(req,res,next)=>{
         console.log('Email sent: ' + info.response);
       }
     });
-    }catch (error:unknown) {
-      if(error instanceof Error){
-        throw error.message
-      }
+    }catch (error) {
       next(error)
   }
 }
@@ -295,37 +283,40 @@ export const correctPassword:RequestHandler=async(req,res,next)=>{
       // error.statusCode=404
       throw error
     }
-   } catch (error:unknown) {
-    if(error instanceof Error){
-      throw error.message
-    }
+   } catch (error:any) {
     next(error)
 }     
 }
 
 export const addEmployeeToCompany:RequestHandler=async(req,res,next)=>{
       try {
+        const companyId=req.body.companyId
+        const employeeId=req.params.id
         // find the employee by id
-        const employee=await Employee.findById({_id:req.params.id})
+        const employee=await Employee.findById({_id:employeeId})
+        // if no employee found throw error
         if(!employee){
           const error:Error=new Error("Employee not found")
           error.statusCode=404
           throw error
         }
+        employee.companies.push(companyId)
+        await employee.save()
+      
         // find the company by id
-        const company=await Company.findById({_id:employee.company})
+        const company=await Company.findById({_id:companyId})
+        // if no company found throw error
         if(!company){
-          const error:Error=new Error("Company not found")
+          const error:Error=new Error("Employee not found")
           error.statusCode=404
           throw error
         }
-        const addEmployee=await Employee.updateOne({_id:employee._id},{
-          company:company._id,
-        },{new:true})
-        console.log(company);
-        res.status(200).json({employee:addEmployee})
+        // update employee id to company_employes array
+        company.company_employes.push(employeeId)
+        await company.save()
+        res.status(200).json({message:`employee added sucessfully to company ${company.company_name}`})
       } catch (error) {
-         throw error 
+         next(error)
       }
 }
 

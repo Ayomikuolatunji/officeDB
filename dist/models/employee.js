@@ -42,10 +42,12 @@ const employeeSchema = new Schema({
         type: String,
         default: "your location"
     },
-    company: {
-        type: Schema.Types.ObjectId,
-        ref: "Companies",
-    },
+    companies: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Companies",
+        },
+    ],
     avartImage: {
         type: String,
         default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIJF7LAdiF7JlRs24nLsBKz7nWamkcdXPODQ&usqp=CAU",

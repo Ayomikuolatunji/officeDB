@@ -305,6 +305,23 @@ export const correctPassword:RequestHandler=async(req,res,next)=>{
 }
 
 const populateEmployee:RequestHandler=async(req,res,next)=>{
-     
+      try {
+        // find the employee by id
+        const employee=await Employee.findById({_id:req.params.id})
+        if(!employee){
+          const error:Error=new Error("Employee not found")
+          error.statusCode=404
+          throw error
+        }
+        // find the company by id
+        const company=await Company.findById({_id:employee.company})
+        if(!company){
+          const error:Error=new Error("Company not found")
+          error.statusCode=404
+          throw error
+        }
+      } catch (error) {
+        
+      }
 }
 

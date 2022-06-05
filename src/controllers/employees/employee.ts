@@ -13,13 +13,14 @@ import Error from "../../interface/errorInterface";
 
 
 export const registration:RequestHandler=async(req,res,next)=>{
- // get client data from request body   
-  const email =(req.body as {email:string}).email;
-  const username = (req.body as {username:string}).username;
-  const password = (req.body as {password:string}).password;
-  const role=(req.body as {role:string}).role
+
   try {
-      const errors = validationResult(req);
+     // get client data from request body   
+     const email =(req.body as {email:string}).email;
+     const username = (req.body as {username:string}).username;
+     const password = (req.body as {password:string}).password;
+     const role=(req.body as {role:string}).role
+     const errors = validationResult(req);
       if (!errors.isEmpty()) {
         const error:Error = new Error('Validation failed.');
         error.statusCode = 422;
@@ -66,10 +67,8 @@ export const registration:RequestHandler=async(req,res,next)=>{
       }
     });
     //  catch errors
-    } catch (error:unknown) {
-      if(error instanceof Error){
-        throw error.message
-      }
+    } catch (error) {
+      console.log(error)
       next(error)
   }
 }
@@ -304,7 +303,7 @@ export const correctPassword:RequestHandler=async(req,res,next)=>{
 }     
 }
 
-const populateEmployee:RequestHandler=async(req,res,next)=>{
+export const addEmployeeToCompany:RequestHandler=async(req,res,next)=>{
       try {
         // find the employee by id
         const employee=await Employee.findById({_id:req.params.id})
@@ -320,8 +319,13 @@ const populateEmployee:RequestHandler=async(req,res,next)=>{
           error.statusCode=404
           throw error
         }
+        const addEmployee=await Employee.updateOne({_id:employee._id},{
+          company:company._id,
+        },{new:true})
+        console.log(company);
+        res.status(200).json({employee:addEmployee})
       } catch (error) {
-        
+         throw error 
       }
 }
 

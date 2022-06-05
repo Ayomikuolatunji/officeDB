@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.correctPassword = exports.resetPassword = exports.deleteEmployee = exports.getAllEmployees = exports.profilePicture = exports.singleEmployee = exports.login = exports.registration = void 0;
+exports.addEmployeeToCompany = exports.correctPassword = exports.resetPassword = exports.deleteEmployee = exports.getAllEmployees = exports.profilePicture = exports.singleEmployee = exports.login = exports.registration = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const validation_result_1 = require("express-validator/src/validation-result");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -22,12 +22,12 @@ const transporter_1 = __importDefault(require("../../transporter/transporter"));
 const employee_1 = __importDefault(require("../../models/employee"));
 const company_1 = __importDefault(require("../../models/company"));
 const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    // get client data from request body   
-    const email = req.body.email;
-    const username = req.body.username;
-    const password = req.body.password;
-    const role = req.body.role;
     try {
+        // get client data from request body   
+        const email = req.body.email;
+        const username = req.body.username;
+        const password = req.body.password;
+        const role = req.body.role;
         const errors = (0, validation_result_1.validationResult)(req);
         if (!errors.isEmpty()) {
             const error = new Error('Validation failed.');
@@ -78,9 +78,7 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         //  catch errors
     }
     catch (error) {
-        if (error instanceof Error) {
-            throw error.message;
-        }
+        console.log(error);
         next(error);
     }
 });
@@ -304,5 +302,30 @@ const correctPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.correctPassword = correctPassword;
-const populateEmployee = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const addEmployeeToCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // find the employee by id
+        const employee = yield employee_1.default.findById({ _id: req.params.id });
+        if (!employee) {
+            const error = new Error("Employee not found");
+            error.statusCode = 404;
+            throw error;
+        }
+        // find the company by id
+        const company = yield company_1.default.findById({ _id: employee.company });
+        if (!company) {
+            const error = new Error("Company not found");
+            error.statusCode = 404;
+            throw error;
+        }
+        const addEmployee = yield employee_1.default.updateOne({ _id: employee._id }, {
+            company: company._id,
+        }, { new: true });
+        console.log(company);
+        res.status(200).json({ employee: addEmployee });
+    }
+    catch (error) {
+        throw error;
+    }
 });
+exports.addEmployeeToCompany = addEmployeeToCompany;

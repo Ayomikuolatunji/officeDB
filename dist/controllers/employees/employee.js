@@ -322,14 +322,19 @@ exports.addEmployeeToCompany = addEmployeeToCompany;
 const getEmployeeCompaines = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const employeeId = req.params.id;
-        const employee = yield employee_1.default.findById({ _id: employeeId })
-            .populate("companies");
-        if (!employee) {
+        const employees = yield employee_1.default.findById({ _id: employeeId })
+            .populate({
+            path: 'companies',
+            populate: {
+                path: 'company_employes',
+            }
+        });
+        if (!employees) {
             const error = new Error("Employee not found");
             error.statusCode = 404;
             throw error;
         }
-        res.status(200).json({ employee_companies: employee.companies });
+        res.status(200).json({ employee_companies: employees.companies });
     }
     catch (error) {
         next(error);

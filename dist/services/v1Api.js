@@ -14,6 +14,6 @@ const api = express_1.default.Router();
 api.use("/office-api", industries_1.default);
 api.use("/office-api", employee_1.default);
 api.use('/office-api', chats_1.default);
-api.use("/office-api/auth", company_1.default);
+api.use("/office-api", company_1.default);
 api.use("/office-api", s3Route_1.default);
 exports.default = api;

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addEmployeeToCompany = exports.correctPassword = exports.resetPassword = exports.deleteEmployee = exports.getAllEmployees = exports.profilePicture = exports.singleEmployee = exports.login = exports.registration = void 0;
+exports.getEmployeeCompaines = exports.addEmployeeToCompany = exports.correctPassword = exports.resetPassword = exports.deleteEmployee = exports.getAllEmployees = exports.profilePicture = exports.singleEmployee = exports.login = exports.registration = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const validation_result_1 = require("express-validator/src/validation-result");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -319,3 +319,20 @@ const addEmployeeToCompany = (req, res, next) => __awaiter(void 0, void 0, void 
     }
 });
 exports.addEmployeeToCompany = addEmployeeToCompany;
+const getEmployeeCompaines = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const employeeId = req.params.id;
+        const employee = yield employee_1.default.findById({ _id: employeeId })
+            .populate("companies");
+        if (!employee) {
+            const error = new Error("Employee not found");
+            error.statusCode = 404;
+            throw error;
+        }
+        res.status(200).json({ employee_companies: employee.companies });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.getEmployeeCompaines = getEmployeeCompaines;

@@ -320,3 +320,18 @@ export const addEmployeeToCompany:RequestHandler=async(req,res,next)=>{
       }
 }
 
+export const getEmployeeCompaines:RequestHandler=async(req,res,next)=>{
+  try {
+    const employeeId=req.params.id
+    const employee=await Employee.findById({_id:employeeId})
+    .populate("companies")
+    if(!employee){
+      const error:Error=new Error("Employee not found")
+      error.statusCode=404
+      throw error
+    }
+    res.status(200).json({employee_companies:employee.companies})
+  } catch (error) {
+     next(error)
+  }
+}

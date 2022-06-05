@@ -11,7 +11,8 @@ import
     deleteEmployee,
     resetPassword,
     correctPassword,
-    addEmployeeToCompany
+    addEmployeeToCompany,
+    getEmployeeCompaines
   }
  from "../../controllers/employees/employee"
 const router=Router()
@@ -52,6 +53,8 @@ router.post("/auth/employee_profile_picture/:id", profilePicture)
 router.delete("/auth/delete_employee/:id",deleteEmployee)
 
 router.post("/auth/add_employee_to_company/:id",addEmployeeToCompany)
+
+router.get("/employee_companies/:id",getEmployeeCompaines)
 
 
 export default router

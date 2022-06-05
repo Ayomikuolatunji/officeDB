@@ -14,7 +14,7 @@ const api=express.Router()
 api.use("/office-api",allIndustryLists)
 api.use("/office-api",employeeRoutes)
 api.use('/office-api',chatRoutes)
-api.use("/office-api/auth",companyRoutes)
+api.use("/office-api",companyRoutes)
 api.use("/office-api",s3Route)
 
 

@@ -17,16 +17,18 @@ const company_1 = __importDefault(require("../../models/company"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const transporter_1 = __importDefault(require("../../transporter/transporter"));
 const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const company_name = req.body.company_name;
-    const company_type = req.body.company_type;
-    const company_email = req.body.company_email;
-    const company_password = req.body.company_password;
-    const company_location = req.body.company_location;
-    const companyExits = yield company_1.default.findOne({ email: company_email });
-    if (companyExits) {
-        res.status(422).json({ message: "company already exits" });
-    }
     try {
+        const company_name = req.body.company_name;
+        const company_type = req.body.company_type;
+        const company_email = req.body.company_email;
+        const company_password = req.body.company_password;
+        const company_location = req.body.company_location;
+        const companyExits = yield company_1.default.findOne({ company_email: company_email });
+        if (companyExits) {
+            const error = new Error("company already exists");
+            error.statusCode = 400;
+            throw error;
+        }
         const hashedPw = yield bcrypt_1.default.hash(company_password, 12);
         const newCompany = new company_1.default({
             company_email: company_email,
@@ -53,29 +55,25 @@ const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, func
                 console.log('Email sent: ' + info.response);
             }
         });
+        // 
     }
     catch (error) {
-        if (error instanceof Error) {
-            throw error.message;
-        }
         next(error);
     }
 });
 exports.createCompany = createCompany;
 const companiesEmployees = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const users = yield company_1.default.find({}).populate("company_employes");
-        if (!users) {
-            const error = new Error(`user empty`);
-            // error.statusCode=422
+        const companies = yield company_1.default.find({})
+            .populate("company_employes");
+        if (!companies) {
+            const error = new Error(`company not found `);
+            error.statusCode = 422;
             throw error;
         }
-        res.status(200).json({ users });
+        res.status(200).json({ companies });
     }
     catch (error) {
-        if (error instanceof Error) {
-            throw error.message;
-        }
         next(error);
     }
 });

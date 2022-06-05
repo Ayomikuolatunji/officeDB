@@ -32,4 +32,5 @@ router.get("/auth/employee/:id", employee_2.singleEmployee);
 router.post("/auth/employee_profile_picture/:id", employee_2.profilePicture);
 router.delete("/auth/delete_employee/:id", employee_2.deleteEmployee);
 router.post("/auth/add_employee_to_company/:id", employee_2.addEmployeeToCompany);
+router.get("/employee_companies/:id", employee_2.getEmployeeCompaines);
 exports.default = router;

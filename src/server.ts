@@ -48,12 +48,10 @@ const startConnection=async()=>{
   try {
     await connectFunction()
     app.listen(process.env.PORT,()=>{
-      console.log(`App runing on port ${process.env.PORT}`)
+      console.log(`App running on port ${process.env.PORT}`)
     })
-  } catch (error:unknown) {
-      if(error instanceof Error){
-          console.log(error.message)
-      }
+  } catch (error:any) {
+    console.log(error.message)
   }
 }
 startConnection()

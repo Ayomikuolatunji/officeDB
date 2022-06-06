@@ -311,6 +311,12 @@ const addEmployeeToCompany = (req, res, next) => __awaiter(void 0, void 0, void 
         const employee = yield employee_1.default.findById({ _id: employeeId });
         // find the company by id and company name
         const company = yield company_1.default.findById({ _id: companyId });
+        // check if the id provided is a valid id
+        if (company._id !== companyId) {
+            const error = new Error("No user with an id found");
+            error.statusCode = 404;
+            throw error;
+        }
         // if no employee found throw error
         if (!employee) {
             const error = new Error("Employee not found");

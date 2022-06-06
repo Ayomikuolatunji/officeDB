@@ -310,8 +310,15 @@ export const addEmployeeToCompany:RequestHandler=async(req,res,next)=>{
           throw error
         }
         const employee=await Employee.findById({_id:employeeId})
-                // find the company by id and company name
+
+        // find the company by id and company name
         const company=await Company.findById({ _id:companyId})
+      // check if the id provided is a valid id
+      if(company._id !==companyId){
+        const error:Error=new Error("No user with an id found")
+        error.statusCode=404
+        throw error
+      }
         // if no employee found throw error
         if(!employee){
           const error:Error=new Error("Employee not found")

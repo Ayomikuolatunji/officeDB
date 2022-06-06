@@ -300,8 +300,15 @@ export const addEmployeeToCompany:RequestHandler=async(req,res,next)=>{
           error.statusCode=404
           throw error
         }
-        employee.companies.push(companyId)
-        await employee.save()
+        // check if company exists in employee schema
+        if(employee.companies.includes(companyId)){
+          const error:Error=new Error("Employee already exists in this company")
+          error.statusCode=404
+          throw error
+        }else{
+          employee.companies.push(companyId)
+          await employee.save()
+        }
       
         // find the company by id
         const company=await Company.findById({_id:companyId})
@@ -314,7 +321,8 @@ export const addEmployeeToCompany:RequestHandler=async(req,res,next)=>{
         // update employee id to company_employes array
         company.company_employes.push(employeeId)
         await company.save()
-        res.status(200).json({message:`employee added sucessfully to company ${company.company_name}`})
+        return res.status(200).json({message:`employee added sucessfully to company ${company.company_name}`})
+
       } catch (error) {
          next(error)
       }

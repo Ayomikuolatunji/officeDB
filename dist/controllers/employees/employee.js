@@ -299,8 +299,16 @@ const addEmployeeToCompany = (req, res, next) => __awaiter(void 0, void 0, void 
             error.statusCode = 404;
             throw error;
         }
-        employee.companies.push(companyId);
-        yield employee.save();
+        // check if company exists in employee schema
+        if (employee.companies.includes(companyId)) {
+            const error = new Error("Employee already exists in this company");
+            error.statusCode = 404;
+            throw error;
+        }
+        else {
+            employee.companies.push(companyId);
+            yield employee.save();
+        }
         // find the company by id
         const company = yield company_1.default.findById({ _id: companyId });
         // if no company found throw error
@@ -312,7 +320,7 @@ const addEmployeeToCompany = (req, res, next) => __awaiter(void 0, void 0, void 
         // update employee id to company_employes array
         company.company_employes.push(employeeId);
         yield company.save();
-        res.status(200).json({ message: `employee added sucessfully to company ${company.company_name}` });
+        return res.status(200).json({ message: `employee added sucessfully to company ${company.company_name}` });
     }
     catch (error) {
         next(error);

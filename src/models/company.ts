@@ -42,3 +42,4 @@ const companySchema=new Schema({
 },{timestamps:true})
 
 export default mongoose.model("Companies", companySchema)
+

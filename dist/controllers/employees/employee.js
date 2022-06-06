@@ -18,6 +18,7 @@ const validation_result_1 = require("express-validator/src/validation-result");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const http_status_codes_1 = require("http-status-codes");
 const crypto_1 = __importDefault(require("crypto"));
+const mongodb_1 = require("mongodb");
 const transporter_1 = __importDefault(require("../../transporter/transporter"));
 const employee_1 = __importDefault(require("../../models/employee"));
 const company_1 = __importDefault(require("../../models/company"));
@@ -283,12 +284,11 @@ const addEmployeeToCompany = (req, res, next) => __awaiter(void 0, void 0, void 
             (0, throwError_1.throwError)("No company with an name found", 422);
         }
         const employee = yield employee_1.default.findById({ _id: employeeId });
+        if (!mongodb_1.ObjectId.isValid(companyId)) {
+            (0, throwError_1.throwError)("You provided an invalid company ID", http_status_codes_1.StatusCodes.NOT_FOUND);
+        }
         // find the company by id and company name
         const company = yield company_1.default.findById({ _id: companyId });
-        // check if the id provided is a valid id
-        if (company._id !== companyId) {
-            (0, throwError_1.throwError)("No company found with the provided company id", http_status_codes_1.StatusCodes.NOT_FOUND);
-        }
         // if no employee found throw error
         if (!employee) {
             (0, throwError_1.throwError)("Employee not found", http_status_codes_1.StatusCodes.NOT_FOUND);
@@ -297,8 +297,9 @@ const addEmployeeToCompany = (req, res, next) => __awaiter(void 0, void 0, void 
         if (!company) {
             (0, throwError_1.throwError)("Company not found", http_status_codes_1.StatusCodes.NOT_FOUND);
         }
+        // // check if the company name provided is the same as the company name in the database
         if (company.company_name !== company_name) {
-            (0, throwError_1.throwError)("You are not allowed to join this company or invalid company name", http_status_codes_1.StatusCodes.FORBIDDEN);
+            (0, throwError_1.throwError)("You are not allowed to join this company or invalid company name or ID", http_status_codes_1.StatusCodes.FORBIDDEN);
         }
         // check if the company id is not eual to the company _id
         // check if company exists in employee schema

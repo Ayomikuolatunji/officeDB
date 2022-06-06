@@ -3,6 +3,7 @@ import { validationResult } from "express-validator/src/validation-result";
 import jwt from "jsonwebtoken"
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import crypto from "crypto";
+import { ObjectId } from "mongodb";
 import transporter from "../../transporter/transporter";
 import Employee from "../../models/employee";
 import Company from "../../models/company";
@@ -284,13 +285,11 @@ export const addEmployeeToCompany:RequestHandler=async(req,res,next)=>{
           throwError("No company with an name found", 422)
         }
         const employee=await Employee.findById({_id:employeeId})
-
+        if(!ObjectId.isValid(companyId)){
+          throwError("You provided an invalid company ID", StatusCodes.NOT_FOUND)
+        }
         // find the company by id and company name
         const company=await Company.findById({ _id:companyId})
-      // check if the id provided is a valid id
-        if(company._id !==companyId){
-        throwError("No company found with the provided company id", StatusCodes.NOT_FOUND)
-        }
         // if no employee found throw error
         if(!employee){
           throwError("Employee not found", StatusCodes.NOT_FOUND)
@@ -299,8 +298,9 @@ export const addEmployeeToCompany:RequestHandler=async(req,res,next)=>{
         if(!company){
           throwError("Company not found", StatusCodes.NOT_FOUND)
         }
+         // // check if the company name provided is the same as the company name in the database
         if(company.company_name !==company_name){
-          throwError("You are not allowed to join this company or invalid company name", StatusCodes.FORBIDDEN)
+          throwError("You are not allowed to join this company or invalid company name or ID", StatusCodes.FORBIDDEN)
         }
         // check if the company id is not eual to the company _id
         // check if company exists in employee schema

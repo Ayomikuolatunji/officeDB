@@ -289,33 +289,55 @@ const correctPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
 exports.correctPassword = correctPassword;
 const addEmployeeToCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const company_name = req.body.company_name;
         const companyId = req.body.companyId;
         const employeeId = req.params.id;
         // find the employee by id
-        const employee = yield employee_1.default.findById({ _id: employeeId });
-        // if no employee found throw error
-        if (!employee) {
-            const error = new Error("Employee not found");
+        if (!employeeId) {
+            const error = new Error("No user with an id found");
             error.statusCode = 404;
             throw error;
         }
+        if (!companyId) {
+            const error = new Error("No company with an id found");
+            error.statusCode = 404;
+            throw error;
+        }
+        if (!company_name) {
+            const error = new Error("No company with the name found");
+            error.statusCode = 404;
+            throw error;
+        }
+        const employee = yield employee_1.default.findById({ _id: employeeId });
+        // find the company by id and company name
+        const company = yield company_1.default.findById({ _id: companyId });
+        // if no employee found throw error
+        if (!employee) {
+            const error = new Error("Employee not found");
+            error.statusCode = 422;
+            throw error;
+        }
+        // if no company found throw error
+        if (!company) {
+            const error = new Error("company not found");
+            error.statusCode = 422;
+            throw error;
+        }
+        if (company.company_name !== company_name) {
+            const error = new Error("You are not allowed to join this company or invalid company name");
+            error.statusCode = 422;
+            throw error;
+        }
+        // check if the company id is not eual to the company _id
         // check if company exists in employee schema
         if (employee.companies.includes(companyId)) {
             const error = new Error("Employee already exists in this company");
-            error.statusCode = 404;
+            error.statusCode = 422;
             throw error;
         }
         else {
             employee.companies.push(companyId);
             yield employee.save();
-        }
-        // find the company by id
-        const company = yield company_1.default.findById({ _id: companyId });
-        // if no company found throw error
-        if (!company) {
-            const error = new Error("Employee not found");
-            error.statusCode = 404;
-            throw error;
         }
         // update employee id to company_employes array
         company.company_employes.push(employeeId);

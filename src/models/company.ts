@@ -21,6 +21,10 @@ const companySchema=new Schema({
               require:true
           }
       },
+      token:{
+        type:String,
+        default:""    
+      },
       company_email:{
           type:String,
           required:true

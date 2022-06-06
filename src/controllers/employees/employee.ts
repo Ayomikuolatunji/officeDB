@@ -290,39 +290,60 @@ export const correctPassword:RequestHandler=async(req,res,next)=>{
 
 export const addEmployeeToCompany:RequestHandler=async(req,res,next)=>{
       try {
+        const company_name=req.body.company_name
         const companyId=req.body.companyId
         const employeeId=req.params.id
         // find the employee by id
-        const employee=await Employee.findById({_id:employeeId})
-        // if no employee found throw error
-        if(!employee){
-          const error:Error=new Error("Employee not found")
+        if(!employeeId){
+          const error:Error=new Error("No user with an id found")
           error.statusCode=404
           throw error
         }
+        if(!companyId){
+          const error:Error=new Error("No company with an id found")
+          error.statusCode=404
+          throw error
+        }
+        if(!company_name){
+          const error:Error=new Error("No company with the name found")
+          error.statusCode=404
+          throw error
+        }
+        const employee=await Employee.findById({_id:employeeId})
+                // find the company by id and company name
+        const company=await Company.findById({ _id:companyId})
+        // if no employee found throw error
+        if(!employee){
+          const error:Error=new Error("Employee not found")
+          error.statusCode=422
+          throw error
+        }
+        // if no company found throw error
+        if(!company){
+          const error:Error=new Error("company not found")
+          error.statusCode=422
+          throw error
+        }
+        if(company.company_name !==company_name){
+          const error:Error=new Error("You are not allowed to join this company or invalid company name") 
+          error.statusCode=422
+          throw error
+        }
+        // check if the company id is not eual to the company _id
         // check if company exists in employee schema
         if(employee.companies.includes(companyId)){
           const error:Error=new Error("Employee already exists in this company")
-          error.statusCode=404
+          error.statusCode=422
           throw error
         }else{
           employee.companies.push(companyId)
           await employee.save()
         }
       
-        // find the company by id
-        const company=await Company.findById({_id:companyId})
-        // if no company found throw error
-        if(!company){
-          const error:Error=new Error("Employee not found")
-          error.statusCode=404
-          throw error
-        }
-        // update employee id to company_employes array
-        company.company_employes.push(employeeId)
-        await company.save()
-        return res.status(200).json({message:`employee added sucessfully to company ${company.company_name}`})
-
+         // update employee id to company_employes array
+         company.company_employes.push(employeeId)
+         await company.save()
+         return res.status(200).json({message:`employee added sucessfully to company ${company.company_name}`})
       } catch (error) {
          next(error)
       }

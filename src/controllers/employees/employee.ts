@@ -8,6 +8,7 @@ import Employee from "../../models/employee";
 import Company from "../../models/company";
 import { RequestHandler } from "express";
 import Error from "../../interface/errorInterface";
+import { throwError } from "../../middleware/throwError";
 
 
 
@@ -22,23 +23,17 @@ export const registration:RequestHandler=async(req,res,next)=>{
      const role=(req.body as {role:string}).role
      const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        const error:Error = new Error('Validation failed.');
-        error.statusCode = 422;
-        throw error;
+        throwError("Invalid data",400)
       }
       // send error to the client if the inputs are empty
       if(!email || !username || !password || !role){
-        const error:Error=new Error("No input field must be empty")
-        error.statusCode=422
-        throw error
+        throwError("No input field must be empty",400)
       }
     // find user
       const userExist=await Employee.findOne({email:email})
       // check if there is a user with the client email
       if(userExist){
-          const error:Error=new Error("User already exist with this email")
-          error.statusCode=422;
-          throw error
+        throwError("User already exist",StatusCodes.CONFLICT)
       } 
     const hashedPw = await bcrypt.hash(password, 12);
     const user = new Employee({
@@ -113,15 +108,10 @@ export const singleEmployee:RequestHandler=async(req,res,next)=>{
    try {
     const user=await Employee.findById({_id:id})
     if (!user) {
-      const error:Error= new Error('A user with this email could not be found.');
-      error.statusCode = 40;
-      throw error;
+      throwError("A user with the provided could not be found.",StatusCodes.NOT_FOUND)
     }
     res.status(200).json({user:user})
-    } catch (error:unknown) {
-      if(error instanceof Error){
-        throw error.message
-      }
+    } catch (error) {
       next(error)
   }
 }
@@ -131,9 +121,7 @@ export const singleEmployee:RequestHandler=async(req,res,next)=>{
 export const profilePicture:RequestHandler=async(req,res,next)=>{
   const {id}=req.params
   if(!id){
-    const error:Error=new Error(`Cant uplaod image with this ${id}`)
-    error.statusCode=422
-    throw error
+    throwError("No id provided or id is invalid",StatusCodes.BAD_REQUEST)
   }
   const avartImage=(req.body as {avartImage:string}).avartImage
   const avatarImageSet=(req.body as {avatarImageSet:boolean}).avatarImageSet
@@ -158,9 +146,7 @@ export const getAllEmployees:RequestHandler=async(req,res,next)=>{
             "_id"
          ])
          if(!users){
-          const error:any=new Error(`No user found`)
-          error.statusCode=422
-          throw error
+            throwError("Employees data not found",StatusCodes.NOT_FOUND)
          }     
          res.status(200).json({users})
      } catch (error:any) {
@@ -175,9 +161,7 @@ export const deleteEmployee:RequestHandler=async(req,res,next)=>{
     const id=req.params.id;
     const findOne=await Employee.findById({_id:id})
     if(!findOne){
-      const error=new Error("No user find  with the id undefined")
-      // error.statusCode=404
-      throw error
+      throwError("Employee not found",StatusCodes.NOT_FOUND)
     } 
     const companyId=await Employee.findById({_id:findOne._id}).populate("company") 
     res.status(StatusCodes.OK).json({message:ReasonPhrases.ACCEPTED})
@@ -219,9 +203,7 @@ export const resetPassword:RequestHandler=async(req,res,next)=>{
       const email=req.body.email
       const user=await Employee.findOne({email:email})
       if(!user){
-        const error:Error=new Error("No user with the email found")
-        error.statusCode=404
-        throw error
+        throwError("User not found",StatusCodes.NOT_FOUND)
       }
       const random= crypto.randomBytes(300)
       if(!random){
@@ -254,20 +236,20 @@ export const resetPassword:RequestHandler=async(req,res,next)=>{
 export const correctPassword:RequestHandler=async(req,res,next)=>{
    try {
     const password=req.body.password
-    const userId=req.body.userId
+    const employeeId=req.body.userId
     const resetToken=req.body.resetToken
-    const user=await Employee.findById({_id:userId})
-    if(user || resetToken ||userId){
+    const employee=await Employee.findById({_id:employeeId})
+    if(employee || resetToken ||employeeId){
       const resetPassword=await bcrypt.hash(password,12)
-      await Employee.findOneAndUpdate({_id:user._id},{
+      await Employee.findOneAndUpdate({_id:employee._id},{
         password:resetPassword,
     })
-    res.status(200).json({user:user._id}) 
+    res.status(200).json({employee:employee._id}) 
     var mailOptions = {
       from: 'ayomikuolatunji@gmail.com',
-      to: user.email,
+      to: employee.email,
       subject: 'Ayoscript from onlineoffice.com',
-      text: `Your request to change password with ${user.email} is sucessful `,
+      text: `Your request to change password with ${employee.email} is sucessful `,
       html:`<body><h5>Your password has been reset </h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>`
     };
     // send email after successful signup
@@ -279,9 +261,7 @@ export const correctPassword:RequestHandler=async(req,res,next)=>{
       }
     });
     }else{
-      const error=new Error("You are not allowed")
-      // error.statusCode=404
-      throw error
+      throwError("Your are not allowed to set new password",StatusCodes.FORBIDDEN)
     }
    } catch (error:any) {
     next(error)
@@ -295,53 +275,37 @@ export const addEmployeeToCompany:RequestHandler=async(req,res,next)=>{
         const employeeId=req.params.id
         // find the employee by id
         if(!employeeId){
-          const error:Error=new Error("No user with an id found")
-          error.statusCode=404
-          throw error
+          throwError("No employee found with the provided ID or invalid ID", StatusCodes.NOT_FOUND)
         }
         if(!companyId){
-          const error:Error=new Error("No company with an id found")
-          error.statusCode=404
-          throw error
+           throwError("No company with an ID found", StatusCodes.NOT_FOUND)
         }
         if(!company_name){
-          const error:Error=new Error("No company with the name found")
-          error.statusCode=404
-          throw error
+          throwError("No company with an name found", 422)
         }
         const employee=await Employee.findById({_id:employeeId})
 
         // find the company by id and company name
         const company=await Company.findById({ _id:companyId})
       // check if the id provided is a valid id
-      if(company._id !==companyId){
-        const error:Error=new Error("No user with an id found")
-        error.statusCode=404
-        throw error
-      }
+        if(company._id !==companyId){
+        throwError("No company found with the provided company id", StatusCodes.NOT_FOUND)
+        }
         // if no employee found throw error
         if(!employee){
-          const error:Error=new Error("Employee not found")
-          error.statusCode=422
-          throw error
+          throwError("Employee not found", StatusCodes.NOT_FOUND)
         }
         // if no company found throw error
         if(!company){
-          const error:Error=new Error("company not found")
-          error.statusCode=422
-          throw error
+          throwError("Company not found", StatusCodes.NOT_FOUND)
         }
         if(company.company_name !==company_name){
-          const error:Error=new Error("You are not allowed to join this company or invalid company name") 
-          error.statusCode=422
-          throw error
+          throwError("You are not allowed to join this company or invalid company name", StatusCodes.FORBIDDEN)
         }
         // check if the company id is not eual to the company _id
         // check if company exists in employee schema
         if(employee.companies.includes(companyId)){
-          const error:Error=new Error("Employee already exists in this company")
-          error.statusCode=422
-          throw error
+          throwError("You are already a member of this company", StatusCodes.FORBIDDEN)
         }else{
           employee.companies.push(companyId)
           await employee.save()
@@ -368,9 +332,7 @@ export const getEmployeeCompaines:RequestHandler=async(req,res,next)=>{
     })
 
     if(!employees){
-      const error:Error=new Error("Employee not found")
-      error.statusCode=404
-      throw error
+      throwError("No employee found with the provided ID or invalid ID", StatusCodes.NOT_FOUND)
     }
     res.status(200).json({employee_companies:employees.companies})
   } catch (error) {

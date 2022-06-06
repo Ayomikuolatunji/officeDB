@@ -21,6 +21,7 @@ const crypto_1 = __importDefault(require("crypto"));
 const transporter_1 = __importDefault(require("../../transporter/transporter"));
 const employee_1 = __importDefault(require("../../models/employee"));
 const company_1 = __importDefault(require("../../models/company"));
+const throwError_1 = require("../../middleware/throwError");
 const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // get client data from request body   
@@ -30,23 +31,17 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         const role = req.body.role;
         const errors = (0, validation_result_1.validationResult)(req);
         if (!errors.isEmpty()) {
-            const error = new Error('Validation failed.');
-            error.statusCode = 422;
-            throw error;
+            (0, throwError_1.throwError)("Invalid data", 400);
         }
         // send error to the client if the inputs are empty
         if (!email || !username || !password || !role) {
-            const error = new Error("No input field must be empty");
-            error.statusCode = 422;
-            throw error;
+            (0, throwError_1.throwError)("No input field must be empty", 400);
         }
         // find user
         const userExist = yield employee_1.default.findOne({ email: email });
         // check if there is a user with the client email
         if (userExist) {
-            const error = new Error("User already exist with this email");
-            error.statusCode = 422;
-            throw error;
+            (0, throwError_1.throwError)("User already exist", http_status_codes_1.StatusCodes.CONFLICT);
         }
         const hashedPw = yield bcrypt_1.default.hash(password, 12);
         const user = new employee_1.default({
@@ -115,16 +110,11 @@ const singleEmployee = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     try {
         const user = yield employee_1.default.findById({ _id: id });
         if (!user) {
-            const error = new Error('A user with this email could not be found.');
-            error.statusCode = 40;
-            throw error;
+            (0, throwError_1.throwError)("A user with the provided could not be found.", http_status_codes_1.StatusCodes.NOT_FOUND);
         }
         res.status(200).json({ user: user });
     }
     catch (error) {
-        if (error instanceof Error) {
-            throw error.message;
-        }
         next(error);
     }
 });
@@ -132,9 +122,7 @@ exports.singleEmployee = singleEmployee;
 const profilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     if (!id) {
-        const error = new Error(`Cant uplaod image with this ${id}`);
-        error.statusCode = 422;
-        throw error;
+        (0, throwError_1.throwError)("No id provided or id is invalid", http_status_codes_1.StatusCodes.BAD_REQUEST);
     }
     const avartImage = req.body.avartImage;
     const avatarImageSet = req.body.avatarImageSet;
@@ -159,9 +147,7 @@ const getAllEmployees = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
             "_id"
         ]);
         if (!users) {
-            const error = new Error(`No user found`);
-            error.statusCode = 422;
-            throw error;
+            (0, throwError_1.throwError)("Employees data not found", http_status_codes_1.StatusCodes.NOT_FOUND);
         }
         res.status(200).json({ users });
     }
@@ -175,9 +161,7 @@ const deleteEmployee = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         const id = req.params.id;
         const findOne = yield employee_1.default.findById({ _id: id });
         if (!findOne) {
-            const error = new Error("No user find  with the id undefined");
-            // error.statusCode=404
-            throw error;
+            (0, throwError_1.throwError)("Employee not found", http_status_codes_1.StatusCodes.NOT_FOUND);
         }
         const companyId = yield employee_1.default.findById({ _id: findOne._id }).populate("company");
         res.status(http_status_codes_1.StatusCodes.OK).json({ message: http_status_codes_1.ReasonPhrases.ACCEPTED });
@@ -215,9 +199,7 @@ const resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         const email = req.body.email;
         const user = yield employee_1.default.findOne({ email: email });
         if (!user) {
-            const error = new Error("No user with the email found");
-            error.statusCode = 404;
-            throw error;
+            (0, throwError_1.throwError)("User not found", http_status_codes_1.StatusCodes.NOT_FOUND);
         }
         const random = crypto_1.default.randomBytes(300);
         if (!random) {
@@ -250,20 +232,20 @@ exports.resetPassword = resetPassword;
 const correctPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const password = req.body.password;
-        const userId = req.body.userId;
+        const employeeId = req.body.userId;
         const resetToken = req.body.resetToken;
-        const user = yield employee_1.default.findById({ _id: userId });
-        if (user || resetToken || userId) {
+        const employee = yield employee_1.default.findById({ _id: employeeId });
+        if (employee || resetToken || employeeId) {
             const resetPassword = yield bcrypt_1.default.hash(password, 12);
-            yield employee_1.default.findOneAndUpdate({ _id: user._id }, {
+            yield employee_1.default.findOneAndUpdate({ _id: employee._id }, {
                 password: resetPassword,
             });
-            res.status(200).json({ user: user._id });
+            res.status(200).json({ employee: employee._id });
             var mailOptions = {
                 from: 'ayomikuolatunji@gmail.com',
-                to: user.email,
+                to: employee.email,
                 subject: 'Ayoscript from onlineoffice.com',
-                text: `Your request to change password with ${user.email} is sucessful `,
+                text: `Your request to change password with ${employee.email} is sucessful `,
                 html: `<body><h5>Your password has been reset </h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>`
             };
             // send email after successful signup
@@ -277,9 +259,7 @@ const correctPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
             });
         }
         else {
-            const error = new Error("You are not allowed");
-            // error.statusCode=404
-            throw error;
+            (0, throwError_1.throwError)("Your are not allowed to set new password", http_status_codes_1.StatusCodes.FORBIDDEN);
         }
     }
     catch (error) {
@@ -294,52 +274,36 @@ const addEmployeeToCompany = (req, res, next) => __awaiter(void 0, void 0, void 
         const employeeId = req.params.id;
         // find the employee by id
         if (!employeeId) {
-            const error = new Error("No user with an id found");
-            error.statusCode = 404;
-            throw error;
+            (0, throwError_1.throwError)("No employee found with the provided ID or invalid ID", http_status_codes_1.StatusCodes.NOT_FOUND);
         }
         if (!companyId) {
-            const error = new Error("No company with an id found");
-            error.statusCode = 404;
-            throw error;
+            (0, throwError_1.throwError)("No company with an ID found", http_status_codes_1.StatusCodes.NOT_FOUND);
         }
         if (!company_name) {
-            const error = new Error("No company with the name found");
-            error.statusCode = 404;
-            throw error;
+            (0, throwError_1.throwError)("No company with an name found", 422);
         }
         const employee = yield employee_1.default.findById({ _id: employeeId });
         // find the company by id and company name
         const company = yield company_1.default.findById({ _id: companyId });
         // check if the id provided is a valid id
         if (company._id !== companyId) {
-            const error = new Error("No user with an id found");
-            error.statusCode = 404;
-            throw error;
+            (0, throwError_1.throwError)("No company found with the provided company id", http_status_codes_1.StatusCodes.NOT_FOUND);
         }
         // if no employee found throw error
         if (!employee) {
-            const error = new Error("Employee not found");
-            error.statusCode = 422;
-            throw error;
+            (0, throwError_1.throwError)("Employee not found", http_status_codes_1.StatusCodes.NOT_FOUND);
         }
         // if no company found throw error
         if (!company) {
-            const error = new Error("company not found");
-            error.statusCode = 422;
-            throw error;
+            (0, throwError_1.throwError)("Company not found", http_status_codes_1.StatusCodes.NOT_FOUND);
         }
         if (company.company_name !== company_name) {
-            const error = new Error("You are not allowed to join this company or invalid company name");
-            error.statusCode = 422;
-            throw error;
+            (0, throwError_1.throwError)("You are not allowed to join this company or invalid company name", http_status_codes_1.StatusCodes.FORBIDDEN);
         }
         // check if the company id is not eual to the company _id
         // check if company exists in employee schema
         if (employee.companies.includes(companyId)) {
-            const error = new Error("Employee already exists in this company");
-            error.statusCode = 422;
-            throw error;
+            (0, throwError_1.throwError)("You are already a member of this company", http_status_codes_1.StatusCodes.FORBIDDEN);
         }
         else {
             employee.companies.push(companyId);
@@ -366,9 +330,7 @@ const getEmployeeCompaines = (req, res, next) => __awaiter(void 0, void 0, void 
             }
         });
         if (!employees) {
-            const error = new Error("Employee not found");
-            error.statusCode = 404;
-            throw error;
+            (0, throwError_1.throwError)("No employee found with the provided ID or invalid ID", http_status_codes_1.StatusCodes.NOT_FOUND);
         }
         res.status(200).json({ employee_companies: employees.companies });
     }

@@ -35,7 +35,7 @@ app.use(cors())
 // graphql endpoints
 app.use('/graphql', graphqlHTTP(graphql()));
 
-//all api routes api routes 
+//all V1 api routes 
 app.use("/v1",api)
 app.use(ErrorPage)
 

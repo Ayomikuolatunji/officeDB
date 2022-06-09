@@ -10,9 +10,11 @@ import Company from "../../models/company";
 import { RequestHandler } from "express";
 import Error from "../../interface/errorInterface";
 import { throwError } from "../../middleware/throwError";
-import sendEmployeeSignupEmail from "../../emails/sendEmployeeSignupEmail";
-import sendDeleteEmployeeEmail from "../../emails/sendDeleteEmployeeEmail";
-import sendResetEmployeeEmail from "../../emails/sendResetEmployeeEmail";
+import sendEmployeeSignupEmail from "../../emails/employee-email-service/sendEmployeeSignupEmail";
+import sendDeleteEmployeeEmail from "../../emails/employee-email-service/sendDeleteEmployeeEmail";
+
+import sendCorrectEmployeePasswordEmail from "../../emails/employee-email-service/sendCorrectEmployeePasswordEmail";
+import sendResetEmployeeEmail from "../../emails/employee-email-service/sendResetEmployeeEmail";
 
 
 
@@ -188,22 +190,7 @@ export const resetPassword:RequestHandler=async(req,res,next)=>{
       }
       const token=random.toString("hex")
       res.status(200).json({message:"Email sent to " + user.email})
-      var mailOptions = {
-      from: 'ayomikuolatunji@gmail.com',
-      to: email,
-      subject: 'Ayoscript from onlineoffice.com',
-      text: `Your request to change password with ${email} is sent `,
-      html:`<body><h5>You set your password with the link below</h5><div><a href='http://localhost:3000/forgot-password/new-password?code=${token}&id=${user._id}'>Click to correct password</a></div></body>`
-    };
-    // send email after successful signup
-     transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Email sent: ' + info.response);
-      }
-    });
-    sendResetEmployeeEmail(email,user._id, token)
+      sendResetEmployeeEmail(email,user._id, token)
     // catch errors
     }catch (error) {
       next(error)
@@ -224,21 +211,7 @@ export const correctPassword:RequestHandler=async(req,res,next)=>{
         password:resetPassword,
     })
     res.status(200).json({employee:employee._id}) 
-    var mailOptions = {
-      from: 'ayomikuolatunji@gmail.com',
-      to: employee.email,
-      subject: 'Ayoscript from onlineoffice.com',
-      text: `Your request to change password with ${employee.email} is sucessful `,
-      html:`<body><h5>Your password has been reset </h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>`
-    };
-    // send email after successful signup
-     transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Email sent: ' + info.response);
-      }
-    });
+    sendCorrectEmployeePasswordEmail(employee.email)
     }else{
       throwError("Your are not allowed to set new password",StatusCodes.FORBIDDEN)
     }

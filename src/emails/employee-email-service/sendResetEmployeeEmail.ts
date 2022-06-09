@@ -1,4 +1,4 @@
-import transporter from "./transporter";
+import transporter from "../transporter";
 
 
 const sendResetEmployeeEmail=(email:string, id:number, token:string)=>{

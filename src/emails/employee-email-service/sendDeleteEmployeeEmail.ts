@@ -1,4 +1,4 @@
-import transporter from "./transporter";
+import transporter from "../transporter";
 
 
 const sendDeleteEmployeeEmail=(email:string, username:string,company_name:string)=>{

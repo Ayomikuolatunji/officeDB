@@ -19,13 +19,13 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const http_status_codes_1 = require("http-status-codes");
 const crypto_1 = __importDefault(require("crypto"));
 const mongodb_1 = require("mongodb");
-const transporter_1 = __importDefault(require("../../emails/transporter"));
 const employee_1 = __importDefault(require("../../models/employee"));
 const company_1 = __importDefault(require("../../models/company"));
 const throwError_1 = require("../../middleware/throwError");
-const sendEmployeeSignupEmail_1 = __importDefault(require("../../emails/sendEmployeeSignupEmail"));
-const sendDeleteEmployeeEmail_1 = __importDefault(require("../../emails/sendDeleteEmployeeEmail"));
-const sendResetEmployeeEmail_1 = __importDefault(require("../../emails/sendResetEmployeeEmail"));
+const sendEmployeeSignupEmail_1 = __importDefault(require("../../emails/employee-email-service/sendEmployeeSignupEmail"));
+const sendDeleteEmployeeEmail_1 = __importDefault(require("../../emails/employee-email-service/sendDeleteEmployeeEmail"));
+const sendCorrectEmployeePasswordEmail_1 = __importDefault(require("../../emails/employee-email-service/sendCorrectEmployeePasswordEmail"));
+const sendResetEmployeeEmail_1 = __importDefault(require("../../emails/employee-email-service/sendResetEmployeeEmail"));
 const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // get client data from request body   
@@ -182,22 +182,6 @@ const resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         }
         const token = random.toString("hex");
         res.status(200).json({ message: "Email sent to " + user.email });
-        var mailOptions = {
-            from: 'ayomikuolatunji@gmail.com',
-            to: email,
-            subject: 'Ayoscript from onlineoffice.com',
-            text: `Your request to change password with ${email} is sent `,
-            html: `<body><h5>You set your password with the link below</h5><div><a href='http://localhost:3000/forgot-password/new-password?code=${token}&id=${user._id}'>Click to correct password</a></div></body>`
-        };
-        // send email after successful signup
-        transporter_1.default.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                console.log(error);
-            }
-            else {
-                console.log('Email sent: ' + info.response);
-            }
-        });
         (0, sendResetEmployeeEmail_1.default)(email, user._id, token);
         // catch errors
     }
@@ -218,22 +202,7 @@ const correctPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
                 password: resetPassword,
             });
             res.status(200).json({ employee: employee._id });
-            var mailOptions = {
-                from: 'ayomikuolatunji@gmail.com',
-                to: employee.email,
-                subject: 'Ayoscript from onlineoffice.com',
-                text: `Your request to change password with ${employee.email} is sucessful `,
-                html: `<body><h5>Your password has been reset </h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>`
-            };
-            // send email after successful signup
-            transporter_1.default.sendMail(mailOptions, function (error, info) {
-                if (error) {
-                    console.log(error);
-                }
-                else {
-                    console.log('Email sent: ' + info.response);
-                }
-            });
+            (0, sendCorrectEmployeePasswordEmail_1.default)(employee.email);
         }
         else {
             (0, throwError_1.throwError)("Your are not allowed to set new password", http_status_codes_1.StatusCodes.FORBIDDEN);

@@ -1,13 +1,13 @@
-import  transporter from "./transporter";
+import transporter from "../transporter";
 
 
-const sendEmployeeSignupEmail=(email:string,name:string)=>{
+const sendCorrectEmployeePasswordEmail=(email:string)=>{
     var mailOptions = {
         from: 'ayomikuolatunji@gmail.com',
         to: email,
         subject: 'Ayoscript from onlineoffice.com',
-        text: `Hello ${name} your account with this ${email} is created successfully successfully`,
-        html:"<body><h5>You can login to your app with the link below</h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>"
+        text: `Your request to change password with ${email} is sucessful `,
+        html:`<body><h5>Your password has been reset </h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>`
       };
       // send email after successful signup
        transporter.sendMail(mailOptions, function(error, info){
@@ -19,4 +19,4 @@ const sendEmployeeSignupEmail=(email:string,name:string)=>{
       });
 }
 
-export default sendEmployeeSignupEmail
+export default sendCorrectEmployeePasswordEmail

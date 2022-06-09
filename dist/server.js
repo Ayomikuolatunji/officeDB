@@ -49,8 +49,8 @@ app_1.default.use(errorHandler_1.default);
 const startConnection = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield (0, mongoDB_1.default)();
-        app_1.default.listen(process.env.PORT, () => {
-            console.log(`App running on port ${process.env.PORT}`);
+        app_1.default.listen(process.env.PORT || 5000, () => {
+            console.log(`App running on port ${process.env.PORT || 5000}`);
         });
     }
     catch (error) {

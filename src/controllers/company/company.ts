@@ -2,7 +2,7 @@ import bcrypt from "bcrypt"
 import { RequestHandler } from "express";
 import Error from "../../interface/errorInterface";
 import Company from "../../models/company"
-import sendCompanyReqEmail from "../../email-service/sendCompanyRegEmail";
+import sendCompanyReqEmail from "../../emails/sendCompanyRegEmail";
 
 
 

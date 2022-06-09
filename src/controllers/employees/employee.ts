@@ -4,14 +4,14 @@ import jwt from "jsonwebtoken"
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import crypto from "crypto";
 import { ObjectId } from "mongodb";
-import transporter from "../../email-service/transporter";
+import transporter from "../../emails/transporter";
 import Employee from "../../models/employee";
 import Company from "../../models/company";
 import { RequestHandler } from "express";
 import Error from "../../interface/errorInterface";
 import { throwError } from "../../middleware/throwError";
-import sendEmployeeSignupEmail from "../../email-service/sendEmployeeSignupEmail";
-import sendDeleteEmployeeEmail from "../../email-service/sendDeleteEmployeeEmail";
+import sendEmployeeSignupEmail from "../../emails/sendEmployeeSignupEmail";
+import sendDeleteEmployeeEmail from "../../emails/sendDeleteEmployeeEmail";
 
 
 

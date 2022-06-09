@@ -25,6 +25,7 @@ const company_1 = __importDefault(require("../../models/company"));
 const throwError_1 = require("../../middleware/throwError");
 const sendEmployeeSignupEmail_1 = __importDefault(require("../../emails/sendEmployeeSignupEmail"));
 const sendDeleteEmployeeEmail_1 = __importDefault(require("../../emails/sendDeleteEmployeeEmail"));
+const sendResetEmployeeEmail_1 = __importDefault(require("../../emails/sendResetEmployeeEmail"));
 const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // get client data from request body   
@@ -170,7 +171,7 @@ const deleteEmployee = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
 exports.deleteEmployee = deleteEmployee;
 const resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const email = req.body.email;
+        const email = req.body.email.email;
         const user = yield employee_1.default.findOne({ email: email });
         if (!user) {
             (0, throwError_1.throwError)("User not found", http_status_codes_1.StatusCodes.NOT_FOUND);
@@ -197,6 +198,8 @@ const resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, func
                 console.log('Email sent: ' + info.response);
             }
         });
+        (0, sendResetEmployeeEmail_1.default)(email, user._id, token);
+        // catch errors
     }
     catch (error) {
         next(error);

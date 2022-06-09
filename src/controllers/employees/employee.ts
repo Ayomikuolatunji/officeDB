@@ -12,6 +12,7 @@ import Error from "../../interface/errorInterface";
 import { throwError } from "../../middleware/throwError";
 import sendEmployeeSignupEmail from "../../emails/sendEmployeeSignupEmail";
 import sendDeleteEmployeeEmail from "../../emails/sendDeleteEmployeeEmail";
+import sendResetEmployeeEmail from "../../emails/sendResetEmployeeEmail";
 
 
 
@@ -176,7 +177,7 @@ export const deleteEmployee:RequestHandler=async(req,res,next)=>{
 
 export const resetPassword:RequestHandler=async(req,res,next)=>{
     try{
-      const email=req.body.email
+      const email=(req.body.email as {email:string}).email;
       const user=await Employee.findOne({email:email})
       if(!user){
         throwError("User not found",StatusCodes.NOT_FOUND)
@@ -202,6 +203,8 @@ export const resetPassword:RequestHandler=async(req,res,next)=>{
         console.log('Email sent: ' + info.response);
       }
     });
+    sendResetEmployeeEmail(email,user._id, token)
+    // catch errors
     }catch (error) {
       next(error)
   }

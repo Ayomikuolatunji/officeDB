@@ -1,8 +1,8 @@
-import Company from "../../models/company"
 import bcrypt from "bcrypt"
-import  transporter from "../../email/transporter";
 import { RequestHandler } from "express";
 import Error from "../../interface/errorInterface";
+import Company from "../../models/company"
+import sendCompanyReqEmail from "../../email-service/sendCompanyRegEmail";
 
 
 
@@ -35,7 +35,8 @@ export const createCompany:RequestHandler=async(req,res,next)=>{
         
         const result=await newCompany.save()  
         res.status(201).json({message:"Company account created successfully",companyId:result._id })
-         
+          // send email to company
+          sendCompanyReqEmail(company_email,company_name)
     } catch (error) {
       next(error)
   }

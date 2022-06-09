@@ -3,7 +3,7 @@ import uploadToS3 from "../aws/uploadSetUp"
 import { Request } from "express"
 import update_profileTypes from "../interface/graphqlInterface"
 import Error from "../interface/errorInterface"
-import transporter from "../email/transporter"
+import transporter from "../email-service/transporter"
 
 
 

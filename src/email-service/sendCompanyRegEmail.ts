@@ -1,7 +1,7 @@
-import  transporter from "../email/transporter";
+import  transporter from "./transporter";
 
 
-const sendEmail=(email:string,name:string)=>{
+const sendCompanyReqEmail=(email:string,name:string)=>{
     const mailOptions = {
         from: 'ayomikuolatunji@gmail.com',
         to: email,
@@ -20,4 +20,4 @@ const sendEmail=(email:string,name:string)=>{
       // 
 }
 
-export default sendEmail
+export default sendCompanyReqEmail

@@ -13,8 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.companiesEmployees = exports.createCompany = void 0;
-const company_1 = __importDefault(require("../../models/company"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const company_1 = __importDefault(require("../../models/company"));
+const sendCompanyRegEmail_1 = __importDefault(require("../../email-service/sendCompanyRegEmail"));
 const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const company_name = req.body.company_name;
@@ -38,6 +39,8 @@ const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         });
         const result = yield newCompany.save();
         res.status(201).json({ message: "Company account created successfully", companyId: result._id });
+        // send email to company
+        (0, sendCompanyRegEmail_1.default)(company_email, company_name);
     }
     catch (error) {
         next(error);

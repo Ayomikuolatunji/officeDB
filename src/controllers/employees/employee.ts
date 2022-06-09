@@ -4,12 +4,14 @@ import jwt from "jsonwebtoken"
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import crypto from "crypto";
 import { ObjectId } from "mongodb";
-import transporter from "../../email/transporter";
+import transporter from "../../email-service/transporter";
 import Employee from "../../models/employee";
 import Company from "../../models/company";
 import { RequestHandler } from "express";
 import Error from "../../interface/errorInterface";
 import { throwError } from "../../middleware/throwError";
+import sendEmployeeSignupEmail from "../../email-service/sendEmployeeSignupEmail";
+import sendDeleteEmployeeEmail from "../../email-service/sendDeleteEmployeeEmail";
 
 
 
@@ -47,21 +49,7 @@ export const registration:RequestHandler=async(req,res,next)=>{
       // send request and email to the employee
     res.status(201).json({ message: 'Employee account created successfully!',employeeId:user._id});
     // send mail to employee after successfully signup
-    var mailOptions = {
-      from: 'ayomikuolatunji@gmail.com',
-      to: email,
-      subject: 'Ayoscript from onlineoffice.com',
-      text: `Hello ${username} your account with this ${email} is created successfully successfully`,
-      html:"<body><h5>You can login to your app with the link below</h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>"
-    };
-    // send email after successful signup
-     transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Email sent: ' + info.response);
-      }
-    });
+    sendEmployeeSignupEmail(email,username)
     //  catch errors
     } catch (error) {
       console.log(error)
@@ -173,22 +161,9 @@ export const deleteEmployee:RequestHandler=async(req,res,next)=>{
     })
     // after remiving the reference from company schema the delete user
     const deleteUser=await Employee.findByIdAndDelete({_id:findOne._id})
-    // send emails after deleting account
-    var mailOptions = {
-      from: 'ayomikuolatunji@gmail.com',
-      to: deleteUser.email,
-      subject: 'Ayoscript from onlineoffice.com',
-      text: `Hello ${findOne.username} your account with this ${findOne.email} deactivated permanently`,
-      html:`<body><h5>You deleted your account with ${companyId.company.company_name} and you are no longer with the company on our platformz</h5></body>`
-    };
-    // send email after successful signup
-     transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Email sent: ' + info.response);
-      }
-    });
+    // send email to an employee  after deleting an account
+    sendDeleteEmployeeEmail(deleteUser.email,deleteUser.username, companyId.company.company_name)
+    // catch errors
     }catch (error) {
       next(error)
   }

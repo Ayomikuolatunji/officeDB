@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 const employee_1 = __importDefault(require("../models/employee"));
 const uploadSetUp_1 = __importDefault(require("../aws/uploadSetUp"));
-const transporter_1 = __importDefault(require("../email/transporter"));
+const transporter_1 = __importDefault(require("../email-service/transporter"));
 module.exports = {
     update_Profile_Picture: (profile, req) => __awaiter(void 0, void 0, void 0, function* () {
         try {

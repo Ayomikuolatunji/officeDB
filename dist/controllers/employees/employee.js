@@ -19,10 +19,12 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const http_status_codes_1 = require("http-status-codes");
 const crypto_1 = __importDefault(require("crypto"));
 const mongodb_1 = require("mongodb");
-const transporter_1 = __importDefault(require("../../email/transporter"));
+const transporter_1 = __importDefault(require("../../email-service/transporter"));
 const employee_1 = __importDefault(require("../../models/employee"));
 const company_1 = __importDefault(require("../../models/company"));
 const throwError_1 = require("../../middleware/throwError");
+const sendEmployeeSignupEmail_1 = __importDefault(require("../../email-service/sendEmployeeSignupEmail"));
+const sendDeleteEmployeeEmail_1 = __importDefault(require("../../email-service/sendDeleteEmployeeEmail"));
 const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // get client data from request body   
@@ -55,22 +57,7 @@ const registration = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         // send request and email to the employee
         res.status(201).json({ message: 'Employee account created successfully!', employeeId: user._id });
         // send mail to employee after successfully signup
-        var mailOptions = {
-            from: 'ayomikuolatunji@gmail.com',
-            to: email,
-            subject: 'Ayoscript from onlineoffice.com',
-            text: `Hello ${username} your account with this ${email} is created successfully successfully`,
-            html: "<body><h5>You can login to your app with the link below</h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>"
-        };
-        // send email after successful signup
-        transporter_1.default.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                console.log(error);
-            }
-            else {
-                console.log('Email sent: ' + info.response);
-            }
-        });
+        (0, sendEmployeeSignupEmail_1.default)(email, username);
         //  catch errors
     }
     catch (error) {
@@ -172,23 +159,9 @@ const deleteEmployee = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         });
         // after remiving the reference from company schema the delete user
         const deleteUser = yield employee_1.default.findByIdAndDelete({ _id: findOne._id });
-        // send emails after deleting account
-        var mailOptions = {
-            from: 'ayomikuolatunji@gmail.com',
-            to: deleteUser.email,
-            subject: 'Ayoscript from onlineoffice.com',
-            text: `Hello ${findOne.username} your account with this ${findOne.email} deactivated permanently`,
-            html: `<body><h5>You deleted your account with ${companyId.company.company_name} and you are no longer with the company on our platformz</h5></body>`
-        };
-        // send email after successful signup
-        transporter_1.default.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                console.log(error);
-            }
-            else {
-                console.log('Email sent: ' + info.response);
-            }
-        });
+        // send email to an employee  after deleting an account
+        (0, sendDeleteEmployeeEmail_1.default)(deleteUser.email, deleteUser.username, companyId.company.company_name);
+        // catch errors
     }
     catch (error) {
         next(error);

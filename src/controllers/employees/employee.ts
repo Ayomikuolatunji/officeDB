@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken"
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import crypto from "crypto";
 import { ObjectId } from "mongodb";
-import transporter from "../../transporter/transporter";
+import transporter from "../../email/transporter";
 import Employee from "../../models/employee";
 import Company from "../../models/company";
 import { RequestHandler } from "express";

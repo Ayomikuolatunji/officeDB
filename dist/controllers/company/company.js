@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.companiesEmployees = exports.createCompany = void 0;
 const company_1 = __importDefault(require("../../models/company"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const transporter_1 = __importDefault(require("../../transporter/transporter"));
+const transporter_1 = __importDefault(require("../../email/transporter"));
 const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const company_name = req.body.company_name;

@@ -6,6 +6,10 @@ const companySchema=new Schema({
           type:String,
           required:true
       },
+      admin_name:{
+         type:String,
+         default:"admin"
+      },
       company_location:{
           type:String,
           required:true

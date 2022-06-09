@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.companiesEmployees = exports.createCompany = void 0;
 const company_1 = __importDefault(require("../../models/company"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const transporter_1 = __importDefault(require("../../email/transporter"));
 const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const company_name = req.body.company_name;
@@ -39,23 +38,6 @@ const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         });
         const result = yield newCompany.save();
         res.status(201).json({ message: "Company account created successfully", companyId: result._id });
-        const mailOptions = {
-            from: 'ayomikuolatunji@gmail.com',
-            to: company_email,
-            subject: 'Ayoscript from onlineoffice.com',
-            text: `Hello ${company_name} your account with this ${company_email} is created sucess fully successfully`,
-            html: "<body><h5>You can login to your app with the link below</h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>"
-        };
-        // send email after successful signup
-        transporter_1.default.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                console.log(error.message);
-            }
-            else {
-                console.log('Email sent: ' + info.response);
-            }
-        });
-        // 
     }
     catch (error) {
         next(error);

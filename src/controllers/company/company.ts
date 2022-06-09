@@ -35,22 +35,7 @@ export const createCompany:RequestHandler=async(req,res,next)=>{
         
         const result=await newCompany.save()  
         res.status(201).json({message:"Company account created successfully",companyId:result._id })
-          const mailOptions = {
-            from: 'ayomikuolatunji@gmail.com',
-            to: company_email,
-            subject: 'Ayoscript from onlineoffice.com',
-            text: `Hello ${company_name} your account with this ${company_email} is created sucess fully successfully`,
-            html:"<body><h5>You can login to your app with the link below</h5><div><a href='http://localhost:3000/login'>Login to your profile</a></div></body>"
-          };
-          // send email after successful signup
-           transporter.sendMail(mailOptions, function(error, info){
-            if (error) {
-              console.log(error.message);
-            } else {
-              console.log('Email sent: ' + info.response);
-            }
-          });
-          // 
+         
     } catch (error) {
       next(error)
   }

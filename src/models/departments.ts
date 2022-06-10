@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 
 const departmentsSchema=new mongoose.Schema({
-    departments:{
+    department:{
         type:String,
         required:true
     }

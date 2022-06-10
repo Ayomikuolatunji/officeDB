@@ -14,7 +14,9 @@ export const createCompanyDepartments:RequestHandler=async(req,res,next)=>{
         if(!companyId){
             throwError("provided a valid company id", 404)
         }
-       
+         if(!department_name){
+             throwError('provide department name', 404)
+         }
         const createDepartment=await Department.create({
             department:department_name
         })

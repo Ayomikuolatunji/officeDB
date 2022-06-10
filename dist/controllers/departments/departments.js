@@ -23,6 +23,9 @@ const createCompanyDepartments = (req, res, next) => __awaiter(void 0, void 0, v
         if (!companyId) {
             (0, throwError_1.throwError)("provided a valid company id", 404);
         }
+        if (!department_name) {
+            (0, throwError_1.throwError)('provide department name', 404);
+        }
         const createDepartment = yield departments_1.default.create({
             department: department_name
         });

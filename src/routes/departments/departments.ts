@@ -5,7 +5,7 @@ import { createCompanyDepartments } from "../../controllers/departments/departme
 const router=express.Router()
 
 
-router.post("/auth/create-department_for_companies",createCompanyDepartments)
+router.post("/create-department_for_companies",createCompanyDepartments)
 
 
 export default router

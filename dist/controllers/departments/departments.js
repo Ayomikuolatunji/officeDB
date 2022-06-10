@@ -13,17 +13,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createCompanyDepartments = void 0;
+const throwError_1 = require("../../middleware/throwError");
 const company_1 = __importDefault(require("../../models/company"));
 const departments_1 = __importDefault(require("../../models/departments"));
 const createCompanyDepartments = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const companyId = req.body.companyId.companyId;
-        const departments = req.body.departments.departments;
+        const department_name = req.body.departments.department_name;
+        if (!companyId) {
+            (0, throwError_1.throwError)("provided a valid company id", 404);
+        }
         const createDepartment = yield departments_1.default.create({
-            department: departments
+            department: department_name
         });
         const findCompany = yield company_1.default.findById({ _id: companyId });
-        yield findCompany.company_departments.push(createDepartment);
+        findCompany.company_departments.push(createDepartment._id);
+        findCompany.save();
+        res.status(200).json(findCompany);
     }
     catch (error) {
         console.log(error);

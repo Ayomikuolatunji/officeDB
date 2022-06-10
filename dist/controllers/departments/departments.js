@@ -18,8 +18,8 @@ const company_1 = __importDefault(require("../../models/company"));
 const departments_1 = __importDefault(require("../../models/departments"));
 const createCompanyDepartments = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const companyId = req.body.companyId.companyId;
-        const department_name = req.body.departments.department_name;
+        const companyId = req.body.companyId;
+        const department_name = req.body.department_name;
         if (!companyId) {
             (0, throwError_1.throwError)("provided a valid company id", 404);
         }
@@ -36,6 +36,7 @@ const createCompanyDepartments = (req, res, next) => __awaiter(void 0, void 0, v
     }
     catch (error) {
         console.log(error);
+        next(error);
     }
 });
 exports.createCompanyDepartments = createCompanyDepartments;

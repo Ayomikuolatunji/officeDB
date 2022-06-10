@@ -46,15 +46,9 @@ const companySchema=new Schema({
       company_departments:[
         {
             type:Schema.Types.ObjectId,
-            ref:"Departments"
+            ref:"tasks"
         }
       ],
-      company_tasks:[
-        {
-            type:Schema.Types.ObjectId,
-            ref:"Tasks"
-        }
-      ]
 },{timestamps:true})
 
 export default mongoose.model("Companies", companySchema)

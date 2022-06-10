@@ -53,11 +53,5 @@ const companySchema = new Schema({
             ref: "Departments"
         }
     ],
-    company_tasks: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Tasks"
-        }
-    ]
 }, { timestamps: true });
 exports.default = mongoose_1.default.model("Companies", companySchema);

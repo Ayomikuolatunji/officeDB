@@ -22,3 +22,4 @@ const taskSchema = new mongoose_1.default.Schema({
         required: true
     }
 });
+exports.default = ;

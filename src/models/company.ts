@@ -46,7 +46,7 @@ const companySchema=new Schema({
       company_departments:[
         {
             type:Schema.Types.ObjectId,
-            ref:"tasks"
+            ref:"Departments"
         }
       ],
 },{timestamps:true})

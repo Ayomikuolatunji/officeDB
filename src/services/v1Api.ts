@@ -4,6 +4,7 @@ import companyRoutes from "../routes/company/company"
 import allIndustryLists from "../routes/industries/industries"
 import s3Route from "../routes/s3routes/s3Route"
 import employeeRoutes from "../routes/employees/employee"
+import departmentsRoutes from "../routes/departments/departments"
 
 const api=express.Router()
 
@@ -11,6 +12,7 @@ const api=express.Router()
 
 
 // version1 apis
+api.use('/office-api', departmentsRoutes)
 api.use("/office-api",allIndustryLists)
 api.use("/office-api",employeeRoutes)
 api.use('/office-api',chatRoutes)

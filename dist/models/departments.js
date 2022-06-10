@@ -8,10 +8,6 @@ const departmentsSchema = new mongoose_1.default.Schema({
     departments: {
         type: String,
         required: true
-    },
-    company: {
-        type: String,
-        required: true
     }
 });
-exports.default = mongoose_1.default.model("Tasks", departmentsSchema);
+exports.default = mongoose_1.default.model("Departments", departmentsSchema);

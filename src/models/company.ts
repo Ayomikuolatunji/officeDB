@@ -42,6 +42,18 @@ const companySchema=new Schema({
             type:Schema.Types.ObjectId,
             ref:"Users"
         }
+      ],
+      company_departments:[
+        {
+            type:Schema.Types.ObjectId,
+            ref:"Departments"
+        }
+      ],
+      company_tasks:[
+        {
+            type:Schema.Types.ObjectId,
+            ref:"Tasks"
+        }
       ]
 },{timestamps:true})
 

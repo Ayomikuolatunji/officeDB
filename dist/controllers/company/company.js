@@ -48,6 +48,20 @@ const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, func
 });
 exports.createCompany = createCompany;
 const loginCompanyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const company_email = req.body.company_email;
+        const company_password = req.body.company_password;
+        const findOneComapny = yield company_1.default.findOne({ company_email: company_email });
+        const hashPassword = yield bcrypt_1.default.compare(findOneComapny.company_email, company_password);
+        // const hashPassword=await bcrypt.compare(company_password,findOneComapny.company_password)
+        if (!hashPassword) {
+            const error = new Error("Incorrect password");
+            error.statusCode = 400;
+            throw error;
+        }
+    }
+    catch (error) {
+    }
 });
 exports.loginCompanyAdmin = loginCompanyAdmin;
 const companiesEmployees = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

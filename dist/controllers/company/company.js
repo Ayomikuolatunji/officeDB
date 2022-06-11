@@ -51,6 +51,7 @@ const loginCompanyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     try {
         const company_email = req.body.company_email;
         const company_password = req.body.company_password;
+        // check if company exists
         const findOneComapny = yield company_1.default.findOne({ company_email: company_email });
         const hashPassword = yield bcrypt_1.default.compare(findOneComapny.company_email, company_password);
         // const hashPassword=await bcrypt.compare(company_password,findOneComapny.company_password)
@@ -61,6 +62,7 @@ const loginCompanyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         }
     }
     catch (error) {
+        next(error);
     }
 });
 exports.loginCompanyAdmin = loginCompanyAdmin;

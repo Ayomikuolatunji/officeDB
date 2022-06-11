@@ -47,6 +47,7 @@ export const loginCompanyAdmin:RequestHandler=async(req,res,next)=>{
       try {
         const company_email=req.body.company_email
         const company_password=req.body.company_password
+        // check if company exists
         const findOneComapny=await Company.findOne({company_email:company_email})
         const hashPassword=await bcrypt.compare(findOneComapny.company_email,company_password)
         // const hashPassword=await bcrypt.compare(company_password,findOneComapny.company_password)
@@ -56,7 +57,7 @@ export const loginCompanyAdmin:RequestHandler=async(req,res,next)=>{
           throw error
         }
       } catch (error) {
-        
+         next(error) 
       }
 }
 

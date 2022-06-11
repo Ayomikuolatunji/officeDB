@@ -14,11 +14,14 @@ const taskSchema=new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    task_deadline:{
+        type:Date,
+        required:true
+    },
     department:{
         type:String,
         required:true
     }
-
 })
 
 

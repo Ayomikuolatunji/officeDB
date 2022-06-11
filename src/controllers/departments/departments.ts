@@ -21,8 +21,8 @@ export const createCompanyDepartments:RequestHandler=async(req,res,next)=>{
         const createDepartment=await Department.create({
             department:department_name
         })
-       
-         const findCompany=await company.findById({_id:companyId})
+         
+        const findCompany=await company.findById({_id:companyId})
          findCompany.company_departments.push(createDepartment._id)
          findCompany.save()
         

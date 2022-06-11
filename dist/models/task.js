@@ -17,6 +17,10 @@ const taskSchema = new mongoose_1.default.Schema({
         type: Boolean,
         default: false
     },
+    task_deadline: {
+        type: Date,
+        required: true
+    },
     department: {
         type: String,
         required: true

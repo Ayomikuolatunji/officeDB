@@ -42,7 +42,9 @@ export const createCompany:RequestHandler=async(req,res,next)=>{
   }
 }
 
+export const loginCompanyAdmin:RequestHandler=async(req,res,next)=>{
 
+}
 
 
 

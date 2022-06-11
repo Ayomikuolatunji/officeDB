@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.companiesEmployees = exports.loginCompanyAdmin = exports.createCompany = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const company_1 = __importDefault(require("../../models/company"));
 const sendCompanyRegEmail_1 = __importDefault(require("../../emails/company-email-service/sendCompanyRegEmail"));
 const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -60,6 +61,9 @@ const loginCompanyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
             error.statusCode = 400;
             throw error;
         }
+        // generate token
+        const token = jsonwebtoken_1.default.sign({ companyId: findOneComapny._id }, "", { expiresIn: "1h" });
+        res.status(200).json({ message: "Login successful", token: token, companyId: findOneComapny._id });
     }
     catch (error) {
         next(error);

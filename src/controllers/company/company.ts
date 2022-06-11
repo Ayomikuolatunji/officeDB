@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
 import { RequestHandler } from "express";
 import Error from "../../interface/errorInterface";
 import Company from "../../models/company"
@@ -56,6 +57,9 @@ export const loginCompanyAdmin:RequestHandler=async(req,res,next)=>{
           error.statusCode=400
           throw error
         }
+        // generate token
+         const token=jwt.sign({companyId:findOneComapny._id},"",{expiresIn:"1h"})
+        res.status(200).json({message:"Login successful",token:token,companyId:findOneComapny._id})
       } catch (error) {
          next(error) 
       }

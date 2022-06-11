@@ -49,8 +49,8 @@ export const loginCompanyAdmin:RequestHandler=async(req,res,next)=>{
         const company_email=req.body.company_email
         const company_password=req.body.company_password
         // check if company exists
-        const findOneComapny=await Company.findOne({company_email:company_email})
-        const hashPassword=await bcrypt.compare(findOneComapny.company_email,company_password)
+        const findOneCompany=await Company.findOne({company_email:company_email})
+        const hashPassword=await bcrypt.compare(findOneCompany.company_email,company_password)
         // const hashPassword=await bcrypt.compare(company_password,findOneComapny.company_password)
         if(!hashPassword){
           const error:Error=new Error("Incorrect password")
@@ -58,8 +58,11 @@ export const loginCompanyAdmin:RequestHandler=async(req,res,next)=>{
           throw error
         }
         // generate token
-         const token=jwt.sign({companyId:findOneComapny._id},"",{expiresIn:"1h"})
-        res.status(200).json({message:"Login successful",token:token,companyId:findOneComapny._id})
+         const token=jwt.sign({
+           company_email:findOneCompany.company_email,
+          },`${process.env.JSON_WEBTOKEN_SECRET_KEY}`,{expiresIn:"1h"})
+          // send response
+        res.status(200).json({message:"Login successful",token:token,companyId:findOneCompany._id})
       } catch (error) {
          next(error) 
       }

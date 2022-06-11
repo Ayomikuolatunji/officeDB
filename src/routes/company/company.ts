@@ -4,7 +4,7 @@ import {createCompany,companiesEmployees, loginCompanyAdmin} from "../../control
 
 
 router.get("/all_companies",companiesEmployees)
-router.post("/login_company_admin",loginCompanyAdmin)
+router.post("/auth/login_company_admin",loginCompanyAdmin)
 router.post('/auth/create_company_account',createCompany)
 
 

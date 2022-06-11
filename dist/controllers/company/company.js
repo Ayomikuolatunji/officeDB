@@ -53,8 +53,8 @@ const loginCompanyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         const company_email = req.body.company_email;
         const company_password = req.body.company_password;
         // check if company exists
-        const findOneComapny = yield company_1.default.findOne({ company_email: company_email });
-        const hashPassword = yield bcrypt_1.default.compare(findOneComapny.company_email, company_password);
+        const findOneCompany = yield company_1.default.findOne({ company_email: company_email });
+        const hashPassword = yield bcrypt_1.default.compare(findOneCompany.company_email, company_password);
         // const hashPassword=await bcrypt.compare(company_password,findOneComapny.company_password)
         if (!hashPassword) {
             const error = new Error("Incorrect password");
@@ -62,8 +62,11 @@ const loginCompanyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
             throw error;
         }
         // generate token
-        const token = jsonwebtoken_1.default.sign({ companyId: findOneComapny._id }, "", { expiresIn: "1h" });
-        res.status(200).json({ message: "Login successful", token: token, companyId: findOneComapny._id });
+        const token = jsonwebtoken_1.default.sign({
+            company_email: findOneCompany.company_email,
+        }, `${process.env.JSON_WEBTOKEN_SECRET_KEY}`, { expiresIn: "1h" });
+        // send response
+        res.status(200).json({ message: "Login successful", token: token, companyId: findOneCompany._id });
     }
     catch (error) {
         next(error);

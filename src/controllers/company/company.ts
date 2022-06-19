@@ -52,7 +52,7 @@ export const loginCompanyAdmin:RequestHandler=async(req,res,next)=>{
         const company_password=req.body.company_password
         // check if company exists
         const findOneCompany=await Company.findOne({company_email:company_email})
-        const hashPassword=await bcrypt.compare(findOneCompany.company_email,company_password)
+        const hashPassword=await bcrypt.compare(findOneCompany.company_password,company_password)
         // const hashPassword=await bcrypt.compare(company_password,findOneComapny.company_password)
         if(!hashPassword){
           throwError("Invalid email or password",StatusCodes.UNAUTHORIZED)

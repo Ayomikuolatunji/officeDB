@@ -56,7 +56,7 @@ const loginCompanyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         const company_password = req.body.company_password;
         // check if company exists
         const findOneCompany = yield company_1.default.findOne({ company_email: company_email });
-        const hashPassword = yield bcrypt_1.default.compare(findOneCompany.company_email, company_password);
+        const hashPassword = yield bcrypt_1.default.compare(findOneCompany.company_password, company_password);
         // const hashPassword=await bcrypt.compare(company_password,findOneComapny.company_password)
         if (!hashPassword) {
             (0, throwError_1.throwError)("Invalid email or password", http_status_codes_1.StatusCodes.UNAUTHORIZED);

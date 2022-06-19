@@ -44,6 +44,12 @@ const companySchema=new Schema({
             ref:"Users"
         }
       ],
+      company_address:[
+         {
+              type:Schema.Types.ObjectId,
+              ref:"CompanyAddress"
+         }
+      ],
       company_departments:[
         {
             type:Schema.Types.ObjectId,

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.companiesEmployees = exports.allCompanyDepartments = exports.resetPassword = exports.forgotCompanyPassword = exports.loginCompanyAdmin = exports.createCompany = void 0;
+exports.companyAddress = exports.companiesEmployees = exports.allCompanyDepartments = exports.resetPassword = exports.forgotCompanyPassword = exports.loginCompanyAdmin = exports.createCompany = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const http_status_codes_1 = require("http-status-codes");
@@ -157,3 +157,27 @@ const companiesEmployees = (req, res, next) => __awaiter(void 0, void 0, void 0,
     }
 });
 exports.companiesEmployees = companiesEmployees;
+// company adddress
+const companyAddress = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const companyId = req.body.company_id;
+        const findCompanyById = yield company_1.default.findById({
+            _id: companyId
+        });
+        if (!findCompanyById) {
+            (0, throwError_1.throwError)("please provide a valid", http_status_codes_1.StatusCodes.FORBIDDEN);
+        }
+        const populateCompanyAddress = yield company_1.default.find({
+            _id: companyId
+        })
+            .populate("company_address")
+            .select("company_address");
+        res.status(200).json({
+            address: populateCompanyAddress
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.companyAddress = companyAddress;

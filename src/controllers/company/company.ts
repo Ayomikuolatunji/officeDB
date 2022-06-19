@@ -156,3 +156,29 @@ export const companiesEmployees:RequestHandler=async(req,res,next)=>{
    next(error)
 }  
 }
+
+
+// company adddress
+
+export const companyAddress:RequestHandler=async(req,res,next)=>{
+  try {
+      const companyId=req.body.company_id
+      const findCompanyById=await Company.findById({
+        _id:companyId
+        })
+        if(!findCompanyById){
+          throwError("please provide a valid", StatusCodes.FORBIDDEN)
+        }
+        const populateCompanyAddress=await Company.find({
+             _id:companyId
+          })
+          .populate("company_address")
+          .select("company_address")
+          res.status(200).json({
+
+            address:populateCompanyAddress
+          })
+  } catch (error) {
+    next(error)
+  }
+}

@@ -14,10 +14,6 @@ const companySchema = new Schema({
         type: String,
         default: "admin"
     },
-    company_location: {
-        type: String,
-        required: true
-    },
     company_profile_picture: {
         type: String,
         default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIJF7LAdiF7JlRs24nLsBKz7nWamkcdXPODQ&usqp=CAU",
@@ -50,6 +46,12 @@ const companySchema = new Schema({
         {
             type: Schema.Types.ObjectId,
             ref: "Users"
+        }
+    ],
+    company_address: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "CompanyAddress"
         }
     ],
     company_departments: [

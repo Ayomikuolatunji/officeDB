@@ -7,6 +7,7 @@ import Error from "../../interface/errorInterface";
 import Company from "../../models/company"
 import sendCompanyReqEmail from "../../emails/company-email-service/sendCompanyRegEmail";
 import sendForgotCompanyPassword from "../../emails/company-email-service/sendForgotCompanyPassword";
+import companyAddress from "../../models/company-address";
 import { throwError } from "../../middleware/throwError";
 
 
@@ -160,24 +161,36 @@ export const companiesEmployees:RequestHandler=async(req,res,next)=>{
 
 // company adddress
 
-export const companyAddress:RequestHandler=async(req,res,next)=>{
+export const CreateCompanyAddress:RequestHandler=async(req,res,next)=>{
   try {
       const companyId=req.body.company_id
-      const findCompanyById=await Company.findById({
-        _id:companyId
-        })
-        if(!findCompanyById){
-          throwError("please provide a valid", StatusCodes.FORBIDDEN)
+      const companyAddress=req.body.company_address
+      const company_city=req.body.company_city
+      const company_state=req.body.company_state
+      const company_country=req.body.company_country
+      const company_zip=req.body.company_zip
+      const company_phone=req.body.company_phone
+      const company_website=req.body.company_website
+       
+      //create addres and push it to a company
+      const newCompanyAddress=await companyAddress.create({
+        company_address:companyAddress,
+        company_city:company_city,
+        company_state:company_state,
+        company_country:company_country,
+        company_zip:company_zip,
+        company_phone:company_phone,
+        company_website:company_website,
+        company_id:companyId
+      })
+      // push address to company
+      await Company.findOneAndUpdate({_id:companyId},{
+        $push:{
+          company_address:newCompanyAddress._id
         }
-        const populateCompanyAddress=await Company.find({
-             _id:companyId
-          })
-          .populate("company_address")
-          .select("company_address")
-          res.status(200).json({
-
-            address:populateCompanyAddress
-          })
+      })
+      
+      // find company address
   } catch (error) {
     next(error)
   }

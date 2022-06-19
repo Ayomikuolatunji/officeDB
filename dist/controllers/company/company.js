@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.companyAddress = exports.companiesEmployees = exports.allCompanyDepartments = exports.resetPassword = exports.forgotCompanyPassword = exports.loginCompanyAdmin = exports.createCompany = void 0;
+exports.CreateCompanyAddress = exports.companiesEmployees = exports.allCompanyDepartments = exports.resetPassword = exports.forgotCompanyPassword = exports.loginCompanyAdmin = exports.createCompany = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const http_status_codes_1 = require("http-status-codes");
@@ -158,26 +158,37 @@ const companiesEmployees = (req, res, next) => __awaiter(void 0, void 0, void 0,
 });
 exports.companiesEmployees = companiesEmployees;
 // company adddress
-const companyAddress = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const CreateCompanyAddress = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const companyId = req.body.company_id;
-        const findCompanyById = yield company_1.default.findById({
-            _id: companyId
+        const companyAddress = req.body.company_address;
+        const company_city = req.body.company_city;
+        const company_state = req.body.company_state;
+        const company_country = req.body.company_country;
+        const company_zip = req.body.company_zip;
+        const company_phone = req.body.company_phone;
+        const company_website = req.body.company_website;
+        //create addres and push it to a company
+        const newCompanyAddress = yield companyAddress.create({
+            company_address: companyAddress,
+            company_city: company_city,
+            company_state: company_state,
+            company_country: company_country,
+            company_zip: company_zip,
+            company_phone: company_phone,
+            company_website: company_website,
+            company_id: companyId
         });
-        if (!findCompanyById) {
-            (0, throwError_1.throwError)("please provide a valid", http_status_codes_1.StatusCodes.FORBIDDEN);
-        }
-        const populateCompanyAddress = yield company_1.default.find({
-            _id: companyId
-        })
-            .populate("company_address")
-            .select("company_address");
-        res.status(200).json({
-            address: populateCompanyAddress
+        // push address to company
+        yield company_1.default.findOneAndUpdate({ _id: companyId }, {
+            $push: {
+                company_address: newCompanyAddress._id
+            }
         });
+        // find company address
     }
     catch (error) {
         next(error);
     }
 });
-exports.companyAddress = companyAddress;
+exports.CreateCompanyAddress = CreateCompanyAddress;

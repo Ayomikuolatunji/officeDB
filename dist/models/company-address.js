@@ -38,12 +38,11 @@ const companyAddress = new mongoose_1.default.Schema({
         maxlength: 100,
     },
     company_zip: {
-        type: String,
+        type: Number,
         required: true,
         default: "",
         trim: true,
-        minlength: 3,
-        maxlength: 100,
+        maxlength: 6,
     },
     company_phone: {
         type: String,

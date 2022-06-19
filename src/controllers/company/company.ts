@@ -55,9 +55,7 @@ export const loginCompanyAdmin:RequestHandler=async(req,res,next)=>{
         const hashPassword=await bcrypt.compare(findOneCompany.company_email,company_password)
         // const hashPassword=await bcrypt.compare(company_password,findOneComapny.company_password)
         if(!hashPassword){
-          const error:Error=new Error("Incorrect password")
-          error.statusCode=400
-          throw error
+          throwError("Invalid email or password",StatusCodes.UNAUTHORIZED)
         }
         // generate token
          const token=jwt.sign({
@@ -116,9 +114,7 @@ export const companiesEmployees:RequestHandler=async(req,res,next)=>{
       const companies:any =await Company.find({})
       .populate("company_employes")
       if(!companies){
-       const error:Error=new Error(`company not found `)
-       error.statusCode=422
-       throw error
+        throwError("No companies found",404)
       }  
       res.status(200).json({companies})
   }catch (error) {

@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.companiesEmployees = exports.resetPassword = exports.forgotCompanyPassword = exports.loginCompanyAdmin = exports.createCompany = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const http_status_codes_1 = require("http-status-codes");
 const crypto_1 = __importDefault(require("crypto"));
 const company_1 = __importDefault(require("../../models/company"));
 const sendCompanyRegEmail_1 = __importDefault(require("../../emails/company-email-service/sendCompanyRegEmail"));
@@ -29,7 +30,7 @@ const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         const company_location = req.body.company_location;
         const companyExits = yield company_1.default.findOne({ company_email: company_email });
         if (companyExits) {
-            (0, throwError_1.throwError)("Company already exist", StatusCodes.CONFLICT);
+            (0, throwError_1.throwError)("Company already exist", http_status_codes_1.StatusCodes.CONFLICT);
         }
         const hashedPw = yield bcrypt_1.default.hash(company_password, 12);
         const newCompany = new company_1.default({
@@ -58,9 +59,7 @@ const loginCompanyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         const hashPassword = yield bcrypt_1.default.compare(findOneCompany.company_email, company_password);
         // const hashPassword=await bcrypt.compare(company_password,findOneComapny.company_password)
         if (!hashPassword) {
-            const error = new Error("Incorrect password");
-            error.statusCode = 400;
-            throw error;
+            (0, throwError_1.throwError)("Invalid email or password", http_status_codes_1.StatusCodes.UNAUTHORIZED);
         }
         // generate token
         const token = jsonwebtoken_1.default.sign({
@@ -119,9 +118,7 @@ const companiesEmployees = (req, res, next) => __awaiter(void 0, void 0, void 0,
         const companies = yield company_1.default.find({})
             .populate("company_employes");
         if (!companies) {
-            const error = new Error(`company not found `);
-            error.statusCode = 422;
-            throw error;
+            (0, throwError_1.throwError)("No companies found", 404);
         }
         res.status(200).json({ companies });
     }

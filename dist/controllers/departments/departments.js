@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateCompanyDepartments = exports.createCompanyDepartments = void 0;
+const http_status_codes_1 = require("http-status-codes");
 const throwError_1 = require("../../middleware/throwError");
 const company_1 = __importDefault(require("../../models/company"));
 const departments_1 = __importDefault(require("../../models/departments"));
@@ -41,5 +42,17 @@ const createCompanyDepartments = (req, res, next) => __awaiter(void 0, void 0, v
 });
 exports.createCompanyDepartments = createCompanyDepartments;
 const updateCompanyDepartments = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const companyId = req.body.companyId;
+        const department = req.body.department;
+        const departmentId = req.body.department;
+        if (companyId || department) {
+            (0, throwError_1.throwError)("Companid or department not found", http_status_codes_1.StatusCodes.NOT_FOUND);
+        }
+        const findADepartment = yield departments_1.default.findById({});
+    }
+    catch (error) {
+        next(error);
+    }
 });
 exports.updateCompanyDepartments = updateCompanyDepartments;

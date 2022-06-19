@@ -1,4 +1,5 @@
 import { RequestHandler } from "express";
+import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import { throwError } from "../../middleware/throwError";
 import company from "../../models/company";
 import Department from "../../models/departments";
@@ -34,5 +35,18 @@ export const createCompanyDepartments:RequestHandler=async(req,res,next)=>{
 }
 
 export const updateCompanyDepartments:RequestHandler=async(req,res,next)=>{
-    
+    try {
+        const companyId=req.body.companyId
+        const department=req.body.department
+        const departmentId=req.body.department
+        if(companyId || department){
+            throwError("Companid or department not found", StatusCodes.NOT_FOUND)
+        }
+        const findADepartment=await Department.findById({
+
+        })
+
+    }catch(error){
+        next(error)
+    }
 }

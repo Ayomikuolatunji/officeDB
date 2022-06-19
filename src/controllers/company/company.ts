@@ -115,6 +115,12 @@ export const resetPassword:RequestHandler=async(req,res,next)=>{
   }  
 }
 
+
+
+export const allCompanyDepartments:RequestHandler=async(req,res,next)=>{
+   
+}
+
 export const companiesEmployees:RequestHandler=async(req,res,next)=>{
   try {
       const companies:any =await Company.find({})

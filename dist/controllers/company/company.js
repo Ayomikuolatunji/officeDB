@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.companiesEmployees = exports.resetPassword = exports.forgotCompanyPassword = exports.loginCompanyAdmin = exports.createCompany = void 0;
+exports.companiesEmployees = exports.allCompanyDepartments = exports.resetPassword = exports.forgotCompanyPassword = exports.loginCompanyAdmin = exports.createCompany = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const http_status_codes_1 = require("http-status-codes");
@@ -120,6 +120,9 @@ const resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.resetPassword = resetPassword;
+const allCompanyDepartments = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+});
+exports.allCompanyDepartments = allCompanyDepartments;
 const companiesEmployees = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const companies = yield company_1.default.find({})

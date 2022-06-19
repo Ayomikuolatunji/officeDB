@@ -121,6 +121,16 @@ const resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, func
 });
 exports.resetPassword = resetPassword;
 const allCompanyDepartments = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const companyId = req.body.company_id;
+        const findCompanyById = yield company_1.default.findById("company_departments");
+        if (!findCompanyById) {
+            (0, throwError_1.throwError)("please provide a valid", http_status_codes_1.StatusCodes.FORBIDDEN);
+        }
+    }
+    catch (error) {
+        next(error);
+    }
 });
 exports.allCompanyDepartments = allCompanyDepartments;
 const companiesEmployees = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

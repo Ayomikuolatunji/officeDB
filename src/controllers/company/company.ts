@@ -1,9 +1,12 @@
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { RequestHandler } from "express";
+import crypto from "crypto"
 import Error from "../../interface/errorInterface";
 import Company from "../../models/company"
 import sendCompanyReqEmail from "../../emails/company-email-service/sendCompanyRegEmail";
+import sendForgotCompanyPassword from "../../emails/company-email-service/sendForgotCompanyPassword";
+import { throwError } from "../../middleware/throwError";
 
 
 
@@ -68,20 +71,51 @@ export const loginCompanyAdmin:RequestHandler=async(req,res,next)=>{
       }
 }
 
+export const forgotCompanyPassword:RequestHandler=async(req,res,next)=>{
+  try {
+    const company_email=req.body.company_email
+    const findOneCompany=await Company.findOne({company_email:company_email})
+    // generate crypto token
+    const cryptoToken=crypto.randomBytes(100)
+    // save token to company
+       await Company.findOneAndUpdate({company_email:company_email},{
+        company_token:cryptoToken.toString("hex")
+      })
 
+    // send email to company
+    sendForgotCompanyPassword(company_email,findOneCompany.company_name)
 
-export const companiesEmployees:RequestHandler=async(req,res,next)=>{
+    res.status(200).json({message:"Email sent successfully", companyId:findOneCompany._id})
+  }catch(error){
+    next(error)
+  }
+}
+
+export const resetPassword:RequestHandler=async(req,res,next)=>{
      try {
-         const companies:any =await Company.find({})
-         .populate("company_employes")
-         if(!companies){
-          const error:Error=new Error(`company not found `)
-          error.statusCode=422
-          throw error
-         }  
-         res.status(200).json({companies})
+      const company_token=req.body.company_token
+      const company_password=req.body.company_password
+      const hashedPw =await  bcrypt.hash(company_password, 12);
+      const findOneCompany=await Company.findOne({company_token:company_token})
+      if(!findOneCompany){
+         throwError("Company not found",404)
+      }
      }catch (error) {
       next(error)
   }  
 }
 
+export const companiesEmployees:RequestHandler=async(req,res,next)=>{
+  try {
+      const companies:any =await Company.find({})
+      .populate("company_employes")
+      if(!companies){
+       const error:Error=new Error(`company not found `)
+       error.statusCode=422
+       throw error
+      }  
+      res.status(200).json({companies})
+  }catch (error) {
+   next(error)
+}  
+}

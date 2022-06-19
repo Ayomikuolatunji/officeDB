@@ -25,7 +25,7 @@ const companySchema=new Schema({
               require:true
           }
       },
-      token:{
+      company_token:{
         type:String,
         default:""    
       },

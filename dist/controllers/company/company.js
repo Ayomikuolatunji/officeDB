@@ -12,11 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.companiesEmployees = exports.loginCompanyAdmin = exports.createCompany = void 0;
+exports.companiesEmployees = exports.resetPassword = exports.forgotCompanyPassword = exports.loginCompanyAdmin = exports.createCompany = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const crypto_1 = __importDefault(require("crypto"));
 const company_1 = __importDefault(require("../../models/company"));
 const sendCompanyRegEmail_1 = __importDefault(require("../../emails/company-email-service/sendCompanyRegEmail"));
+const sendForgotCompanyPassword_1 = __importDefault(require("../../emails/company-email-service/sendForgotCompanyPassword"));
+const throwError_1 = require("../../middleware/throwError");
 const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const company_name = req.body.company_name;
@@ -73,6 +76,40 @@ const loginCompanyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     }
 });
 exports.loginCompanyAdmin = loginCompanyAdmin;
+const forgotCompanyPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const company_email = req.body.company_email;
+        const findOneCompany = yield company_1.default.findOne({ company_email: company_email });
+        // generate crypto token
+        const cryptoToken = crypto_1.default.randomBytes(100);
+        // save token to company
+        yield company_1.default.findOneAndUpdate({ company_email: company_email }, {
+            company_token: cryptoToken.toString("hex")
+        });
+        // send email to company
+        (0, sendForgotCompanyPassword_1.default)(company_email, findOneCompany.company_name);
+        res.status(200).json({ message: "Email sent successfully", companyId: findOneCompany._id });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.forgotCompanyPassword = forgotCompanyPassword;
+const resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const company_token = req.body.company_token;
+        const company_password = req.body.company_password;
+        const hashedPw = yield bcrypt_1.default.hash(company_password, 12);
+        const findOneCompany = yield company_1.default.findOne({ company_token: company_token });
+        if (!findOneCompany) {
+            (0, throwError_1.throwError)("Company not found", 404);
+        }
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.resetPassword = resetPassword;
 const companiesEmployees = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const companies = yield company_1.default.find({})

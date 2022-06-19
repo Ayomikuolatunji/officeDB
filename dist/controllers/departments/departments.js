@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createCompanyDepartments = void 0;
+exports.updateCompanyDepartments = exports.createCompanyDepartments = void 0;
 const throwError_1 = require("../../middleware/throwError");
 const company_1 = __importDefault(require("../../models/company"));
 const departments_1 = __importDefault(require("../../models/departments"));
@@ -40,3 +40,6 @@ const createCompanyDepartments = (req, res, next) => __awaiter(void 0, void 0, v
     }
 });
 exports.createCompanyDepartments = createCompanyDepartments;
+const updateCompanyDepartments = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+});
+exports.updateCompanyDepartments = updateCompanyDepartments;

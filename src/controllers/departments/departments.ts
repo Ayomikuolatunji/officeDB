@@ -31,5 +31,8 @@ export const createCompanyDepartments:RequestHandler=async(req,res,next)=>{
         console.log(error)
         next(error)
     }
+}
 
+export const updateCompanyDepartments:RequestHandler=async(req,res,next)=>{
+    
 }

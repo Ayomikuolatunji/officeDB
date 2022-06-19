@@ -161,7 +161,7 @@ export const companiesEmployees:RequestHandler=async(req,res,next)=>{
 
 // company adddress
 
-export const CreateCompanyAddress:RequestHandler=async(req,res,next)=>{
+export const createCompanyAddress:RequestHandler=async(req,res,next)=>{
   try {
       const companyId=req.body.company_id
       const companyAddress=req.body.company_address
@@ -189,7 +189,11 @@ export const CreateCompanyAddress:RequestHandler=async(req,res,next)=>{
           company_address:newCompanyAddress._id
         }
       })
-      
+      // send response
+      res.status(200).json({
+        message:"Address created successfully",
+        company_address:newCompanyAddress,
+      })
       // find company address
   } catch (error) {
     next(error)

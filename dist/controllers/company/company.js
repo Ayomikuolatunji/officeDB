@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateCompanyAddress = exports.companiesEmployees = exports.allCompanyDepartments = exports.resetPassword = exports.forgotCompanyPassword = exports.loginCompanyAdmin = exports.createCompany = void 0;
+exports.createCompanyAddress = exports.companiesEmployees = exports.allCompanyDepartments = exports.resetPassword = exports.forgotCompanyPassword = exports.loginCompanyAdmin = exports.createCompany = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const http_status_codes_1 = require("http-status-codes");
@@ -158,7 +158,7 @@ const companiesEmployees = (req, res, next) => __awaiter(void 0, void 0, void 0,
 });
 exports.companiesEmployees = companiesEmployees;
 // company adddress
-const CreateCompanyAddress = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const createCompanyAddress = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const companyId = req.body.company_id;
         const companyAddress = req.body.company_address;
@@ -185,10 +185,15 @@ const CreateCompanyAddress = (req, res, next) => __awaiter(void 0, void 0, void 
                 company_address: newCompanyAddress._id
             }
         });
+        // send response
+        res.status(200).json({
+            message: "Address created successfully",
+            company_address: newCompanyAddress,
+        });
         // find company address
     }
     catch (error) {
         next(error);
     }
 });
-exports.CreateCompanyAddress = CreateCompanyAddress;
+exports.createCompanyAddress = createCompanyAddress;

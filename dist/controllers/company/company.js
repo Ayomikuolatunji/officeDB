@@ -104,6 +104,12 @@ const resetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         if (!findOneCompany) {
             (0, throwError_1.throwError)("Company not found", 404);
         }
+        // update company password
+        yield company_1.default.findOneAndUpdate({ company_token: company_token }, {
+            company_password: hashedPw,
+            company_token: null
+        });
+        res.status(200).json({ message: "Password updated successfully" });
     }
     catch (error) {
         next(error);

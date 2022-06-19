@@ -100,6 +100,12 @@ export const resetPassword:RequestHandler=async(req,res,next)=>{
       if(!findOneCompany){
          throwError("Company not found",404)
       }
+      // update company password
+      await Company.findOneAndUpdate({company_token:company_token},{
+        company_password:hashedPw,
+        company_token:null
+      })
+      res.status(200).json({message:"Password updated successfully"})
      }catch (error) {
       next(error)
   }  

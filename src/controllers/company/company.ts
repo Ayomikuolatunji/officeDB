@@ -52,15 +52,16 @@ export const loginCompanyAdmin:RequestHandler=async(req,res,next)=>{
         const company_password=req.body.company_password
         // check if company exists
         const findOneCompany=await Company.findOne({company_email:company_email})
-        const hashPassword=await bcrypt.compare(findOneCompany.company_password,company_password)
+        // check if password is correct
+        const hashPassword=await bcrypt.compare(company_password,findOneCompany.company_password)
         // const hashPassword=await bcrypt.compare(company_password,findOneComapny.company_password)
         if(!hashPassword){
           throwError("Invalid email or password",StatusCodes.UNAUTHORIZED)
         }
         // generate token
          const token=jwt.sign({
-           company_email:findOneCompany.company_email,
-          },`${process.env.JSON_WEBTOKEN_SECRET_KEY}`,{expiresIn:"1h"})
+             company_email:findOneCompany.company_email,
+          },`somesupersecretsecret`,{expiresIn:"30d"})
           // send response
         res.status(200).json({message:"Login successful",token:token,companyId:findOneCompany._id})
       } catch (error) {

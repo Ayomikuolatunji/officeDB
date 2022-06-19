@@ -73,15 +73,11 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         const password = req.body.password;
         const user = yield employee_1.default.findOne({ email: email });
         if (!user) {
-            const error = new Error('A user with this email could not be found.');
-            error.statusCode = 404;
-            throw error;
+            (0, throwError_1.throwError)("User does not exist", http_status_codes_1.StatusCodes.UNAUTHORIZED);
         }
         const isEqual = yield bcrypt_1.default.compare(password, user.password);
         if (!isEqual) {
-            const error = new Error('Wrong password!');
-            error.statusCode = 422;
-            throw error;
+            (0, throwError_1.throwError)("Invalid email or password", http_status_codes_1.StatusCodes.UNAUTHORIZED);
         }
         const token = jsonwebtoken_1.default.sign({
             email: user.email,

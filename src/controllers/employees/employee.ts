@@ -66,16 +66,12 @@ export const login:RequestHandler=async(req,res,next)=>{
     const password = (req.body as {password:string}).password;
     const user = await Employee.findOne({ email: email });
     if (!user) {
-      const error:Error = new Error('A user with this email could not be found.');
-      error.statusCode = 404;
-      throw error;
+      throwError("User does not exist",StatusCodes.UNAUTHORIZED)
     }
 
     const isEqual = await bcrypt.compare(password, user.password);
     if (!isEqual) {
-      const error:Error = new Error('Wrong password!');
-      error.statusCode = 422;
-      throw error;
+      throwError("Invalid email or password",StatusCodes.UNAUTHORIZED)
     }
     const token = jwt.sign(
       {

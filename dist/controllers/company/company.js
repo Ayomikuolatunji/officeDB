@@ -56,7 +56,8 @@ const loginCompanyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         const company_password = req.body.company_password;
         // check if company exists
         const findOneCompany = yield company_1.default.findOne({ company_email: company_email });
-        const hashPassword = yield bcrypt_1.default.compare(findOneCompany.company_password, company_password);
+        // check if password is correct
+        const hashPassword = yield bcrypt_1.default.compare(company_password, findOneCompany.company_password);
         // const hashPassword=await bcrypt.compare(company_password,findOneComapny.company_password)
         if (!hashPassword) {
             (0, throwError_1.throwError)("Invalid email or password", http_status_codes_1.StatusCodes.UNAUTHORIZED);
@@ -64,7 +65,7 @@ const loginCompanyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         // generate token
         const token = jsonwebtoken_1.default.sign({
             company_email: findOneCompany.company_email,
-        }, `${process.env.JSON_WEBTOKEN_SECRET_KEY}`, { expiresIn: "1h" });
+        }, `somesupersecretsecret`, { expiresIn: "30d" });
         // send response
         res.status(200).json({ message: "Login successful", token: token, companyId: findOneCompany._id });
     }

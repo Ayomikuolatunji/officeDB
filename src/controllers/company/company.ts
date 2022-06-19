@@ -72,16 +72,18 @@ export const forgotCompanyPassword:RequestHandler=async(req,res,next)=>{
   try {
     const company_email=req.body.company_email
     const findOneCompany=await Company.findOne({company_email:company_email})
+    // set expiration date on company model
+    const resetTokenExpirationDate=Date.now() + 360000
     // generate crypto token
-    const cryptoToken=crypto.randomBytes(100)
+    const cryptoToken=crypto.randomBytes(100).toString('hex')
     // save token to company
        await Company.findOneAndUpdate({company_email:company_email},{
-        company_token:cryptoToken.toString("hex")
+        company_token:cryptoToken,
+        resetTokenExpiration:resetTokenExpirationDate
       })
 
     // send email to company
-    sendForgotCompanyPassword(company_email,findOneCompany.company_name)
-
+    sendForgotCompanyPassword(company_email,findOneCompany.company_name, cryptoToken)
     res.status(200).json({message:"Email sent successfully", companyId:findOneCompany._id})
 
   }catch(error){

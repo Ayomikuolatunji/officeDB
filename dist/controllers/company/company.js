@@ -77,14 +77,17 @@ const forgotCompanyPassword = (req, res, next) => __awaiter(void 0, void 0, void
     try {
         const company_email = req.body.company_email;
         const findOneCompany = yield company_1.default.findOne({ company_email: company_email });
+        // set expiration date on company model
+        const resetTokenExpirationDate = Date.now() + 360000;
         // generate crypto token
-        const cryptoToken = crypto_1.default.randomBytes(100);
+        const cryptoToken = crypto_1.default.randomBytes(100).toString('hex');
         // save token to company
         yield company_1.default.findOneAndUpdate({ company_email: company_email }, {
-            company_token: cryptoToken.toString("hex")
+            company_token: cryptoToken,
+            resetTokenExpiration: resetTokenExpirationDate
         });
         // send email to company
-        (0, sendForgotCompanyPassword_1.default)(company_email, findOneCompany.company_name);
+        (0, sendForgotCompanyPassword_1.default)(company_email, findOneCompany.company_name, cryptoToken);
         res.status(200).json({ message: "Email sent successfully", companyId: findOneCompany._id });
     }
     catch (error) {

@@ -101,7 +101,10 @@ export const resetPassword:RequestHandler=async(req,res,next)=>{
          throwError("Company not found",404)
       }
       // update company password
-      await Company.findOneAndUpdate({company_token:company_token},{
+      await Company.findOneAndUpdate({
+          company_token:company_token,
+          resetTokenExpiration:{$gt:Date.now()}
+      },{
         company_password:hashedPw,
         company_token:null
       })

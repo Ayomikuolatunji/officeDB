@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { RequestHandler } from "express";
+import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import crypto from "crypto"
 import Error from "../../interface/errorInterface";
 import Company from "../../models/company"
@@ -23,9 +24,7 @@ export const createCompany:RequestHandler=async(req,res,next)=>{
       const companyExits=await Company.findOne({company_email:company_email})
 
       if(companyExits){
-        const error:Error=new Error("company already exists")
-         error.statusCode=400
-         throw error
+        throwError("Company already exist",StatusCodes.CONFLICT)
       }
 
         const hashedPw =await  bcrypt.hash(company_password, 12);
@@ -86,6 +85,7 @@ export const forgotCompanyPassword:RequestHandler=async(req,res,next)=>{
     sendForgotCompanyPassword(company_email,findOneCompany.company_name)
 
     res.status(200).json({message:"Email sent successfully", companyId:findOneCompany._id})
+
   }catch(error){
     next(error)
   }

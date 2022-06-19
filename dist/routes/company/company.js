@@ -6,5 +6,6 @@ const company_1 = require("../../controllers/company/company");
 router.get("/all_companies", company_1.companiesEmployees);
 router.post("/auth/login_company_admin", company_1.loginCompanyAdmin);
 router.post("/auth/forgot_company_password", company_1.forgotCompanyPassword);
+router.get("/get_all_company_departments", company_1.allCompanyDepartments);
 router.post('/auth/create_company_account', company_1.createCompany);
 exports.default = router;

@@ -120,15 +120,25 @@ export const resetPassword:RequestHandler=async(req,res,next)=>{
 export const allCompanyDepartments:RequestHandler=async(req,res,next)=>{
      try {
          const companyId=req.body.company_id
-         const findCompanyById=await Company.findById("company_departments")
+         const findCompanyById=await Company.findById({
+          _id:companyId
+         })
          if(!findCompanyById){
           throwError("please provide a valid", StatusCodes.FORBIDDEN)
          }
-         
+
+         const populateCompanyDepartments:any=await Company.find({})
+         .populate("company_departments")
+
+         res.status(200).json({
+             departments: populateCompanyDepartments['company_departments']
+         })
+           
      } catch (error) {
         next(error)
      }
 }
+
 
 export const companiesEmployees:RequestHandler=async(req,res,next)=>{
   try {

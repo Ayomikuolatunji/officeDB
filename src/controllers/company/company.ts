@@ -127,11 +127,14 @@ export const allCompanyDepartments:RequestHandler=async(req,res,next)=>{
           throwError("please provide a valid", StatusCodes.FORBIDDEN)
          }
 
-         const populateCompanyDepartments:any=await Company.find({})
+         const populateCompanyDepartments=await Company.find({
+          _id:companyId
+         })
          .populate("company_departments")
+         .select("company_departments")
 
          res.status(200).json({
-             departments: populateCompanyDepartments['company_departments']
+             departments: populateCompanyDepartments
          })
            
      } catch (error) {

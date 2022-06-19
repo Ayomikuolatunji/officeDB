@@ -129,10 +129,13 @@ const allCompanyDepartments = (req, res, next) => __awaiter(void 0, void 0, void
         if (!findCompanyById) {
             (0, throwError_1.throwError)("please provide a valid", http_status_codes_1.StatusCodes.FORBIDDEN);
         }
-        const populateCompanyDepartments = yield company_1.default.find({})
-            .populate("company_departments");
+        const populateCompanyDepartments = yield company_1.default.find({
+            _id: companyId
+        })
+            .populate("company_departments")
+            .select("company_departments");
         res.status(200).json({
-            departments: populateCompanyDepartments['company_departments']
+            departments: populateCompanyDepartments
         });
     }
     catch (error) {

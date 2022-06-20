@@ -20,7 +20,7 @@ export const createCompany:RequestHandler=async(req,res,next)=>{
       const company_type=req.body.company_type
       const company_email=req.body.company_email
       const company_password=req.body.company_password
-      const  company_location=req.body.company_location 
+      const  company_country=req.body.company_country 
 
       const companyExits=await Company.findOne({company_email:company_email})
 
@@ -31,8 +31,8 @@ export const createCompany:RequestHandler=async(req,res,next)=>{
         const hashedPw =await  bcrypt.hash(company_password, 12);
         const newCompany=new Company({
           company_email:company_email,
-          company_location:company_location,
           company_type:company_type,
+          company_country:company_country,
           company_name:company_name,
           company_password:hashedPw
         })
@@ -167,7 +167,6 @@ export const createCompanyAddress:RequestHandler=async(req,res,next)=>{
       const companyAddress=req.body.company_address
       const company_city=req.body.company_city
       const company_state=req.body.company_state
-      const company_country=req.body.company_country
       const company_zip=req.body.company_zip
       const company_phone=req.body.company_phone
       const company_website=req.body.company_website
@@ -177,7 +176,6 @@ export const createCompanyAddress:RequestHandler=async(req,res,next)=>{
         company_address:companyAddress,
         company_city:company_city,
         company_state:company_state,
-        company_country:company_country,
         company_zip:company_zip,
         company_phone:company_phone,
         company_website:company_website,

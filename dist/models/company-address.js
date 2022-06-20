@@ -29,14 +29,6 @@ const companyAddress = new mongoose_1.default.Schema({
         minlength: 3,
         maxlength: 100,
     },
-    company_country: {
-        type: String,
-        required: true,
-        default: "",
-        trim: true,
-        minlength: 3,
-        maxlength: 100,
-    },
     company_zip: {
         type: Number,
         required: true,

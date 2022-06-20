@@ -27,7 +27,7 @@ const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         const company_type = req.body.company_type;
         const company_email = req.body.company_email;
         const company_password = req.body.company_password;
-        const company_location = req.body.company_location;
+        const company_country = req.body.company_country;
         const companyExits = yield company_1.default.findOne({ company_email: company_email });
         if (companyExits) {
             (0, throwError_1.throwError)("Company already exist", http_status_codes_1.StatusCodes.CONFLICT);
@@ -35,8 +35,8 @@ const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         const hashedPw = yield bcrypt_1.default.hash(company_password, 12);
         const newCompany = new company_1.default({
             company_email: company_email,
-            company_location: company_location,
             company_type: company_type,
+            company_country: company_country,
             company_name: company_name,
             company_password: hashedPw
         });
@@ -164,7 +164,6 @@ const createCompanyAddress = (req, res, next) => __awaiter(void 0, void 0, void 
         const companyAddress = req.body.company_address;
         const company_city = req.body.company_city;
         const company_state = req.body.company_state;
-        const company_country = req.body.company_country;
         const company_zip = req.body.company_zip;
         const company_phone = req.body.company_phone;
         const company_website = req.body.company_website;
@@ -173,7 +172,6 @@ const createCompanyAddress = (req, res, next) => __awaiter(void 0, void 0, void 
             company_address: companyAddress,
             company_city: company_city,
             company_state: company_state,
-            company_country: company_country,
             company_zip: company_zip,
             company_phone: company_phone,
             company_website: company_website,

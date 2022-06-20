@@ -7,7 +7,7 @@ import Error from "../../interface/errorInterface";
 import Company from "../../models/company"
 import sendCompanyReqEmail from "../../emails/company-email-service/sendCompanyRegEmail";
 import sendForgotCompanyPassword from "../../emails/company-email-service/sendForgotCompanyPassword";
-import companyAddress from "../../models/company-address";
+import CompanyAddress from "../../models/company-address";
 import { throwError } from "../../middleware/throwError";
 
 
@@ -172,7 +172,7 @@ export const createCompanyAddress:RequestHandler=async(req,res,next)=>{
       const company_website=req.body.company_website
        
       //create addres and push it to a company
-      const newCompanyAddress=await companyAddress.create({
+      const newCompanyAddress=await CompanyAddress.create({
         company_address:companyAddress,
         company_city:company_city,
         company_state:company_state,

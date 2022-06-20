@@ -20,6 +20,7 @@ const crypto_1 = __importDefault(require("crypto"));
 const company_1 = __importDefault(require("../../models/company"));
 const sendCompanyRegEmail_1 = __importDefault(require("../../emails/company-email-service/sendCompanyRegEmail"));
 const sendForgotCompanyPassword_1 = __importDefault(require("../../emails/company-email-service/sendForgotCompanyPassword"));
+const company_address_1 = __importDefault(require("../../models/company-address"));
 const throwError_1 = require("../../middleware/throwError");
 const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -168,7 +169,7 @@ const createCompanyAddress = (req, res, next) => __awaiter(void 0, void 0, void 
         const company_phone = req.body.company_phone;
         const company_website = req.body.company_website;
         //create addres and push it to a company
-        const newCompanyAddress = yield companyAddress.create({
+        const newCompanyAddress = yield company_address_1.default.create({
             company_address: companyAddress,
             company_city: company_city,
             company_state: company_state,

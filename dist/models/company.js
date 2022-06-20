@@ -25,6 +25,10 @@ const companySchema = new Schema({
             require: true
         }
     },
+    company_country: {
+        type: String,
+        required: true
+    },
     company_token: {
         type: String,
         default: ""

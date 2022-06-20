@@ -41,6 +41,7 @@ export const createCompany:RequestHandler=async(req,res,next)=>{
         res.status(201).json({message:"Company account created successfully",companyId:result._id })
           // send email to company
           sendCompanyReqEmail(company_email,company_name)
+          
     } catch (error) {
       next(error)
   }

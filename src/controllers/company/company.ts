@@ -23,11 +23,12 @@ export const createCompany:RequestHandler=async(req,res,next)=>{
       const  company_country=req.body.company_country 
 
       const companyExits=await Company.findOne({company_email:company_email})
+      const companyNameExits=await Company.findOne({company_name:company_name})
 
-      if(companyExits){
+      if(companyExits || companyNameExits){
         throwError("Company already exist",StatusCodes.CONFLICT)
       }
-
+    
         const hashedPw =await  bcrypt.hash(company_password, 12);
         const newCompany=new Company({
           company_email:company_email,

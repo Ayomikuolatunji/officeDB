@@ -30,7 +30,8 @@ const createCompany = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         const company_password = req.body.company_password;
         const company_country = req.body.company_country;
         const companyExits = yield company_1.default.findOne({ company_email: company_email });
-        if (companyExits) {
+        const companyNameExits = yield company_1.default.findOne({ company_name: company_name });
+        if (companyExits || companyNameExits) {
             (0, throwError_1.throwError)("Company already exist", http_status_codes_1.StatusCodes.CONFLICT);
         }
         const hashedPw = yield bcrypt_1.default.hash(company_password, 12);
